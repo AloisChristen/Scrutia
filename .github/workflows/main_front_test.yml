@@ -29,17 +29,37 @@ jobs:
           cache: 'yarn'
           cache-dependency-path: 'scrutia-frontend/yarn.lock'
         
-#       - name: move to frontend
-#         run: cd scrutia-frontend
-        
       - run: yarn install
         working-directory: './scrutia-frontend'
       - run: yarn build
         working-directory: './scrutia-frontend'
       - run: yarn run test:unit
         working-directory: './scrutia-frontend'
-
-
-
         
-      
+  # This workflow contains a single job called "build"
+  e2e-tests:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      - name: setup yarn, with cache for dependencies
+        uses: actions/setup-node@v3
+        with:
+          node-version: '14'
+          cache: 'yarn'
+          cache-dependency-path: 'scrutia-frontend/yarn.lock'
+
+      - run: yarn install
+        working-directory: './scrutia-frontend'
+      - run: yarn build
+        working-directory: './scrutia-frontend'
+      - name: e2e on chrome
+        run: yarn run test:e2e --headless
+        working-directory: './scrutia-frontend'
+      - name: e2e on firefox
+        run: yarn run test:e2e --headless -b firefox
+        working-directory: './scrutia-frontend'
