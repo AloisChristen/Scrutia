@@ -27,7 +27,9 @@ jobs:
         with:
           node-version: '14'
         
-      - run: yarn run lint
+      - run: yarn install
+        working-directory: './scrutia-frontend'
+      - run: yarn run lint --no-fix
         working-directory: './scrutia-frontend'
 
 
