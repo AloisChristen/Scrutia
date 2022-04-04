@@ -26,12 +26,12 @@ jobs:
       - name: Lint Action
         uses: wearerequired/lint-action@v1.12.0
         with:
-          eslint: true
+#           eslint: true
           prettier: true
 
 
   run-linters:
-    name: Run linters
+    name: api-linters
     runs-on: ubuntu-latest
 
     steps:
@@ -47,6 +47,7 @@ jobs:
 
       - name: Install PHP dependencies
         run: |
+          cd ./scrutia-api
           composer install --prefer-dist --no-progress --no-ansi --no-interaction
           echo "${PWD}/vendor/bin" >> $GITHUB_PATH
 
