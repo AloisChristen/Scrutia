@@ -52,10 +52,8 @@ jobs:
         run: |
           cd ./scrutia-api
           composer install
-          echo "${PWD}/vendor/bin" >> $GITHUB_PATH
 
       - name: Run linters
-        uses: wearerequired/lint-action@v1
-        with:
-          php_codesniffer: true
-          php_codesniffer_dir: 'scrutia_api'
+        run: |
+          cd ./scrutia-api
+          .vendor/bin/phpcs
