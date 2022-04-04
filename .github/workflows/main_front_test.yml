@@ -23,10 +23,10 @@ jobs:
       - uses: actions/checkout@v3
       
       - name: move to frontend
-      - run: cd scrutia-frontend
+        run: cd scrutia-frontend
       
       - name: setup yarn, with cache for dependencies
-      - uses: actions/setup-node@v3
+        uses: actions/setup-node@v3
         with:
           node-version: '14'
           cache: 'yarn'
