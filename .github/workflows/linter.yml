@@ -58,4 +58,4 @@ jobs:
         uses: wearerequired/lint-action@v1
         with:
           php_codesniffer: true
-          codesniffer_dir: 'scrutia_api'
+          php_codesniffer_dir: 'scrutia_api'
