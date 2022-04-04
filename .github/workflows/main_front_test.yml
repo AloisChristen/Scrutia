@@ -26,9 +26,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '14'
-          working-directory: 'scrutia-frontend'
+          working-directory: './scrutia-frontend'
           cache: 'yarn'
-          cache-dependency-path: './yarn.lock'
+          cache-dependency-path: 'scrutia-frontend/yarn.lock'
         
 #       - name: move to frontend
 #         run: cd scrutia-frontend
