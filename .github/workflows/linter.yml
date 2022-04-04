@@ -51,7 +51,7 @@ jobs:
       - name: Install PHP dependencies
         run: |
           cd ./scrutia-api
-          composer install --prefer-dist --no-progress --no-ansi --no-interaction
+          composer install
           echo "${PWD}/vendor/bin" >> $GITHUB_PATH
 
       - name: Run linters
