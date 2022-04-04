@@ -1,64 +1,83 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# Scrutia API
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Mise en place :wrench:
 
-## About Laravel
+### PHP
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Afin de mettre en place l'environnement de développement pour l'API de Scrutia, il faut installer PHP8.1.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+##### Pour Windows
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+L'installer se trouve ici : https://windows.php.net/download/.
 
-## Learning Laravel
+Ajouter votre installation PHP8.1 dans votre **PATH**.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Il faudra **enable** l'extension *php-fileinfo* dans le fichier **php.ini**.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+##### Pour Ubuntu / WSL
 
-## Laravel Sponsors
+```bash
+$ sudo apt update && sudo apt upgrade -y
+$ sudo apt install software-properties-common && sudo add-apt-repository ppa:ondrej/php -y
+$ sudo apt update
+$ sudo apt upgrade -y
+$ sudo apt install php8.1 php8.1-curl php8.1-xml 
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+Si la deuxième commande ne passe pas, cette commande obtient l'heure la plus récente du RTC de votre machine Windows et règle l'heure du système sur celle-ci.
 
-### Premium Partners
+```bash
+$ sudo hwclock --hctosys 
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+### Composer
 
-## Contributing
+Pour générer les fichiers importants pour le framework Laravel, il nous faut installer Composer, qui est le packet manager de PHP (comme npm pour NodeJS).
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+##### Pour Windows
 
-## Code of Conduct
+Vous trouverez l'installeur ici : https://getcomposer.org/Composer-Setup.exe
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+##### Pour Ubuntu / WSL
 
-## Security Vulnerabilities
+```bash
+$ php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+$ php -r "if (hash_file('sha384', 'composer-setup.php') === '906a84df04cea2aa72f40b5f787e49f22d4c2f19492ac310e8cba5b96ac8b64115ac402c8cd292b8a03482574915d1a8') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+$ php composer-setup.php
+$ php -r "unlink('composer-setup.php');"
+$ sudo mv composer.phar /usr/local/bin/composer
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Finition
 
-## License
+Enfin pour l'installation des dépendances , il faut être à la racine de l'API (Scrutia/scrutia-api):
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```bash
+$ composer install
+```
+
+Pour lancer l'API :
+
+##### Pour Windows
+
+Les utilisateurs sous Windows sont péjorés car toutes les fonctionnalités ne sont pas présentes. Vous pouvez tout de même lancer le docker-compose :
+
+```bash
+$ docker-composer up
+```
+
+##### Pour Ubuntu / WSL
+
+Afin de se faciliter la tache dans les commandes, nous pouvons ajouter cet alias : 
+
+```bash
+alias sail='[ -f sail ] && bash sail || bash vendor/bin/sail'
+```
+
+Pour lancer l'API, il suffit de faire la commande suivante : 
+
+```bash
+$ sail up
+# ./vendor/bin/sail up si l'alias n'a pas été créé
+```
+
