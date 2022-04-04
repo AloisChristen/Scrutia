@@ -23,11 +23,12 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 
-      - name: Lint Action
-        uses: wearerequired/lint-action@v1.12.0
+      - uses: actions/setup-node@v3
         with:
-#           eslint: true
-          prettier: true
+          node-version: '14'
+        
+      - run: yarn run lint
+        working-directory: './scrutia-frontend'
 
 
   run-linters:
@@ -41,7 +42,7 @@ jobs:
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: "7.4"
+          php-version: "8.1"
           coverage: none
           tools: composer
 
