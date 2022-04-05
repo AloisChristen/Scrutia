@@ -5,7 +5,7 @@ name: main_front_test
 # Controls when the workflow will run
 on:
   pull_request:
-    branches: [ fb-pipeline_test ]
+    branches: [main]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -21,21 +21,21 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
-      
+
       - name: setup yarn, with cache for dependencies
         uses: actions/setup-node@v3
         with:
           node-version: '14'
           cache: 'yarn'
           cache-dependency-path: 'scrutia-frontend/yarn.lock'
-        
+
       - run: yarn install
         working-directory: './scrutia-frontend'
       - run: yarn build
         working-directory: './scrutia-frontend'
       - run: yarn run test:unit
         working-directory: './scrutia-frontend'
-        
+
   # This workflow contains a single job called "build"
   e2e-tests:
     # The type of runner that the job will run on

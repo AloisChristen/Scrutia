@@ -6,7 +6,7 @@ name: Linters
 on:
   # Triggers the workflow on push or pull request events but only for the dev branch
   push:
-    branches: [ fb-pipeline-test ]
+    branches: [main, dev]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -26,12 +26,11 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '14'
-        
+
       - run: yarn install
         working-directory: './scrutia-frontend'
       - run: yarn run lint --no-fix
         working-directory: './scrutia-frontend'
-
 
   run-linters:
     name: api-linters
@@ -44,7 +43,7 @@ jobs:
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: "8.1"
+          php-version: '8.1'
           coverage: none
           tools: composer
 
