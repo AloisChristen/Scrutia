@@ -15,12 +15,11 @@ class RegistrationController extends Controller
      *
      * @param RegistrationRequest $request
      * @return \Illuminate\Http\JsonResponse
-     *
      */
     public function register(RegistrationRequest $request)
     {
         $validated = $request->validated();
-        if($validated){
+        if ($validated) {
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
