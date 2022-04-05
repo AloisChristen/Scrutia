@@ -81,5 +81,5 @@ jobs:
       run: |
         cd scrutia-api
         ./vendor/bin/sail up -d
-        ./vendor/bin/sail artisan migrate
+        ./vendor/bin/sail artisan migrate --no-interaction --force
         ./vendor/bin/sail php artisan test --testsuite=Feature --coverage --min=50
