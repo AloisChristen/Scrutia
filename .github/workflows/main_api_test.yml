@@ -76,12 +76,11 @@ jobs:
 
     # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
     # Docs: https://getcomposer.org/doc/articles/scripts.md
-
-    - name: Run test suite
+    - name: Build backend
       env:
           APP_KEY: ${{secrets.APP_KEY}}
           DB_CONNECTION: mysql
-          DB_HOST: mysql
+          DB_HOST: localhost
           DB_PORT: 3306
           DB_DATABASE: scrutia_api
           DB_USERNAME: ${{secrets.DB_USERNAME}}
@@ -89,5 +88,10 @@ jobs:
       run: |
         cd scrutia-api
         ./vendor/bin/sail up -d
+        echo "sail up"
         ./vendor/bin/sail artisan migrate --no-interaction --force
-        ./vendor/bin/sail php artisan test --testsuite=Feature --coverage --min=50
+    
+    - name: Run test suite
+      run: |
+        cd scrutia-api
+        ./vendor/bin/sail artisan test --testsuite=Feature --coverage --min=50
