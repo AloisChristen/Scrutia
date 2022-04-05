@@ -83,7 +83,6 @@ jobs:
         DB_PASSWORD: ${{secrets.DB_PASSWORD}}
       run: |
         cd ./scrutia-api
-        cp .env.ci .env
         php artisan key:generate
 
  
