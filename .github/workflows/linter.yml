@@ -55,4 +55,4 @@ jobs:
       - name: Run linters
         run: |
           cd ./scrutia-api
-          ./vendor/bin/phpcs ./app
+          ./vendor/bin/php-cs-fixer fix
