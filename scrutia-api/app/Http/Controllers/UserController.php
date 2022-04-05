@@ -33,6 +33,7 @@ class UserController extends Controller
     {
         //
     }
+
     /**
      * @OA\Post(
      *     path="/users",

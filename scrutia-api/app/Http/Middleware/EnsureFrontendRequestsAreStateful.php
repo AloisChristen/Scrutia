@@ -13,7 +13,7 @@ class EnsureFrontendRequestsAreStateful extends BaseSanctumMiddleware
      */
     protected static function isEnvTesting(): bool
     {
-        return env("APP_ENV") === 'local';
+        return env('APP_ENV') === 'local';
     }
 
     /**
@@ -26,5 +26,3 @@ class EnsureFrontendRequestsAreStateful extends BaseSanctumMiddleware
         return static::isEnvTesting() || parent::fromFrontend($request);
     }
 }
-
-
