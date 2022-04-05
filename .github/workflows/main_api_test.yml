@@ -47,38 +47,47 @@ jobs:
           ./vendor/bin/sail up -d
           ./vendor/bin/sail php artisan test --testsuite=Unit --coverage --min=50
 
-#   # This workflow contains a single job called "build"
 #   phpe2e:
-
 #     runs-on: ubuntu-latest
 
+#     container:
+#       image: kirschbaumdevelopment/laravel-test-runner:8.1
+#     services:
+#       mysql:
+#         image: mysql:5.7
+#         env:
+#           MYSQL_ROOT_PASSWORD: ${{secrets.DB_PASSWORD}}
+#           MYSQL_DATABASE: ${{secrets.DB_USERNAME}}
+#         ports:
+#           - 33306:3306
+#         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    
 #     steps:
 #     - uses: actions/checkout@v3
-
-#     - name: Validate composer.json and composer.lock
-#       run: |
-#         cd scrutia-api
-#         composer validate --strict
-
-#     - name: Cache Composer packages
-#       id: composer-cache
-#       uses: actions/cache@v3
 #       with:
-#         path: ./scrutia-api/vendor
-#         key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
-#         restore-keys: |
-#           ${{ runner.os }}-php-
+#         fetch-depth: 1
 
-#     - name: Install dependencies
+#     - name: Install composer dependencies
 #       run: |
-#         cd scrutia-api
-#         composer install --prefer-dist --no-progress
+#         cd ./scrutia-api
+#         composer install --no-scripts
 
-#     # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
-#     # Docs: https://getcomposer.org/doc/articles/scripts.md
-
-#     - name: Run test suite
+ 
+#     - name: Prepare Laravel Application
+#       env:
+#         DB_CONNECTION: mysql
+#         DB_HOST: mysql
+#         DB_PORT: 3306
+#         DB_DATABASE: scrutia_api
+#         DB_USERNAME: ${{secrets.DB_USERNAME}}
+#         DB_PASSWORD: ${{secrets.DB_PASSWORD}}
 #       run: |
-#         cd scrutia-api
-#         ./vendor/bin/sail up -d
-#         ./vendor/bin/sail php artisan test --testsuite=Feature --coverage --min=50
+#         cd ./scrutia-api
+#         php artisan key:generate
+
+ 
+
+#     - name: Run Testsuite
+#       run: |
+#         cd ./scrutia-api
+#         php artisan test --testsuite=Feature --coverage --min=50
