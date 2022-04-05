@@ -1,6 +1,6 @@
 <template>
   <div class="about">
-    <h1>De l’idée au scrutin - TEXT TO REMOVE</h1>
+    <h1>De l’idée au scrutin</h1>
     <p>
       L’application <b>Scrutia</b> permet d’aider les personnes souhaitant faire
       part d’une idée à pouvoir la concrétiser politiquement et la promouvoir en
