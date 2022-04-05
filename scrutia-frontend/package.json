@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "start": "node server.js",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "serve": "vue-cli-service serve",
@@ -11,7 +12,10 @@
   },
   "dependencies": {
     "core-js": "^3.8.3",
+    "express": "^4.17.3",
+    "path": "^0.12.7",
     "register-service-worker": "^1.7.2",
+    "serve-static": "^1.15.0",
     "vue": "^3.2.13",
     "vue-class-component": "^8.0.0-0",
     "vue-router": "^4.0.3",
