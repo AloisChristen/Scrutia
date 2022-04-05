@@ -42,14 +42,6 @@ jobs:
       # Docs: https://getcomposer.org/doc/articles/scripts.md
 
       - name: Run test suite
-        env:
-          APP_KEY: ${{secrets.APP_KEY}}
-          DB_CONNECTION: mysql
-          DB_HOST: mysql
-          DB_PORT: 3306
-          DB_DATABASE: scrutia_api
-          DB_USERNAME: ${{secrets.DB_USERNAME}}
-          DB_PASSWORD: ${{secrets.DB_PASSWORD}}
         run: |
           cd scrutia-api
           ./vendor/bin/sail up -d
@@ -86,6 +78,14 @@ jobs:
     # Docs: https://getcomposer.org/doc/articles/scripts.md
 
     - name: Run test suite
+      env:
+          APP_KEY: ${{secrets.APP_KEY}}
+          DB_CONNECTION: mysql
+          DB_HOST: mysql
+          DB_PORT: 3306
+          DB_DATABASE: scrutia_api
+          DB_USERNAME: ${{secrets.DB_USERNAME}}
+          DB_PASSWORD: ${{secrets.DB_PASSWORD}}
       run: |
         cd scrutia-api
         ./vendor/bin/sail up -d
