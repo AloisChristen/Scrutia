@@ -1,0 +1,604 @@
+openapi: 3.0.1
+info:
+  title: Scrutia API
+  version: 1.0.0
+  description: The Scrutia application helps people who want to share an idea to be able to turn it into a political reality and promote it as a popular initiative. It is also a community site that allows anyone to participate in the life cycle of an initiative, from the basic idea to the text of a law submitted to the confederation.
+  contact:
+    name: Scrutia API Support
+    email: scrutia.team@gmail.com
+servers:
+  - url: https://scrutia-api-dev.herokuapp.com/api:80
+  - url: https://scrutia-api.herokuapp.com/api:80
+tags:
+  - name: Auths
+    description: Eveything about authentication
+  - name: Answers
+    description: Everything about answers
+  - name: Projects
+    description: Everything about initiative ideas and projects
+  - name: Questions
+    description: Everything about questions
+  - name: Tags
+    description: Everything about tags
+  - name: Users
+    description: Everything about users
+  - name: Versions
+    description: Everything about initiative text versions
+paths:
+  /login:
+    post:
+      tags:
+        - Auths
+      summary: Sign in
+      parameters:
+        - in: header
+          name: username
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: password
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Authenticated
+          content:
+            text/plain:
+              schema:
+                type: string
+                description: JWT Token
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/WrongAuth'
+        404:
+          $ref: '#/components/responses/NotExistingUser'
+  /answers:
+    post:
+      tags:
+        - Answers
+      summary: Answer to a question
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/Answer'
+      responses:
+        201:
+          description: Created
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/NotEnoughReputation'
+  /projects:
+    get:
+      tags:
+        - Projects
+      summary: Get projects
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: page number
+      responses:
+        200:
+          description: OK
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProjectPagination'
+    post:
+      tags:
+        - Projects
+      summary: Add an initiative idea
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/Project'
+      responses:
+        201:
+          description: Created
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/NotEnoughReputation'
+  /projects/ideas:
+    get:
+      tags:
+        - Projects
+      summary: Get ideas
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: page number
+      responses:
+        200:
+          description: OK
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProjectPagination'
+  /projects/initiatives:
+    get:
+      tags:
+        - Projects
+      summary: Get initiatives
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: page number
+      responses:
+        200:
+          description: OK
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProjectPagination'
+  /projects/{projectId}:
+    get:
+      tags:
+        - Projects
+      summary: Get project details
+      parameters:
+        - in: path
+          name: projectId
+          schema:
+            type: integer
+          required: true
+          description: Numeric ID of the project to get
+      responses:
+        200:
+          description: OK
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProjectDetailsDTO'
+  /projects/{projectId}/promote:
+    put:
+      tags:
+        - Projects
+      summary: Promote project idea to concretization
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: projectId
+          schema:
+            type: integer
+          required: true
+          description: Numeric ID of the project to promote
+      responses:
+        204:
+          description: Promoted
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/NotEnoughLikes'
+  /questions:
+    post:
+      tags:
+        - Questions
+      summary: Ask a question
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/Question'
+      responses:
+        201:
+          description: Created
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/NotEnoughReputation'
+  /tags:
+    get:
+      tags:
+        - Tags
+      summary: Get existing tags
+      responses:
+        200:
+          description: OK
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tags'
+  /users:
+    get:
+      tags:
+        - Users
+      summary: Get authenticated user informations
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: OK
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserDTO'
+    post:
+      tags:
+        - Users
+      summary: Create a user account
+      requestBody:
+        required: true
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        201:
+          description: Created
+          content:
+            text/plain:
+              schema:
+                type: string
+                description: JWT Token
+        400:
+          description: Bad request. A field is invalid.
+        409:
+          description: Conflict. Username or email already exists.
+    put:
+      tags:
+        - Users
+      summary: Update a user account
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Username can not be changed
+        required: true
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        204:
+          description: Updated
+        400:
+          description: Bad request. A field is invalid.
+  /versions:
+    post:
+      tags:
+        - Versions
+      summary: Add a new text version
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/Version'
+      responses:
+        201:
+          description: Created
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/NotAProject'
+components:
+  schemas:
+    Answer:
+      type: object
+      properties:
+        questionId:
+          type: integer
+        description:
+          type: string
+    AnswersDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+        description:
+          type: string
+        author:
+          type: string
+          maxLength: 30
+        date:
+          type: string
+          format: date-time
+        nbLikes:
+          type: integer
+        nbDislikes:
+          type: integer
+        userVote:
+          $ref: '#/components/schemas/Vote'
+    Error:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+    Project:
+      type: object
+      properties:
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tags'
+    ProjectDetailsDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        author:
+          type: string
+          maxLength: 30
+        date:
+          type: string
+          format: date-time
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tags'
+        nbLikes:
+          type: integer
+        nbDislikes:
+          type: integer
+        userVote:
+          $ref: '#/components/schemas/Vote'
+        status:
+          $ref: '#/components/schemas/ProjectStatus'
+        questions:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuestionsDTO'
+    ProjectDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        author:
+          type: string
+          maxLength: 30
+        date:
+          type: string
+          format: date-time
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tags'
+        nbLikes:
+          type: integer
+        nbDislikes:
+          type: integer
+        userVote:
+          $ref: '#/components/schemas/Vote'
+        status:
+          $ref: '#/components/schemas/ProjectStatus'
+    ProjectPagination:
+      type: object
+      properties:
+        total:
+          type: integer
+        per_page:
+          type: integer
+        current_page:
+          type: integer
+        last_page:
+          type: integer
+        first_page_url:
+          type: string
+          format: uri
+        last_page_url:
+          type: string
+          format: uri
+        next_page_url:
+          type: string
+          format: uri
+        prev_page_url:
+          type: string
+          format: uri
+        path:
+          type: string
+          format: uri
+        from:
+          type: integer
+        to:
+          type: integer
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProjectDTO'
+    ProjectStatus:
+      type: string
+      enum: [idea, initiative]
+    Question:
+      type: object
+      properties:
+        projectId:
+          type: integer
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+    QuestionsDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+          maxLength: 255
+        author:
+          type: string
+          maxLength: 30
+        date:
+          type: string
+          format: date-time
+        nbLikes:
+          type: integer
+        nbDislikes:
+          type: integer
+        userVote:
+          $ref: '#/components/schemas/Vote'
+        answers:
+          type: array
+          items:
+            $ref: '#/components/schemas/AnswersDTO'
+    Tags:
+      type: object
+      properties:
+        id:
+          type: integer
+        description:
+          type: string
+          maxLength: 30
+    User:
+      type: object
+      properties:
+        username:
+          type: string
+          minLength: 3
+          maxLength: 30
+          pattern: '^[A-Za-z][A-Za-z0-9_]{3,30}$'
+        password:
+          type: string
+          minLength: 6
+          format: password
+        firstname:
+          type: string
+        lastname:
+          type: string
+        email:
+          type: string
+          format: email
+    UserDTO:
+      type: object
+      properties:
+        username:
+          type: string
+          minLength: 3
+          maxLength: 30
+          pattern: '^[A-Za-z][A-Za-z0-9_]{3,30}$'
+        firstname:
+          type: string
+        lastname:
+          type: string
+        email:
+          type: string
+          format: email
+    Version:
+      type: object
+      properties:
+        projectId:
+          type: integer
+        parentId:
+          type: integer
+        description:
+          type: string
+    Vote:
+      type: integer
+      enum: [-1, 0, 1]
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotAProject:
+      description: Forbidden because project is still an idea
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotEnoughLikes:
+      description: Not enough likes on the idea to promote project.
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotEnoughReputation:
+      description: User does not have a good enough reputation to do the action.
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotExistingUser:
+      description: Not found. Username does not exists.
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Ressource was not found.
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Access token is missing or invalid.
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/Error'
+    WrongAuth:
+      description: Unauthorized. Wrong username or password.
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/Error'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
