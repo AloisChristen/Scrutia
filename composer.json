@@ -1,3 +1,0 @@
-{
-	"script" : {"post-install-cmd" : "cd scrutia-api;composer install; composer update"}
-}
