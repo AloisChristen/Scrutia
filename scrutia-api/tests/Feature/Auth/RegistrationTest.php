@@ -24,7 +24,7 @@ class RegistrationTest extends TestCase
         $this->assertDatabaseHas('users', ['email' => 'test@example.com']);
         $this->assertDatabaseHas('personal_access_tokens', [
             'tokenable_type' => User::class,
-            'name' => 'Symfony'
+            'name' => 'Symfony',
         ]);
     }
 }

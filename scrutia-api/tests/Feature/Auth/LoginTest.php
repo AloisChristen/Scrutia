@@ -23,7 +23,7 @@ class LoginTest extends TestCase
         $this->assertNotEmpty($response->getContent());
         $this->assertDatabaseHas('personal_access_tokens', [
             'tokenable_type' => User::class,
-            'tokenable_id' => $user->id
+            'tokenable_id' => $user->id,
         ]);
     }
 
