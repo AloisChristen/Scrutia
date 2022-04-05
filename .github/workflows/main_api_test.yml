@@ -48,37 +48,38 @@ jobs:
           ./vendor/bin/sail php artisan test --testsuite=Unit --coverage --min=50
 
 #   # This workflow contains a single job called "build"
-#   phpe2e:
+  phpe2e:
 
-#     runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
 
-#     steps:
-#     - uses: actions/checkout@v3
+    steps:
+    - uses: actions/checkout@v3
 
-#     - name: Validate composer.json and composer.lock
-#       run: |
-#         cd scrutia-api
-#         composer validate --strict
+    - name: Validate composer.json and composer.lock
+      run: |
+        cd scrutia-api
+        composer validate --strict
 
-#     - name: Cache Composer packages
-#       id: composer-cache
-#       uses: actions/cache@v3
-#       with:
-#         path: ./scrutia-api/vendor
-#         key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
-#         restore-keys: |
-#           ${{ runner.os }}-php-
+    - name: Cache Composer packages
+      id: composer-cache
+      uses: actions/cache@v3
+      with:
+        path: ./scrutia-api/vendor
+        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-php-
 
-#     - name: Install dependencies
-#       run: |
-#         cd scrutia-api
-#         composer install --prefer-dist --no-progress
+    - name: Install dependencies
+      run: |
+        cd scrutia-api
+        composer install --prefer-dist --no-progress
 
-#     # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
-#     # Docs: https://getcomposer.org/doc/articles/scripts.md
+    # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
+    # Docs: https://getcomposer.org/doc/articles/scripts.md
 
-#     - name: Run test suite
-#       run: |
-#         cd scrutia-api
-#         ./vendor/bin/sail up -d
-#         ./vendor/bin/sail php artisan test --testsuite=Feature --coverage --min=50
+    - name: Run test suite
+      run: |
+        cd scrutia-api
+        ./vendor/bin/sail up -d
+        ./vendor/bin/sail artisan migrate
+        ./vendor/bin/sail php artisan test --testsuite=Feature --coverage --min=50
