@@ -27,15 +27,21 @@ class LoginTest extends TestCase
         ]);
     }
 
-//    public function test_users_can_not_authenticate_with_invalid_password()
-//    {
-//        $user = User::factory()->create();
-//
-//        $this->post('/login', [
-//            'email' => $user->email,
-//            'password' => 'wrong-password',
-//        ]);
-//
-//        $this->assertGuest();
-//    }
+    public function test_user_cannot_login_with_invalid_credentials()
+    {
+        $user = User::factory()->create();
+
+        $response = $this->post('/api/login', [
+            'username' => $user->username,
+            'password' => 'sds',
+        ]);
+
+        $this->assertNotEmpty($response->getContent());
+        $this->assertDatabaseMissing('personal_access_tokens', [
+            'tokenable_type' => User::class,
+            'tokenable_id' => $user->id,
+        ]);
+    }
+
+
 }
