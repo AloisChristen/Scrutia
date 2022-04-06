@@ -21,12 +21,22 @@ class RegistrationController extends Controller
         $validated = $request->validated();
         if ($validated) {
             $user = User::create([
-                'name' => $request->name,
+                'username' => $request->username,
+                'firstname' => $request->firstname,
+                'lastname' => $request->lastname,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
             ]);
         }
+        else {
+            return response()->json([
+                'error' => 'Error during registration'
+            ], 401);
+        }
 
-        return response()->json(['token' => $user->createToken($request->header('User-Agent'))->plainTextToken]);
+        return response()->json([
+            'token' => $user->createToken($request->header('User-Agent'))->plainTextToken,
+            'user' => $user
+            ]);
     }
 }
