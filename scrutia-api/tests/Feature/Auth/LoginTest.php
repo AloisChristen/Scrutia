@@ -15,7 +15,7 @@ class LoginTest extends TestCase
         $user = User::factory()->create();
 
         $response = $this->post('/api/login', [
-            'email' => $user->email,
+            'username' => $user->username,
             'password' => 'password',
         ]);
 
