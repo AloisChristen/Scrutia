@@ -26,7 +26,17 @@ class LoginTest extends TestCase
             'tokenable_id' => $user->id,
         ]);
     }
+    public function test_username_not_found()
+    {
+        $response = $this->post('/api/login', [
+            'username' => 'qwertz',
+            'password' => 'qwertz',
+        ]);
 
+        $this->assertTrue($response->status() == 404);
+        $this->assertNotEmpty($response->getContent());
+    }
+    
     public function test_user_cannot_login_with_invalid_credentials()
     {
         $user = User::factory()->create();
@@ -37,6 +47,7 @@ class LoginTest extends TestCase
         ]);
 
         $this->assertNotEmpty($response->getContent());
+        $this->assertTrue($response->status() == 401);
         $this->assertDatabaseMissing('personal_access_tokens', [
             'tokenable_type' => User::class,
             'tokenable_id' => $user->id,
