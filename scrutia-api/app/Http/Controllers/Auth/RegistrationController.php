@@ -36,8 +36,5 @@ class RegistrationController extends Controller
         return response()->json([
             'error' => 'Error during registration'
         ], 401);
-
-
-
     }
 }
