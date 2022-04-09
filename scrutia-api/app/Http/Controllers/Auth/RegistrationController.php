@@ -27,16 +27,17 @@ class RegistrationController extends Controller
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
             ]);
-        }
-        else {
-            return response()->json([
-                'error' => 'Error during registration'
-            ], 401);
-        }
 
+            return response()->json([
+                'token' => $user->createToken($request->header('User-Agent'))->plainTextToken,
+                'user' => $user
+            ], 201);
+        }
         return response()->json([
-            'token' => $user->createToken($request->header('User-Agent'))->plainTextToken,
-            'user' => $user
-            ]);
+            'error' => 'Error during registration'
+        ], 401);
+
+
+
     }
 }
