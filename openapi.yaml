@@ -7,6 +7,7 @@ info:
     name: Scrutia API Support
     email: scrutia.team@gmail.com
 servers:
+  - url: http://localhost/api
   - url: https://scrutia-api-dev.herokuapp.com/api:80
   - url: https://scrutia-api.herokuapp.com/api:80
 tags:
@@ -25,36 +26,69 @@ tags:
   - name: Versions
     description: Everything about initiative text versions
 paths:
+  /register:
+    post:
+      tags:
+        - Auths
+      summary: Register an account
+      requestBody:
+        required: true
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/RegisterUser'
+      responses:
+        201:
+          description: Created
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/AuthUser'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        422:
+          $ref: '#/components/responses/UnprocessableContent'
+        
   /login:
     post:
       tags:
         - Auths
       summary: Sign in
-      parameters:
-        - in: header
-          name: username
-          schema:
-            type: string
-          required: true
-        - in: header
-          name: password
-          schema:
-            type: string
-          required: true
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/Login'
       responses:
         200:
-          description: Authenticated
+          description: OK
           content:
-            text/plain:
+            'application/json':
               schema:
-                type: string
-                description: JWT Token
+                $ref: '#/components/schemas/AuthUser'
         400:
           $ref: '#/components/responses/BadRequest'
         401:
           $ref: '#/components/responses/WrongAuth'
         404:
           $ref: '#/components/responses/NotExistingUser'
+        422:
+          $ref: '#/components/responses/UnprocessableContent'
+  /logout:
+    post:
+      tags:
+        - Auths
+      summary: Sign out
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: OK
+          content:
+            'application/json':
+              schema:
+                type: string
+                
   /answers:
     post:
       tags:
@@ -87,7 +121,7 @@ paths:
           name: page
           schema:
             type: integer
-          description: page number
+            description: page number
       responses:
         200:
           description: OK
@@ -344,6 +378,13 @@ components:
           type: integer
         userVote:
           $ref: '#/components/schemas/Vote'
+    AuthUser:
+      type: object
+      properties:
+        token:
+          type: string
+        user:
+          $ref: '#/components/schemas/User'
     Error:
       type: object
       properties:
@@ -351,6 +392,14 @@ components:
           type: string
         description:
           type: string
+    Login:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+          format: password
     Project:
       type: object
       properties:
@@ -494,6 +543,27 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/AnswersDTO'
+    RegisterUser:
+      type: object
+      properties: 
+        username:
+          type: string
+          minLength: 3
+          maxLength: 30
+          pattern: '^[A-Za-z][A-Za-z0-9_]{3,30}$'
+        firstname:
+          type: string
+        lastname:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+        password_confirmation:
+          type: string
+          format: password
     Tags:
       type: object
       properties:
@@ -502,9 +572,18 @@ components:
         description:
           type: string
           maxLength: 30
+    UnprocessableContentError:
+      type: object
+      properties:
+        message:
+          type: string
+        errors:
+          type: object
     User:
       type: object
       properties:
+        id:
+          type: integer
         username:
           type: string
           minLength: 3
@@ -591,6 +670,12 @@ components:
         'application/json':
           schema:
             $ref: '#/components/schemas/Error'
+    UnprocessableContent:
+      description: Unprocessable Content
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/UnprocessableContentError'
     WrongAuth:
       description: Unauthorized. Wrong username or password.
       content:

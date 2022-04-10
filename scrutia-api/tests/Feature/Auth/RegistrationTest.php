@@ -12,8 +12,12 @@ class RegistrationTest extends TestCase
 
     public function test_new_users_can_register()
     {
+        $user = User::factory()->create();
+
         $response = $this->post('/api/register', [
-            'name' => 'Test User',
+            'username' => 'test',
+            'firstname' => 'Alex',
+            'lastname' => 'Test',
             'email' => 'test@example.com',
             'password' => 'password',
             'password_confirmation' => 'password',

@@ -22,10 +22,12 @@ Route::post('/register', [RegistrationController::class, 'register'])
 Route::post('/login', [LoginController::class, 'login'])
     ->name('login');
 
-Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
-    return $request->user();
-});
 
-Route::middleware(['auth:sanctum'])->get('/hello', function (Request $request) {
-    return 'Hello, World!';
+Route::group(['middleware' => 'auth:sanctum'], function(){
+  Route::get('/hello', function (Request $request) {
+      return 'Hello, World!';
+  });
+
+    Route::post('/logout', [LoginController::class, 'logout'])
+        ->name('logout');
 });
