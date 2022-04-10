@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegistrationRequest;
 use App\Models\User;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
 
 class RegistrationController extends Controller
@@ -14,9 +14,9 @@ class RegistrationController extends Controller
      * Handle an incoming registration request.
      *
      * @param RegistrationRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function register(RegistrationRequest $request)
+    public function register(RegistrationRequest $request): JsonResponse
     {
         $validated = $request->validated();
         if ($validated) {
@@ -34,7 +34,8 @@ class RegistrationController extends Controller
             ], 201);
         }
         return response()->json([
-            'error' => 'Error during registration'
+            'title' => 'Error: Bad Request',
+            'description' => 'Error during registration'
         ], 401);
     }
 }
