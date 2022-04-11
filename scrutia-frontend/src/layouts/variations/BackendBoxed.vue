@@ -389,7 +389,7 @@ export default {
       header: true,
       sidebar: false,
       sideOverlay: false,
-      footer: true,
+      footer: false,
     })
 
     // Set various template options

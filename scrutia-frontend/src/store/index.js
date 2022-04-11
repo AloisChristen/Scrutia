@@ -10,10 +10,10 @@ Vue.use(Vuex)
 
 // Helpers
 const helpers = {
-  getWindowWidth () {
+  getWindowWidth() {
     return window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth
   },
-  getCurrentYear () {
+  getCurrentYear() {
     return new Date().getFullYear()
   }
 }
@@ -33,7 +33,7 @@ export default new Vuex.Store({
       header: true,
       sidebar: true,
       sideOverlay: true,
-      footer: true
+      footer: false
     },
 
     // Default template settings
@@ -77,15 +77,15 @@ export default new Vuex.Store({
     }
   },
   mutations: {
-    // Sets the layout, useful for setting different layouts (under layouts/variations/) 
-    setLayout (state, payload) {
+    // Sets the layout, useful for setting different layouts (under layouts/variations/)
+    setLayout(state, payload) {
       state.layout.header = payload.header
       state.layout.sidebar = payload.sidebar
       state.layout.sideOverlay = payload.sideOverlay
       state.layout.footer = payload.footer
     },
     // Sets sidebar visibility (open, close, toggle)
-    sidebar (state, payload) {
+    sidebar(state, payload) {
       if (helpers.getWindowWidth() > 991) {
         if (payload.mode === 'open') {
           state.settings.sidebarVisibleDesktop = true
@@ -105,7 +105,7 @@ export default new Vuex.Store({
       }
     },
     // Sets sidebar mini mode (on, off, toggle)
-    sidebarMini (state, payload) {
+    sidebarMini(state, payload) {
       if (helpers.getWindowWidth() > 991) {
         if (payload.mode === 'on') {
           state.settings.sidebarMini = true
@@ -117,7 +117,7 @@ export default new Vuex.Store({
       }
     },
     // Sets sidebar position (left, right, toggle)
-    sidebarPosition (state, payload) {
+    sidebarPosition(state, payload) {
       if (payload.mode === 'left') {
         state.settings.sidebarLeft = true
       } else if (payload.mode === 'right') {
@@ -127,7 +127,7 @@ export default new Vuex.Store({
       }
     },
     // Sets sidebar style (dark, light, toggle)
-    sidebarStyle (state, payload) {
+    sidebarStyle(state, payload) {
       if (payload.mode === 'dark') {
         state.settings.sidebarDark = true
       } else if (payload.mode === 'light') {
@@ -137,7 +137,7 @@ export default new Vuex.Store({
       }
     },
     // Sets side overlay visibility (open, close, toggle)
-    sideOverlay (state, payload) {
+    sideOverlay(state, payload) {
       if (payload.mode === 'open') {
         state.settings.sideOverlayVisible = true
       } else if (payload.mode === 'close') {
@@ -147,7 +147,7 @@ export default new Vuex.Store({
       }
     },
     // Sets side overlay hover mode (on, off, toggle)
-    sideOverlayHover (state, payload) {
+    sideOverlayHover(state, payload) {
       if (payload.mode === 'on') {
         state.settings.sideOverlayHoverable = true
       } else if (payload.mode === 'off') {
@@ -157,7 +157,7 @@ export default new Vuex.Store({
       }
     },
     // Sets page overlay visibility (on, off, toggle)
-    pageOverlay (state, payload) {
+    pageOverlay(state, payload) {
       if (payload.mode === 'on') {
         state.settings.pageOverlay = true
       } else if (payload.mode === 'off') {
@@ -167,7 +167,7 @@ export default new Vuex.Store({
       }
     },
     // Sets header mode (fixed, static, toggle)
-    header (state, payload) {
+    header(state, payload) {
       if (payload.mode === 'fixed') {
         state.settings.headerFixed = true
       } else if (payload.mode === 'static') {
@@ -177,7 +177,7 @@ export default new Vuex.Store({
       }
     },
     // Sets header style (dark, light, toggle)
-    headerStyle (state, payload) {
+    headerStyle(state, payload) {
       if (payload.mode === 'dark') {
         state.settings.headerDark = true
       } else if (payload.mode === 'light') {
@@ -187,7 +187,7 @@ export default new Vuex.Store({
       }
     },
     // Sets header search visibility (on, off, toggle)
-    headerSearch (state, payload) {
+    headerSearch(state, payload) {
       if (payload.mode === 'on') {
         state.settings.headerSearch = true
       } else if (payload.mode === 'off') {
@@ -197,7 +197,7 @@ export default new Vuex.Store({
       }
     },
     // Sets header loader visibility (on, off, toggle)
-    headerLoader (state, payload) {
+    headerLoader(state, payload) {
       if (payload.mode === 'on') {
         state.settings.headerLoader = true
       } else if (payload.mode === 'off') {
@@ -207,7 +207,7 @@ export default new Vuex.Store({
       }
     },
     // Sets page loader visibility (on, off, toggle)
-    pageLoader (state, payload) {
+    pageLoader(state, payload) {
       if (payload.mode === 'on') {
         state.settings.pageLoader = true
       } else if (payload.mode === 'off') {
@@ -217,7 +217,7 @@ export default new Vuex.Store({
       }
     },
     // Sets main content mode (full, boxed, narrow)
-    mainContent (state, payload) {
+    mainContent(state, payload) {
       if (payload.mode === 'full') {
         state.settings.mainContent = ''
       } else if (payload.mode === 'boxed') {
@@ -227,7 +227,7 @@ export default new Vuex.Store({
       }
     },
     // Sets active color theme
-    setColorTheme (state, payload) {
+    setColorTheme(state, payload) {
       // Matches all classes which start with "theme-"
       let regx = new RegExp('\\btheme-[^ ]*[ ]?\\b', 'g')
 
@@ -243,7 +243,7 @@ export default new Vuex.Store({
       }
     },
     // Sets side transitions
-    setSideTransitions (state, payload) {
+    setSideTransitions(state, payload) {
       state.settings.sideTransitions = payload.transitions
     }
   }
