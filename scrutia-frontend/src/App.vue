@@ -1,31 +1,25 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link> |
-    <router-link to="/landing">Landing</router-link>
-  </nav>
-  <router-view />
+  <router-view></router-view>
 </template>
 
 <style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+// Main Stylesheet
+@import './src/assets/scss/main';
 
-nav {
-  padding: 30px;
+// Bootstrap Vue Stylesheet
+@import '~bootstrap-vue/src/index';
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
-}
+// All color themes are included and available by default
+// Feel free to comment out any of them if you won't use them in your project
+@import './src/assets/scss/oneui/themes/amethyst';
+@import './src/assets/scss/oneui/themes/city';
+@import './src/assets/scss/oneui/themes/flat';
+@import './src/assets/scss/oneui/themes/modern';
+@import './src/assets/scss/oneui/themes/smooth';
 </style>
+
+<script>
+export default {
+  name: 'App'
+}
+</script>
