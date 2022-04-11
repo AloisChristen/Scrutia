@@ -291,45 +291,37 @@ export default {
       },
       navigation: [
         {
-          name: 'Dashboard',
-          to: '/backend-boxed/dashboard',
-          icon: 'si si-compass',
+          name: 'Accueil',
+          to: '/home',
+          icon: 'si si-home',
         },
         {
           name: 'Pages',
           heading: true,
         },
         {
-          name: 'Variations',
-          icon: 'si si-puzzle',
+          name: 'Urne à idées',
+          icon: 'si si-bulb',
           sub: [
             {
-              name: 'Simple 1',
-              to: '/backend-boxed/simple1',
+              name: 'Parcourir',
+              to: '/browseIdeas',
             },
             {
-              name: 'Simple 2',
-              to: '/backend-boxed/simple2',
-            },
-            {
-              name: 'Image 1',
-              to: '/backend-boxed/image1',
-            },
-            {
-              name: 'Image 2',
-              to: '/backend-boxed/image2',
+              name: 'Ajouter une idée',
+              to: '/addIdea',
             },
           ],
         },
         {
-          name: 'Search',
-          to: '/backend-boxed/search',
-          icon: 'si si-magnifier',
+          name: "Projets d'initiative",
+          to: '/browseInitiatives',
+          icon: 'si si-puzzle',
         },
         {
-          name: 'Go Back',
-          to: '/backend/dashboard',
-          icon: 'si si-action-undo',
+          name: 'À propos',
+          to: '/about',
+          icon: 'si si-question',
         },
       ],
       baseSearchTerm: '',
