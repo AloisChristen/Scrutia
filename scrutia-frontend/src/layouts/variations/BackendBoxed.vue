@@ -12,7 +12,7 @@
             to="/"
             class="font-w600 font-size-h5 tracking-wider text-dual mr-3"
           >
-            OneUI <span class="font-w400">Vue</span>
+            Scrutia
           </router-link>
           <!-- END Logo -->
 
@@ -149,34 +149,30 @@
                   class="dropdown-item d-flex align-items-center justify-content-between"
                   href="javascript:void(0)"
                 >
-                  <span class="font-size-sm font-w500">Inbox</span>
+                  <span class="font-size-sm font-w500">Favoris</span>
                   <span class="badge badge-pill badge-primary ml-2">3</span>
                 </a>
                 <router-link
                   class="dropdown-item d-flex align-items-center justify-content-between"
                   to="/backend/pages/generic/profile"
                 >
-                  <span class="font-size-sm font-w500">Profile</span>
+                  <span class="font-size-sm font-w500"
+                    >Idées et initiatives</span
+                  >
                   <span class="badge badge-pill badge-primary ml-2">1</span>
                 </router-link>
-                <a
-                  class="dropdown-item d-flex align-items-center justify-content-between"
-                  href="javascript:void(0)"
-                >
-                  <span class="font-size-sm font-w500">Settings</span>
-                </a>
                 <div role="separator" class="dropdown-divider"></div>
                 <router-link
                   class="dropdown-item d-flex align-items-center justify-content-between"
                   to="/auth/lock"
                 >
-                  <span class="font-size-sm font-w500">Lock Account</span>
+                  <span class="font-size-sm font-w500">Profil</span>
                 </router-link>
                 <router-link
                   class="dropdown-item d-flex align-items-center justify-content-between"
                   to="/auth/signin"
                 >
-                  <span class="font-size-sm font-w500">Log Out</span>
+                  <span class="font-size-sm font-w500">Se déconnecter</span>
                 </router-link>
               </div>
             </li>
@@ -325,44 +321,7 @@ export default {
         },
       ],
       baseSearchTerm: '',
-      notifications: [
-        {
-          href: 'javascript:void(0)',
-          icon: 'fa fa-fw fa-check-circle text-success',
-          title: 'You have a new follower',
-          time: '15 min ago',
-        },
-        {
-          href: 'javascript:void(0)',
-          icon: 'fa fa-fw fa-plus-circle text-info',
-          title: '1 new sale, keep it up',
-          time: '22 min ago',
-        },
-        {
-          href: 'javascript:void(0)',
-          icon: 'fa fa-fw fa-times-circle text-danger',
-          title: 'Update failed, restart server',
-          time: '15 min ago',
-        },
-        {
-          href: 'javascript:void(0)',
-          icon: 'fa fa-fw fa-plus-circle text-info',
-          title: '2 new sales, keep it up',
-          time: '33 min ago',
-        },
-        {
-          href: 'javascript:void(0)',
-          icon: 'fa fa-fw fa-user-plus text-success',
-          title: 'You have a new subscriber',
-          time: '41 min ago',
-        },
-        {
-          href: 'javascript:void(0)',
-          icon: 'fa fa-fw fa-check-circle text-success',
-          title: 'You have a new follower',
-          time: '42 min ago',
-        },
-      ],
+      notifications: [],
     }
   },
   methods: {
@@ -387,9 +346,6 @@ export default {
     // Set default elements for this layout
     this.$store.commit('setLayout', {
       header: true,
-      sidebar: false,
-      sideOverlay: false,
-      footer: false,
     })
 
     // Set various template options

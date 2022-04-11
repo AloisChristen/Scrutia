@@ -1,7 +1,3 @@
-/*
- * VueX - State Management
- */
-
 import Vue from 'vue'
 import Vuex from 'vuex'
 
@@ -31,22 +27,12 @@ export default new Vuex.Store({
     // Default layout options
     layout: {
       header: true,
-      sidebar: true,
-      sideOverlay: true,
-      footer: false
     },
 
     // Default template settings
     // Various of them are also set in each layout variation under layouts/variations/ folder
     settings: {
       colorTheme: '', // 'amethyst', 'city', 'flat', 'modern', 'smooth'
-      sidebarLeft: true,
-      sidebarMini: false,
-      sidebarDark: true,
-      sidebarVisibleDesktop: true,
-      sidebarVisibleMobile: false,
-      sideOverlayVisible: false,
-      sideOverlayHoverable: false,
       pageOverlay: true,
       headerFixed: true,
       headerDark: false,
@@ -80,81 +66,6 @@ export default new Vuex.Store({
     // Sets the layout, useful for setting different layouts (under layouts/variations/)
     setLayout(state, payload) {
       state.layout.header = payload.header
-      state.layout.sidebar = payload.sidebar
-      state.layout.sideOverlay = payload.sideOverlay
-      state.layout.footer = payload.footer
-    },
-    // Sets sidebar visibility (open, close, toggle)
-    sidebar(state, payload) {
-      if (helpers.getWindowWidth() > 991) {
-        if (payload.mode === 'open') {
-          state.settings.sidebarVisibleDesktop = true
-        } else if (payload.mode === 'close') {
-          state.settings.sidebarVisibleDesktop = false
-        } else if (payload.mode === 'toggle') {
-          state.settings.sidebarVisibleDesktop = !state.settings.sidebarVisibleDesktop
-        }
-      } else {
-        if (payload.mode === 'open') {
-          state.settings.sidebarVisibleMobile = true
-        } else if (payload.mode === 'close') {
-          state.settings.sidebarVisibleMobile = false
-        } else if (payload.mode === 'toggle') {
-          state.settings.sidebarVisibleMobile = !state.settings.sidebarVisibleMobile
-        }
-      }
-    },
-    // Sets sidebar mini mode (on, off, toggle)
-    sidebarMini(state, payload) {
-      if (helpers.getWindowWidth() > 991) {
-        if (payload.mode === 'on') {
-          state.settings.sidebarMini = true
-        } else if (payload.mode === 'off') {
-          state.settings.sidebarMini = false
-        } else if (payload.mode === 'toggle') {
-          state.settings.sidebarMini = !state.settings.sidebarMini
-        }
-      }
-    },
-    // Sets sidebar position (left, right, toggle)
-    sidebarPosition(state, payload) {
-      if (payload.mode === 'left') {
-        state.settings.sidebarLeft = true
-      } else if (payload.mode === 'right') {
-        state.settings.sidebarLeft = false
-      } else if (payload.mode === 'toggle') {
-        state.settings.sidebarLeft = !state.settings.sidebarLeft
-      }
-    },
-    // Sets sidebar style (dark, light, toggle)
-    sidebarStyle(state, payload) {
-      if (payload.mode === 'dark') {
-        state.settings.sidebarDark = true
-      } else if (payload.mode === 'light') {
-        state.settings.sidebarDark = false
-      } else if (payload.mode === 'toggle') {
-        state.settings.sidebarDark = !state.settings.sidebarDark
-      }
-    },
-    // Sets side overlay visibility (open, close, toggle)
-    sideOverlay(state, payload) {
-      if (payload.mode === 'open') {
-        state.settings.sideOverlayVisible = true
-      } else if (payload.mode === 'close') {
-        state.settings.sideOverlayVisible = false
-      } else if (payload.mode === 'toggle') {
-        state.settings.sideOverlayVisible = !state.settings.sideOverlayVisible
-      }
-    },
-    // Sets side overlay hover mode (on, off, toggle)
-    sideOverlayHover(state, payload) {
-      if (payload.mode === 'on') {
-        state.settings.sideOverlayHoverable = true
-      } else if (payload.mode === 'off') {
-        state.settings.sideOverlayHoverable = false
-      } else if (payload.mode === 'toggle') {
-        state.settings.sideOverlayHoverable = !state.settings.sideOverlayHoverable
-      }
     },
     // Sets page overlay visibility (on, off, toggle)
     pageOverlay(state, payload) {
@@ -242,9 +153,5 @@ export default new Vuex.Store({
         document.body.classList.add('theme-' + payload.theme)
       }
     },
-    // Sets side transitions
-    setSideTransitions(state, payload) {
-      state.settings.sideTransitions = payload.transitions
-    }
   }
 })
