@@ -1,39 +1,46 @@
-# oneui-vue-edition
+# Scrutia - Frontend :desktop_computer:
 
-## Project setup
-```
-npm install
-```
+[[![Linters](https://github.com/AloisChristen/Scrutia/actions/workflows/linter.yml/badge.svg?branch=main)](https://github.com/AloisChristen/Scrutia/actions/workflows/linter.yml)](https://github.com/AloisChristen/Scrutia/actions/workflows/linter.yml)
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+[![main_front_test](https://github.com/AloisChristen/Scrutia/actions/workflows/main_front_test.yml/badge.svg)](https://github.com/AloisChristen/Scrutia/actions/workflows/main_front_test.yml)
 
-### Compiles and minifies for production
-```
-npm run build
-```
+## Setup development environment :building_construction:
 
-### Run your tests
-```
-npm run test
-```
+**Install Node JS LTS**
 
-### Lints and fixes files
-```
-npm run lint
-```
+Install LTS version available at https://nodejs.org/en/download/
 
-### Install Vue CLI
-```
-npm i -g @vue/cli
-```
+**Visual Studio Code**
 
-### Init Vue CLI UI
-```
-vue ui
-```
+Install Visual Studio Code from https://code.visualstudio.com/
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+Add the following required extensions :
+
+- [EditorConfig for VS Code](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig)
+- [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
+- [Prettier - Code formatter](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+- [Vetur](https://marketplace.visualstudio.com/items?itemName=octref.vetur)
+
+**Install Yarn**
+
+Install Yarn from [https://yarnpkg.com/](https://yarnpkg.com/) 
+
+## Scripts available :runner:
+
+Start the development server with hot reload enabled : `yarn serve`
+
+Build the code for production : `yarn build`
+
+Run unit tests with code coverage : `yarn test:unit`
+
+Run integration tests : `yarn test:e2e`
+
+Run linter to check code quality : `yarn lint`
+
+Run the server that serve the built application : `yarn start`
+
+> To run this command, you should have built the project before
+
+## Technologies used :books:
+
+Project uses : [Vue JS](https://vuejs.org/), [Vue Router](https://router.vuejs.org/), [Vuex](https://vuex.vuejs.org/), [OneUI with Bootstrap theme](https://demo.pixelcave.com/oneui/), [Eslint](https://eslint.org/), [Jest](https://jestjs.io/fr/), [Cypress](https://go.cypress.io/)
