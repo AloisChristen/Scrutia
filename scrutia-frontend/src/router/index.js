@@ -24,6 +24,7 @@ const Landing = () => import("@/views/pages/Landing.vue")
 
 // Router Configuration
 export default new Router({
+  mode: 'history',
   linkActiveClass: 'active',
   linkExactActiveClass: '',
   scrollBehavior() {
