@@ -11,4 +11,12 @@ class Project extends Model
 
     // Question check here how to do it with belongs to many ->
     // many to many guide
+    /**
+     * The roles that belong to the user.
+     */
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class);
+    }
+
 }

@@ -14,7 +14,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
-        // QUESTION: why not making user seeder specific ??
+         \App\Models\User::factory(10)->create();
+
+         $this->call(ProjectSeeder::class);
+         // NOTE: put seeder here
     }
 }
