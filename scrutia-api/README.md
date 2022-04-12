@@ -1,5 +1,7 @@
 # Scrutia API
 
+[![Linters](https://github.com/AloisChristen/Scrutia/actions/workflows/linter.yml/badge.svg)](https://github.com/AloisChristen/Scrutia/actions/workflows/linter.yml)  [![dev_api_test](https://github.com/AloisChristen/Scrutia/actions/workflows/dev_api_test.yml/badge.svg)](https://github.com/AloisChristen/Scrutia/actions/workflows/dev_api_test.yml) [![main_api_test](https://github.com/AloisChristen/Scrutia/actions/workflows/main_api_test.yml/badge.svg)](https://github.com/AloisChristen/Scrutia/actions/workflows/main_api_test.yml)
+
 ## Mise en place :wrench:
 
 ### PHP
