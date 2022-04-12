@@ -23,6 +23,12 @@ Add the following required extensions :
 
 Install Yarn from [https://yarnpkg.com/](https://yarnpkg.com/) 
 
+Or via NPM : `npm install yarn -g`
+
+**Install dependencies**
+
+Use `yarn install` to get all the dependencies of the project
+
 ## Scripts available :runner:
 
 Start the development server with hot reload enabled : `yarn serve`
