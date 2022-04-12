@@ -3,13 +3,19 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+<<<<<<< HEAD
 use App\Models\Project;
+=======
+>>>>>>> fb-retrieve-projects
 use Illuminate\Http\Request;
 
 class ProjectController extends Controller
 {
+<<<<<<< HEAD
     // QUESTION: what is the real controller so ?
 
+=======
+>>>>>>> fb-retrieve-projects
     /**
      * Display a listing of the resource.
      *
@@ -40,8 +46,12 @@ class ProjectController extends Controller
      */
     public function show($id)
     {
+<<<<<<< HEAD
         $project = Project::find($id);
         return $project;
+=======
+        //
+>>>>>>> fb-retrieve-projects
     }
 
     /**

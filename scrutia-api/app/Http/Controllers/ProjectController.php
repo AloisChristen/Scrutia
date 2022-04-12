@@ -17,7 +17,10 @@ class ProjectController extends Controller
     {
 
         //
+<<<<<<< HEAD
         return Project::all();
+=======
+>>>>>>> fb-retrieve-projects
     }
 
     /**
@@ -27,7 +30,11 @@ class ProjectController extends Controller
      */
     public function create()
     {
+<<<<<<< HEAD
         // QUESTION: delete this ?
+=======
+        //
+>>>>>>> fb-retrieve-projects
     }
 
     /**
@@ -49,11 +56,15 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
+<<<<<<< HEAD
         // QUESTION: is it for blade or also for api ?
         $project = Project::find($project['id'])::with('tag'); // QUESTION why find() method is not found ???
         // QUESTION : order for calling with ?
         // question: need first ?
         return $project;
+=======
+        //
+>>>>>>> fb-retrieve-projects
     }
 
     /**
@@ -64,7 +75,11 @@ class ProjectController extends Controller
      */
     public function edit(Project $project)
     {
+<<<<<<< HEAD
         // QUESTION : can be deleted ? or is the api route ?
+=======
+        //
+>>>>>>> fb-retrieve-projects
     }
 
     /**
@@ -88,6 +103,9 @@ class ProjectController extends Controller
     public function destroy(Project $project)
     {
         //
+<<<<<<< HEAD
         $
+=======
+>>>>>>> fb-retrieve-projects
     }
 }

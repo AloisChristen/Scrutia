@@ -17,8 +17,12 @@ class ProjectFactory extends Factory
     public function definition()
     {
         return [
+<<<<<<< HEAD
             'title' => $this->faker->sentence(),
             // QUESTION: comment faire pour prendre un tag au hasard ?
+=======
+            //
+>>>>>>> fb-retrieve-projects
         ];
     }
 }

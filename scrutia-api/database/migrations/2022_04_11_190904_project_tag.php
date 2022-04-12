@@ -6,8 +6,11 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+<<<<<<< HEAD
     // QUESTION: why phpstorm dont see this file as class like others migrations ?
 
+=======
+>>>>>>> fb-retrieve-projects
     /**
      * Run the migrations.
      *

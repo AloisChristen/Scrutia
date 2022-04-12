@@ -17,7 +17,11 @@ class TagFactory extends Factory
     public function definition()
     {
         return [
+<<<<<<< HEAD
             'title' => $this->faker->words(1)
+=======
+            //
+>>>>>>> fb-retrieve-projects
         ];
     }
 }
