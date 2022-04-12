@@ -28,6 +28,13 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
       return 'Hello, World!';
   });
 
+  Route::get("/projects", [\App\Http\Controllers\ProjectController::class, 'index'])->name("projet index");
+  // QUESTION : how to have id argument ?
+   //  route::get("/projects/id"[\App\Http\Controllers\ProjectController::class, 'show']) _> need argument to function
+    // Question best way to group routes ?
+
+  // QUESTION: alignement ? php-cs fixer how make it works ?
+    // _> documentation readme to complete
     Route::post('/logout', [LoginController::class, 'logout'])
         ->name('logout');
 });

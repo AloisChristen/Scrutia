@@ -17,7 +17,8 @@ class ProjectFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'title' => $this->faker->sentence(),
+            // QUESTION: comment faire pour prendre un tag au hasard ?
         ];
     }
 }

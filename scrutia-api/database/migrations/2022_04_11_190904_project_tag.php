@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    // QUESTION: why phpstorm dont see this file as class like others migrations ?
+
     /**
      * Run the migrations.
      *
