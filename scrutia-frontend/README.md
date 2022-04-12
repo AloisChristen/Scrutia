@@ -1,6 +1,8 @@
 # Scrutia - Frontend :desktop_computer:
 
-[[![Linters](https://github.com/AloisChristen/Scrutia/actions/workflows/linter.yml/badge.svg?branch=main)](https://github.com/AloisChristen/Scrutia/actions/workflows/linter.yml)](https://github.com/AloisChristen/Scrutia/actions/workflows/linter.yml)
+[![Linters](https://github.com/AloisChristen/Scrutia/actions/workflows/linter.yml/badge.svg)](https://github.com/AloisChristen/Scrutia/actions/workflows/linter.yml)
+
+[![dev_front_test](https://github.com/AloisChristen/Scrutia/actions/workflows/dev_front_test.yml/badge.svg)](https://github.com/AloisChristen/Scrutia/actions/workflows/dev_front_test.yml)
 
 [![main_front_test](https://github.com/AloisChristen/Scrutia/actions/workflows/main_front_test.yml/badge.svg)](https://github.com/AloisChristen/Scrutia/actions/workflows/main_front_test.yml)
 
