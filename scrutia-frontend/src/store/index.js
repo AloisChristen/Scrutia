@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import {User} from '../models/userDTO'
 
 // Register Vuex
 Vue.use(Vuex)
@@ -24,6 +25,8 @@ export default new Vuex.Store({
       copyright: helpers.getCurrentYear()
     },
 
+    currentUser: User,
+    authToken: null,
     // Default layout options
     layout: {
       header: true,
@@ -60,9 +63,25 @@ export default new Vuex.Store({
     // Get app color theme
     appColorTheme: (state) => {
       return state.settings.colorTheme
-    }
+    },
+    isConnected: (state) => {
+      return state.currentUser != null && state.authToken != null;
+    },
+    // Get current connected User
+    currentUser: (state) => {
+      return state.currentUser.user
+    },
+    // GET authToken
+    authToken: (state) => {
+      return state.authToken
+    },
   },
   mutations: {
+    // Set currentUser and authToken
+    setUserDTO(state, payload){
+      state.currentUser = payload.user;
+      state.authToken = payload.token;
+    },
     // Sets the layout, useful for setting different layouts (under layouts/variations/)
     setLayout(state, payload) {
       state.layout.header = payload.header
