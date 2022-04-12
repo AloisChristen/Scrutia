@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="content">
-      <h2 class="content-heading">Your Content <small>Subtitle</small></h2>
+      <h1 class="content-heading">Parcourir les idées</h1>
       <p>...</p>
     </div>
   </div>
