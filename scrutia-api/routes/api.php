@@ -23,10 +23,10 @@ Route::post('/register', [RegistrationController::class, 'register'])
 Route::post('/login', [LoginController::class, 'login'])
     ->name('login');
 
-
 Route::controller(ProjectController::class)->prefix('/projects')->group( // TODO: put in middleware auth
     function () {
-        Route::get('/', 'index')->name('project index');
+        Route::get('/', 'index')->name('project.index');
+        Route::get('/{id}', 'show')->name('projet.show');
     }
 );
 
@@ -35,11 +35,6 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         return 'Hello, World!';
     });
 
-    // QUESTION : how to have id argument ?
-    // route::get("/projects/id"[\App\Http\Controllers\ProjectController::class, 'show']) _> need argument to function
-    // Question best way to group routes ?
-
-    // _> documentation readme to complete
     Route::post('/logout', [LoginController::class, 'logout'])
         ->name('logout');
 });

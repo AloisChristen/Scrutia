@@ -5,8 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
-    // QUESTION: why phpstorm dont see this file as class like others migrations ?
-
     /**
      * Run the migrations.
      *
@@ -18,6 +16,7 @@ return new class extends Migration {
             $table->id();
             $table->string('title');
             $table->timestamps();
+
         });
     }
 

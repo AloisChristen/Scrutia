@@ -43,10 +43,6 @@ class ProjectController extends Controller
         $project = Project::find($id);
 
         return $project;
-        /*
-            // QUESTION : order for calling with ?
-            // question: need first ?
-            */
     }
 
     /**
