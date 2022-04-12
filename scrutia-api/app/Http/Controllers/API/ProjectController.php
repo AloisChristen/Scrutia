@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UpdateProjectRequest;
 use App\Models\Project;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class ProjectController extends Controller
 {
-    // QUESTION: what is the real controller so ?
-
     /**
      * Display a listing of the resource.
      *
@@ -17,7 +17,7 @@ class ProjectController extends Controller
      */
     public function index()
     {
-            return Project::all();
+        return Project::all();
         //
     }
 
@@ -41,19 +41,32 @@ class ProjectController extends Controller
     public function show($id)
     {
         $project = Project::find($id);
+
         return $project;
+        /*
+            // QUESTION : order for calling with ?
+            // question: need first ?
+            */
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param UpdateProjectRequest $request
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     * @throws ValidationException
      */
-    public function update(Request $request, $id)
+    public function update(UpdateProjectRequest $request, $id)
     {
-        //
+        $project = Project::with('tag')->find($id);
+        if (! $request->validated()) {
+            throw ValidationException::withMessages('bad request format');
+        }
+        $project->title = $request->title;
+
+        $project->save();
+        return response()->json($project);
     }
 
     /**
@@ -64,6 +77,6 @@ class ProjectController extends Controller
      */
     public function destroy($id)
     {
-        //
+        // QUESTION DELETE cascade
     }
 }
