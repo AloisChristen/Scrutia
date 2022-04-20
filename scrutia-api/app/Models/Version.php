@@ -6,12 +6,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class Project extends Model
+class Version extends Model
 {
     use HasFactory;
 
-    public function tags(): BelongsToMany
+    protected $casts = [
+        'status' => Status::class
+    ];
+
+    public function questions(): BelongsToMany
     {
-        return $this->belongsToMany(Tag::class);
+        return $this->belongsToMany(Question::class);
     }
 }

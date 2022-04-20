@@ -1,12 +1,13 @@
 <?php
 
+use App\Models\Project;
+use App\Models\Tag;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
-    // QUESTION: why phpstorm dont see this file as class like others migrations ?
-
+return new class extends Migration
+{
     /**
      * Run the migrations.
      *
@@ -14,9 +15,10 @@ return new class extends Migration {
      */
     public function up()
     {
-        Schema::create('project_tags', function (Blueprint $table) {
+        Schema::create('projects_tags', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
+            $table->foreignIdFor(Project::class);
+            $table->foreignIdFor(Tag::class);
             $table->timestamps();
         });
     }
@@ -28,6 +30,6 @@ return new class extends Migration {
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('projects_tags');
     }
 };

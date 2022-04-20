@@ -1,6 +1,7 @@
 <?php
 
-use App\Models\User;
+use App\Models\Question;
+use App\Models\Version;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,9 +15,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('questions', function (Blueprint $table) {
+        Schema::create('questions_versions', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(User::class, 'author');
+            $table->foreignIdFor(Question::class);
+            $table->foreignIdFor(Version::class);
             $table->timestamps();
         });
     }
@@ -28,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('questions');
+        Schema::dropIfExists('questions_versions');
     }
 };
