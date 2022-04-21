@@ -1,9 +1,9 @@
 <?php
 
 use App\Http\Controllers\API\ProjectController;
+use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegistrationController;
-use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -27,10 +27,10 @@ Route::post('/login', [LoginController::class, 'login'])
 
 Route::controller(ProjectController::class)->prefix('/projects')->group( // TODO: put in middleware auth
     function () {
-        Route::get('/', 'index')->name('project index');
-        Route::get('/{id}', 'getProject')->name('project by id');
-        Route::post('/', 'store')->name('create project');
-        Route::delete('/{id}', 'destroy')->name('delete project');
+        Route::get('/', 'index')->name('project.index');
+        Route::get('/{id}', 'show')->name('project.show');
+        Route::post('/', 'store')->name('project.store');
+        Route::delete('/{id}', 'destroy')->name('project.delete');
     }
 );
 
@@ -38,18 +38,18 @@ Route::controller(ProjectController::class)->prefix('/projects')->group( // TODO
 
 Route::controller(QuestionController::class)->prefix('/questions')->group( // TODO: put in middleware auth
     function () {
-        Route::get('/', 'index')->name('questions list');
-        Route::post('/', 'store')->name('create question');
-        Route::delete('/{id}', 'destroy')->name('delete question');
+        Route::get('/', 'index')->name('question.index');
+        Route::post('/', 'store')->name('question.store');
+        Route::delete('/{id}', 'destroy')->name('question.delete');
 
     }
 );
 
 Route::controller(UserController::class)->prefix('/users')->group( // TODO: put in middleware auth
     function () {
-        Route::get('/', 'index')->name('users list');
-        Route::get('/{id}', 'getUser')->name('get user');
-        Route::delete('/{id}', 'destroy')->name('delete user');
+        Route::get('/', 'index')->name('user.index');
+        Route::get('/{id}', 'show')->name('user.show');
+        Route::delete('/{id}', 'destroy')->name('user.delete');
     }
 );
 
