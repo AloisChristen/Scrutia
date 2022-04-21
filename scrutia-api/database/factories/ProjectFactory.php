@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,6 +19,7 @@ class ProjectFactory extends Factory
     {
         return [
             'title' => $this->faker->sentence(),
+            'user_id' => User::pluck('id')[$this->faker->numberBetween(1, User::count() - 1)],
         ];
     }
 }

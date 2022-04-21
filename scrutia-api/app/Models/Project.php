@@ -17,7 +17,7 @@ class Project extends Model
 
     public function tags(): BelongsToMany
     {
-        return $this->belongsToMany(Tag::class);
+        return $this->belongsToMany(Tag::class)->withTimestamps();
     }
 
     public function user(): BelongsTo

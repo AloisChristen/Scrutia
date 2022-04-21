@@ -18,11 +18,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory(10)->create();
-        $this->call(AnswerSeeder::class);
+        $this->call(UserSeeder::class);
+
         $this->call(ProjectSeeder::class);
-        $this->call(QuestionSeeder::class);
-        $this->call(TagSeeder::class);
-        $this->call(VersionSeeder::class);
+        //$this->call(AnswerSeeder::class);
+        //$this->call(QuestionSeeder::class);
+        //$this->call(VersionSeeder::class);
+        // $this->call(LikeSeeder::class);
     }
 }
