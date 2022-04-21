@@ -19,19 +19,11 @@ class VersionFactory extends Factory
      */
     public function definition()
     {
-        $number = $this->faker->randomDigitNotNull();
-        if($number > 1) {
-            $status = Status::INITIATIVE;
-        }
-        else {
-            $status = Status::IDEE;
-
-        }
         $project_id = Project::pluck('id')[$this->faker->numberBetween(1, Project::count() - 1)];
         $project = Project::find($project_id);
         return [
-            'number' => $number,
-            'status' => $status,
+            'number' => $this->faker->randomDigitNot(1),
+            'status' => Status::INITIATIVE,
             'description' => $this->faker->text(),
             'project_id' => $project_id,
             'author' => $project->user->id,
