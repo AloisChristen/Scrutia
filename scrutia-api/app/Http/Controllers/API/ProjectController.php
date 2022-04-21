@@ -4,8 +4,11 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateProjectRequest;
+use App\Http\Service\ProjectService;
 use App\Models\Project;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Validation\ValidationException;
 
 class ProjectController extends Controller
@@ -13,48 +16,41 @@ class ProjectController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
         return Project::all();
     }
 
-    public function getProject($id)
+    /**
+     * Return the specific resource
+     *
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function show($id): JsonResponse
     {
-        return Project::where('id', $id);
+        //TODO Check DTO on swagger, it misses some informations
+        return response()->json(Project::find($id));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
-        $project = new Project();
-        $project->title = $request->title;
-        $project->timestamp = $request->timestamp;
-        $project->save();
+        $project = Project::create([
+            'title' => $request->title,
+            'description' => $request->description
+        ]);
 
-    }
+        ProjectService::createAndAttachTags($project, $request->tags);
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        $project = Project::find($id);
-
-        return $project;
-        /*
-            // QUESTION : order for calling with ?
-            // question: need first ?
-            */
+        return response()->json($project);
     }
 
     /**
@@ -62,30 +58,31 @@ class ProjectController extends Controller
      *
      * @param UpdateProjectRequest $request
      * @param int $id
-     * @return \Illuminate\Http\JsonResponse
-     * @throws ValidationException
+     * @return JsonResponse
      */
-    public function update(UpdateProjectRequest $request, $id)
+    public function update(UpdateProjectRequest $request, int $id): JsonResponse
     {
-        $project = Project::with('tag')->find($id);
-        if (! $request->validated()) {
-            throw ValidationException::withMessages('bad request format');
-        }
-        $project->title = $request->title;
+        $project = Project::with('tags')->find($id);
 
+        $project->title = $request->title;
+        $project->description = $request->description;
         $project->save();
+        ProjectService::createAndAttachTags($project, $request->tags);
+
         return response()->json($project);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return JsonResponse
      */
-    public function destroy($id)
+    public function destroy(int $id): JsonResponse
     {
-        $res=Project::where('id',$id)->delete();
-        return response()->json($res);
+        $project = Project::find($id);
+        $project->tags()->detach();
+        $project->delete();
+        return response()->json($project);
     }
 }
