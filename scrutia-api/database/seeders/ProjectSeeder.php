@@ -18,7 +18,7 @@ class ProjectSeeder extends Seeder
      */
     public function run(): void
     {
-        Project::factory(10)->create();
+        Project::factory(20)->create();
         Tag::factory(50)->create();
 
         $tags = Tag::all();
@@ -33,7 +33,7 @@ class ProjectSeeder extends Seeder
             ]);
 
            $project->tags()->attach(
-               $tags->random(rand(1,3))->pluck('id')->toArray()
+               $tags->random(rand(1,9))->pluck('id')->toArray()
            );
         });
     }

@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Like;
 use Illuminate\Database\Seeder;
 
 class LikeSeeder extends Seeder
@@ -12,8 +12,8 @@ class LikeSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
-        //
+        Like::factory(50)->create();
     }
 }

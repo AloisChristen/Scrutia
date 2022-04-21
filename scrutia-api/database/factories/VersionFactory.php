@@ -4,7 +4,6 @@ namespace Database\Factories;
 
 use App\Models\Project;
 use App\Models\Status;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -20,7 +19,7 @@ class VersionFactory extends Factory
     public function definition()
     {
         $project_id = Project::pluck('id')[$this->faker->numberBetween(1, Project::count() - 1)];
-        $project = Project::find($project_id);
+        $project = Project::with('versions')->find($project_id);
         return [
             'number' => $this->faker->numberBetween(2,9),
             'status' => Status::INITIATIVE,
