@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
-use App\Http\Requests\StoreAnswerRequest;
-use App\Http\Requests\UpdateAnswerRequest;
-use App\Models\Answer;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreVersionRequest;
+use App\Http\Requests\UpdateVersionRequest;
+use App\Models\Version;
 
-class AnswerController extends Controller
+class VersionController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -31,10 +32,10 @@ class AnswerController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreAnswerRequest  $request
+     * @param  \App\Http\Requests\StoreVersionRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreAnswerRequest $request)
+    public function store(StoreVersionRequest $request)
     {
         //
     }
@@ -42,10 +43,10 @@ class AnswerController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Answer  $answer
+     * @param  \App\Models\Version  $version
      * @return \Illuminate\Http\Response
      */
-    public function show(Answer $answer)
+    public function show(Version $version)
     {
         //
     }
@@ -53,10 +54,10 @@ class AnswerController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Answer  $answer
+     * @param  \App\Models\Version  $version
      * @return \Illuminate\Http\Response
      */
-    public function edit(Answer $answer)
+    public function edit(Version $version)
     {
         //
     }
@@ -64,11 +65,11 @@ class AnswerController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateAnswerRequest  $request
-     * @param  \App\Models\Answer  $answer
+     * @param  \App\Http\Requests\UpdateVersionRequest  $request
+     * @param  \App\Models\Version  $version
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateAnswerRequest $request, Answer $answer)
+    public function update(UpdateVersionRequest $request, Version $version)
     {
         //
     }
@@ -76,12 +77,11 @@ class AnswerController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Answer  $answer
+     * @param  \App\Models\Version  $version
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Version $version)
     {
-        $res=Answer::where('id',$id)->delete();
-        return response()->json($res);
+        //
     }
 }

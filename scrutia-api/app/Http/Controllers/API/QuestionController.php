@@ -1,19 +1,22 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreQuestionRequest;
 use App\Http\Requests\UpdateQuestionRequest;
 use App\Models\Question;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 
 class QuestionController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
-    public function index()
+    public function index(): Response
     {
         return Question::all();
 
@@ -22,7 +25,7 @@ class QuestionController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -32,37 +35,39 @@ class QuestionController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreQuestionRequest  $request
-     * @return \Illuminate\Http\Response
+     * @param StoreQuestionRequest $request
+     * @return JsonResponse
      */
-    public function store(StoreQuestionRequest $request)
+    public function store(StoreQuestionRequest $request): JsonResponse
     {
-        $question = new Question();
-        $question->title  = $request->title;
-        $question->description = $request->description;
-        $question->save();
+        $question = Question::create([
+            'title' =>  $request->title,
+            'description' => $request->description,
+        ]);
+
+        return response()->json($question, 201);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Question  $question
-     * @return \Illuminate\Http\Response
+     * @param Question $id
+     * @return JsonResponse
      */
-    public function show(Question $id)
+    public function show(Question $id): JsonResponse
     {
         $question = Question::find($id);
 
-        return $question;
+        return response()->json($question);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Question  $question
-     * @return \Illuminate\Http\Response
+     * @param Question $question
+     * @return Response
      */
-    public function edit(Question $question)
+    public function edit(Question $question): Response
     {
         //
     }
@@ -70,11 +75,11 @@ class QuestionController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateQuestionRequest  $request
-     * @param  \App\Models\Question  $question
-     * @return \Illuminate\Http\Response
+     * @param UpdateQuestionRequest $request
+     * @param Question $question
+     * @return JsonResponse
      */
-    public function update(UpdateQuestionRequest $request, Question $question)
+    public function update(UpdateQuestionRequest $request, Question $question): JsonResponse
     {
         $question->title = $request->title;
         $question->description = $request->description;
@@ -85,10 +90,10 @@ class QuestionController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Question  $question
-     * @return \Illuminate\Http\Response
+     * @param $id
+     * @return JsonResponse
      */
-    public function destroy($id)
+    public function destroy($id): JsonResponse
     {
         $res=Question::where('id',$id)->delete();
         return response()->json($res);
