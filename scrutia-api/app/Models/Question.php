@@ -17,9 +17,9 @@ class Question extends Model
         'description',
     ];
 
-    public function versions(): BelongsToMany
+    public function version(): BelongsTo
     {
-        return $this->belongsToMany(Version::class);
+        return $this->belongsTo(Version::class);
     }
 
     public function author(): BelongsTo

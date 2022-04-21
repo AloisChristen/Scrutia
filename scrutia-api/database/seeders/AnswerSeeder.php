@@ -15,6 +15,6 @@ class AnswerSeeder extends Seeder
      */
     public function run()
     {
-        Answer::factory(10)->create();
+        Answer::factory(50)->create();
     }
 }

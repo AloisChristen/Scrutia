@@ -22,7 +22,7 @@ class VersionFactory extends Factory
         $project_id = Project::pluck('id')[$this->faker->numberBetween(1, Project::count() - 1)];
         $project = Project::find($project_id);
         return [
-            'number' => $this->faker->randomDigitNot(1),
+            'number' => $this->faker->numberBetween(2,9),
             'status' => Status::INITIATIVE,
             'description' => $this->faker->text(),
             'project_id' => $project_id,
