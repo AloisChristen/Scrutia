@@ -21,6 +21,11 @@ class Answer extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function question(): BelongsTo
+    {
+        return $this->belongsTo(Question::class);
+    }
+
     public function likes(): MorphMany
     {
         return $this->morphMany(Like::class, 'likeable');
