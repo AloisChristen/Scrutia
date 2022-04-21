@@ -18,7 +18,11 @@ class ProjectController extends Controller
     public function index()
     {
         return Project::all();
-        //
+    }
+
+    public function getProject($id)
+    {
+        return Project::where('id', $id);
     }
 
     /**
@@ -29,7 +33,11 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $project = new Project();
+        $project->title = $request->title;
+        $project->timestamp = $request->timestamp;
+        $project->save();
+
     }
 
     /**
@@ -50,7 +58,7 @@ class ProjectController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Updateª the specified resource in storage.
      *
      * @param UpdateProjectRequest $request
      * @param int $id
@@ -77,6 +85,7 @@ class ProjectController extends Controller
      */
     public function destroy($id)
     {
-        // QUESTION DELETE cascade
+        $res=Project::where('id',$id)->delete();
+        return response()->json($res);
     }
 }

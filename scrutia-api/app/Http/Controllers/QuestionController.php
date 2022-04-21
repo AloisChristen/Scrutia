@@ -15,7 +15,8 @@ class QuestionController extends Controller
      */
     public function index()
     {
-        //
+        return Question::all();
+
     }
 
     /**
@@ -36,7 +37,10 @@ class QuestionController extends Controller
      */
     public function store(StoreQuestionRequest $request)
     {
-        //
+        $question = new Question();
+        $question->title  = $request->title;
+        $question->description = $request->description;
+        $question->save();
     }
 
     /**
@@ -45,9 +49,11 @@ class QuestionController extends Controller
      * @param  \App\Models\Question  $question
      * @return \Illuminate\Http\Response
      */
-    public function show(Question $question)
+    public function show(Question $id)
     {
-        //
+        $question = Question::find($id);
+
+        return $question;
     }
 
     /**
@@ -70,7 +76,10 @@ class QuestionController extends Controller
      */
     public function update(UpdateQuestionRequest $request, Question $question)
     {
-        //
+        $question->title = $request->title;
+        $question->description = $request->description;
+        $question->save();
+        return response()->json($question);
     }
 
     /**
@@ -79,8 +88,9 @@ class QuestionController extends Controller
      * @param  \App\Models\Question  $question
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Question $question)
+    public function destroy($id)
     {
-        //
+        $res=Question::where('id',$id)->delete();
+        return response()->json($res);
     }
 }

@@ -16,6 +16,8 @@ return new class extends Migration
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
             $table->string('title');
+            $table->foreignIdFor(Tag::class, 'tags');
+            $table->foreignIdFor(Version::class, 'versions');
             $table->timestamps();
         });
     }

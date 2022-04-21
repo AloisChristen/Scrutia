@@ -3,6 +3,7 @@
 use App\Http\Controllers\API\ProjectController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegistrationController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -27,6 +28,28 @@ Route::post('/login', [LoginController::class, 'login'])
 Route::controller(ProjectController::class)->prefix('/projects')->group( // TODO: put in middleware auth
     function () {
         Route::get('/', 'index')->name('project index');
+        Route::get('/{id}', 'getProject')->name('project by id');
+        Route::post('/', 'store')->name('create project');
+        Route::delete('/{id}', 'destroy')->name('delete project');
+    }
+);
+
+
+
+Route::controller(QuestionController::class)->prefix('/questions')->group( // TODO: put in middleware auth
+    function () {
+        Route::get('/', 'index')->name('questions list');
+        Route::post('/', 'store')->name('create question');
+        Route::delete('/{id}', 'destroy')->name('delete question');
+
+    }
+);
+
+Route::controller(UserController::class)->prefix('/users')->group( // TODO: put in middleware auth
+    function () {
+        Route::get('/', 'index')->name('users list');
+        Route::get('/{id}', 'getUser')->name('get user');
+        Route::delete('/{id}', 'destroy')->name('delete user');
     }
 );
 

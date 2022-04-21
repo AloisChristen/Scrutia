@@ -70,7 +70,9 @@ class TagController extends Controller
      */
     public function update(UpdateTagRequest $request, Tag $tag)
     {
-        //
+        $tag->title = $request->title;
+        $tag->save();
+        return response()->json($tag);
     }
 
     /**
@@ -79,8 +81,9 @@ class TagController extends Controller
      * @param  \App\Models\Tag  $tag
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Tag $tag)
+    public function destroy($id)
     {
-        //
+        $res=Tag::where('id',$id)->delete();
+        return response()->json($res);
     }
 }
