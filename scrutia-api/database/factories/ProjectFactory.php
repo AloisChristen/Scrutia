@@ -5,7 +5,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Project>
+ * @extends Factory
  */
 class ProjectFactory extends Factory
 {
@@ -18,7 +18,6 @@ class ProjectFactory extends Factory
     {
         return [
             'title' => $this->faker->sentence(),
-            // QUESTION: comment faire pour prendre un tag au hasard ?
         ];
     }
 }

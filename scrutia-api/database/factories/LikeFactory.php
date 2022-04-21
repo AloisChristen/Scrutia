@@ -5,7 +5,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Like>
+ * @extends Factory
  */
 class LikeFactory extends Factory
 {
@@ -17,7 +17,7 @@ class LikeFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'value' => $this->faker->numberBetween(-1, 1)
         ];
     }
 }

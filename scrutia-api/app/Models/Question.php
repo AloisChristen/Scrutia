@@ -12,6 +12,11 @@ class Question extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'title',
+        'description',
+    ];
+
     public function versions(): BelongsToMany
     {
         return $this->belongsToMany(Version::class);

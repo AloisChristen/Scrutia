@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\Question;
-use App\Models\Version;
+use App\Models\Project;
+use App\Models\Tag;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,10 +15,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('questions_versions', function (Blueprint $table) {
+        Schema::create('project_tag', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Question::class);
-            $table->foreignIdFor(Version::class);
+            $table->foreignIdFor(Project::class);
+            $table->foreignIdFor(Tag::class);
             $table->timestamps();
         });
     }
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('questions_versions');
+        Schema::dropIfExists('projects_tags');
     }
 };

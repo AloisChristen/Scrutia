@@ -11,6 +11,12 @@ class Version extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'number',
+        'status',
+        'description',
+    ];
+
     protected $casts = [
         'status' => Status::class
     ];

@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\Status;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Version>
+ * @extends Factory
  */
 class VersionFactory extends Factory
 {
@@ -16,8 +17,19 @@ class VersionFactory extends Factory
      */
     public function definition()
     {
+        $number = $this->faker->randomDigitNotNull();
+        if($number > 1) {
+            $status = Status::INITIATIVE;
+        }
+        else {
+            $status = Status::IDEE;
+
+        }
+
         return [
-            //
+            'number' => $number,
+            'status' => $status,
+            'description' => $this->faker->text(),
         ];
     }
 }

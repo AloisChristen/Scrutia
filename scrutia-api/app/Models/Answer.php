@@ -11,6 +11,11 @@ class Answer extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'title',
+        'content'
+    ];
+
     public function author(): BelongsTo
     {
         return $this->belongsTo(User::class);
