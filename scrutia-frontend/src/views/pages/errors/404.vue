@@ -8,7 +8,8 @@
             <!-- Error Header -->
             <h1 class="display-1 font-w600 text-city">404</h1>
             <h2 class="h4 font-w400 text-muted mb-5">
-              We are sorry but the page you are looking for was not found..
+              Nous sommes désolés mais la page que vous cherchez n'a pas été
+              trouvée...
             </h2>
             <!-- END Error Header -->
           </div>
