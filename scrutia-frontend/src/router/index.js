@@ -24,6 +24,7 @@ const UserProfile = () => import("@/views/pages/UserProfile.vue")
 const Favorites = () => import("@/views/pages/Favorites.vue")
 const Landing = () => import("@/views/pages/Landing.vue")
 const Search = () => import("@/views/pages/Search.vue")
+const Error404 = () => import("@/views/pages/errors/404.vue")
 
 // Router Configuration
 export default new Router({
@@ -122,5 +123,6 @@ export default new Router({
         },
       ]
     },
+    { path: "*", component: Error404 }
   ]
 })
