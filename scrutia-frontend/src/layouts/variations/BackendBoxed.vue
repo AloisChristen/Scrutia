@@ -145,16 +145,16 @@
                 <p class="mb-0 text-white-50 font-size-sm">Web Developer</p>
               </div>
               <div class="p-2">
-                <a
+                <router-link
                   class="dropdown-item d-flex align-items-center justify-content-between"
-                  href="javascript:void(0)"
+                  to="/favorites"
                 >
                   <span class="font-size-sm font-w500">Favoris</span>
                   <span class="badge badge-pill badge-primary ml-2">3</span>
-                </a>
+                </router-link>
                 <router-link
                   class="dropdown-item d-flex align-items-center justify-content-between"
-                  to="/backend/pages/generic/profile"
+                  to="/userIdeasAndInitiatives"
                 >
                   <span class="font-size-sm font-w500"
                     >Idées et initiatives</span
@@ -164,7 +164,7 @@
                 <div role="separator" class="dropdown-divider"></div>
                 <router-link
                   class="dropdown-item d-flex align-items-center justify-content-between"
-                  to="/auth/lock"
+                  to="/userProfile"
                 >
                   <span class="font-size-sm font-w500">Profil</span>
                 </router-link>
