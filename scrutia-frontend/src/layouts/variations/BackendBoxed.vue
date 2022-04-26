@@ -12,7 +12,7 @@
             to="/"
             class="font-w600 font-size-h5 tracking-wider text-dual mr-3"
           >
-            Scrutia
+            {{ $store.getters.appName }}
           </router-link>
           <!-- END Logo -->
 
@@ -270,6 +270,7 @@
 
 <script>
 import BaseLayout from '../Base'
+import { Navigation } from '../../router/navigation'
 
 export default {
   name: 'LayoutBackend',
@@ -285,41 +286,7 @@ export default {
         header: '',
         footer: '',
       },
-      navigation: [
-        {
-          name: 'Accueil',
-          to: '/home',
-          icon: 'si si-home',
-        },
-        {
-          name: 'Pages',
-          heading: true,
-        },
-        {
-          name: 'Urne à idées',
-          icon: 'si si-bulb',
-          sub: [
-            {
-              name: 'Parcourir',
-              to: '/browseIdeas',
-            },
-            {
-              name: 'Ajouter une idée',
-              to: '/addIdea',
-            },
-          ],
-        },
-        {
-          name: "Projets d'initiative",
-          to: '/browseInitiatives',
-          icon: 'si si-puzzle',
-        },
-        {
-          name: 'À propos',
-          to: '/about',
-          icon: 'si si-question',
-        },
-      ],
+      navigation: Navigation,
       baseSearchTerm: '',
       notifications: [],
     }
