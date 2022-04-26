@@ -21,6 +21,7 @@ const BrowseInitiatives = () => import("@/views/pages/BrowseInitiatives.vue")
 const InitiativeDetails = () => import("@/views/pages/InitiativeDetails.vue")
 const UserIdeasAndInitiatives = () => import("@/views/pages/UserIdeasAndInitiatives.vue")
 const Landing = () => import("@/views/pages/Landing.vue")
+const Search = () => import("@/views/pages/Search.vue")
 
 // Router Configuration
 export default new Router({
@@ -75,6 +76,11 @@ export default new Router({
           path: 'user',
           name: 'Scrutia | Mes idées et initiatives',
           component: UserIdeasAndInitiatives
+        },
+        {
+          path: 'search',
+          name: 'Scrutia | Recherche',
+          component: Search
         },
         {
           path: 'about',

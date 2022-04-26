@@ -18,12 +18,14 @@
     <!-- END Page Overlay -->
 
     <!-- Header -->
-    <base-header
+    <header
       v-if="$store.state.layout.header"
       :class="layoutClasses.header"
+      id="page-header"
     >
       <slot name="header"></slot>
-    </base-header>
+    </header>
+
     <!-- END Header -->
 
     <!-- Main Container -->
@@ -51,14 +53,8 @@
 </style>
 
 <script>
-// Import main layout components
-import BaseHeader from '@/layouts/partials/Header'
-
 export default {
   name: 'BaseLayout',
-  components: {
-    BaseHeader,
-  },
   props: {
     layoutClasses: Object,
   },
