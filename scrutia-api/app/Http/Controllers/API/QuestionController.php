@@ -6,31 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreQuestionRequest;
 use App\Http\Requests\UpdateQuestionRequest;
 use App\Models\Question;
+use App\Models\User;
+use App\Models\Version;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
+use phpDocumentor\Reflection\Project;
 
 class QuestionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return Response
-     */
-    public function index(): Response
-    {
-        return Question::all();
-
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -44,35 +27,17 @@ class QuestionController extends Controller
             'title' =>  $request->title,
             'description' => $request->description,
         ]);
+        $project_version = Version::where('project_id', $request->project_id)->where('number', $request->version_number)->first();
+
+        //$question->author()->associate(auth()->user()->id); TODO : uncomment when there's the middleware in place
+        $user = User::find($request->user_id);
+        $question->user()->associate($user);
+        $question->version()->associate($project_version);
+        $question->save();
 
         return response()->json($question, 201);
     }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param Question $id
-     * @return JsonResponse
-     */
-    public function show(Question $id): JsonResponse
-    {
-        $question = Question::find($id);
-
-        return response()->json($question);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param Question $question
-     * @return Response
-     */
-    public function edit(Question $question): Response
-    {
-        //
-    }
-
-    /**
+   /**
      * Update the specified resource in storage.
      *
      * @param UpdateQuestionRequest $request
@@ -87,7 +52,7 @@ class QuestionController extends Controller
         return response()->json($question);
     }
 
-    /**
+   /**
      * Remove the specified resource from storage.
      *
      * @param $id
