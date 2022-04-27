@@ -28,7 +28,6 @@ describe("General layout test", () => {
   it("Displays the application header", () => {
     cy.visit("/home");
     cy.contains("a", "Scrutia")
-      .should("have.class", "font-w600")
       .should("have.attr", "href", "/");
     cy.get("#searchInput").should("have.attr", "placeholder", "Rechercher...");
   });
