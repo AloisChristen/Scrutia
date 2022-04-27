@@ -25,7 +25,7 @@ class VersionFactory extends Factory
             'status' => Status::INITIATIVE,
             'description' => $this->faker->text(),
             'project_id' => $project_id,
-            'author' => $project->user->id,
+            'user_id' => $project->user->id,
         ];
     }
 }

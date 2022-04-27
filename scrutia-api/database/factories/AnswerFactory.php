@@ -22,7 +22,7 @@ class AnswerFactory extends Factory
             'title' => $this->faker->sentence(),
             'content' => $this->faker->text(),
             'question_id' =>  Question::pluck('id')[$this->faker->numberBetween(1, Question::count() - 1)],
-            'author' => User::pluck('id')[$this->faker->numberBetween(1, User::count() - 1)],
+            'user_id' => User::pluck('id')[$this->faker->numberBetween(1, User::count() - 1)],
         ];
     }
 }
