@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\DestroyQuestionRequest;
 use App\Http\Requests\StoreQuestionRequest;
 use App\Http\Requests\UpdateQuestionRequest;
 use App\Models\Question;
@@ -44,7 +45,7 @@ class QuestionController extends Controller
      * @param Question $question
      * @return JsonResponse
      */
-    public function update(UpdateQuestionRequest $request, Question $question): JsonResponse
+    public function update(UpdateQuestionRequest $request): JsonResponse
     {
         $question->title = $request->title;
         $question->description = $request->description;
@@ -58,7 +59,7 @@ class QuestionController extends Controller
      * @param $id
      * @return JsonResponse
      */
-    public function destroy($id): JsonResponse
+    public function destroy(DestroyQuestionRequest $request): JsonResponse
     {
         $res=Question::where('id',$id)->delete();
         return response()->json($res);

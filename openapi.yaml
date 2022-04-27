@@ -411,7 +411,7 @@ components:
         tags:
           type: array
           items:
-            $ref: '#/components/schemas/Tags'
+            $ref: '#/components/schemas/TagsDTO'
     ProjectDetailsDTO:
       type: object
       properties:
@@ -512,7 +512,9 @@ components:
     Question:
       type: object
       properties:
-        projectId:
+        project_id:
+          type: integer
+        version_number:
           type: integer
         title:
           type: string
@@ -569,7 +571,13 @@ components:
       properties:
         id:
           type: integer
-        description:
+        title:
+          type: string
+          maxLength: 30
+    TagsDTO:
+      type: object
+      properties:
+        title:
           type: string
           maxLength: 30
     UnprocessableContentError:

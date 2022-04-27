@@ -24,7 +24,10 @@ class UpdateQuestionRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            "title" => "required|max:50",
+            "description" => "required",
+            "project_id" => "required",
+            "version_number" => "required",
         ];
     }
 }

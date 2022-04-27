@@ -40,8 +40,8 @@ Route::controller(ProjectController::class)->prefix('/projects')->group( // TODO
 Route::controller(QuestionController::class)->prefix('/questions')->group(
     function () {
         Route::post('/', 'store')->name('question.store');
-        Route::put('/{question}', 'update')->name('question.update');
-        Route::delete('/{id}', 'destroy')->name('question.delete');
+        Route::put('/', 'update')->name('question.update');
+        Route::delete('/', 'destroy')->name('question.delete');
     }
 );
 
