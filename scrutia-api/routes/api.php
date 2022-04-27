@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\ProjectController;
+use App\Http\Controllers\API\QuestionController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegistrationController;
@@ -36,12 +37,11 @@ Route::controller(ProjectController::class)->prefix('/projects')->group( // TODO
 
 
 
-Route::controller(QuestionController::class)->prefix('/questions')->group( // TODO: put in middleware auth
+Route::controller(QuestionController::class)->prefix('/questions')->group(
     function () {
-        Route::get('/', 'index')->name('question.index');
         Route::post('/', 'store')->name('question.store');
+        Route::put('/{question}', 'update')->name('question.update');
         Route::delete('/{id}', 'destroy')->name('question.delete');
-
     }
 );
 
