@@ -1,0 +1,80 @@
+{
+	"info": {
+		"_postman_id": "0f68c2ca-2e2a-412f-87c3-800dd1955730",
+		"name": "PDG",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "projectd",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{localhost}}:80/api/projects",
+					"host": [
+						"{{localhost}}"
+					],
+					"port": "80",
+					"path": [
+						"api",
+						"projects"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "hakim",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "hakim@hak.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "salut123",
+							"type": "text"
+						},
+						{
+							"key": "password_confirmation",
+							"value": "salut123",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{localhost}}:80/api/register",
+					"host": [
+						"{{localhost}}"
+					],
+					"port": "80",
+					"path": [
+						"api",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}
