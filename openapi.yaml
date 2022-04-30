@@ -569,7 +569,7 @@ components:
       properties:
         id:
           type: integer
-        description:
+        title:
           type: string
           maxLength: 30
     UnprocessableContentError:
