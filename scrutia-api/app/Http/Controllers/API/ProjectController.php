@@ -10,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Pagination\Paginator;
 
 class ProjectController extends Controller
 {
@@ -20,7 +21,13 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        return Project::all();
+        return Project::paginate();
+    }
+
+    public function getProject($id)
+    {
+
+        return Project::where('id', $id);
     }
 
     /**
