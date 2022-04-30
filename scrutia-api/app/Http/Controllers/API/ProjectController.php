@@ -24,6 +24,21 @@ class ProjectController extends Controller
         return Project::paginate();
     }
 
+    /**
+     * Display a listing of the resource (only ideas).
+     *
+     * @return Response
+     */
+    public function showIdeas() {
+        // donc version qui ont status=idee et dont il n'existe aucune version avec le meme project_ide qui ont status=initiative
+        // + mettre data venant du project avec le project_id semblable
+        // -> pareil pour showInitiatives
+    }
+
+    public function showInitiatives() {
+
+    }
+
     public function getProject($id)
     {
 
@@ -50,9 +65,12 @@ class ProjectController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
+        $user_id = 11; // TODO: get user id from token or something
+
         $project = Project::create([
             'title' => $request->title,
-            'description' => $request->description
+            'description' => $request->description,
+            'user_id' => $user_id, // QUESTION: why not taken in account ? -> create sql exception
         ]);
 
         ProjectService::createAndAttachTags($project, $request->tags);
