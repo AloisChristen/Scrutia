@@ -84,10 +84,28 @@ $ sail up
 ```
 
 
+
+Pour lancer l'API **en background**, il suffit de faire la commande suivante : 
+
+```bash
+$ sail up -d
+# ./vendor/bin/sail up si l'alias n'a pas été créé
+```
+
+
 ## tests
 
 pour lancer les tests en local
 
 ```bash
 sail artisan test
+```
+
+
+# commandes php artisan 
+
+en local il faut utiliser `sail` à la place de `php` (selon alias)
+
+```bash
+sail artisan migrate:refresh --seed
 ```
