@@ -81,3 +81,11 @@ $ sail up
 # ./vendor/bin/sail up si l'alias n'a pas été créé
 ```
 
+
+## tests
+
+pour lancer les tests en local
+
+```bash
+sail artisan test
+```
