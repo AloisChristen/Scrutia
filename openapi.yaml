@@ -258,12 +258,19 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         403:
           $ref: '#/components/responses/NotEnoughReputation'
+  /questions/{question}:
     put:
       tags:
         - Questions
       summary: Edit a question
       security:
         - bearerAuth: []
+      parameters:
+        - in: path
+          name: question
+          schema:
+            type: integer
+          required: true
       requestBody:
         required: true
         content:
@@ -285,12 +292,12 @@ paths:
       summary: Delete a question
       security:
         - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-          'application/json':
-            schema:
-              $ref: '#/components/schemas/QuestionDeleteDTO'
+      parameters:
+        - in: path
+          name: question
+          schema:
+            type: integer
+          required: true
       responses:
         200:
           description: Deleted
@@ -430,10 +437,10 @@ components:
     Error:
       type: object
       properties:
-        title:
+        message:
           type: string
-        description:
-          type: string
+        errors:
+          type: object
     Login:
       type: object
       properties:
@@ -566,18 +573,16 @@ components:
     QuestionUpdateDTO:
       type: object
       properties:
-        id:
-          type: integer
         title:
           type: string
           maxLength: 50
         description:
           type: string
-    QuestionDeleteDTO:
-      type: object
-      properties:
-        id:
-          type: integer
+    # QuestionDeleteDTO:
+    #   type: object
+    #   properties:
+    #     id:
+    #       type: integer
     QuestionsDTO:
       type: object
       properties:
@@ -637,13 +642,6 @@ components:
         title:
           type: string
           maxLength: 30
-    UnprocessableContentError:
-      type: object
-      properties:
-        message:
-          type: string
-        errors:
-          type: object
     User:
       type: object
       properties:
@@ -740,7 +738,7 @@ components:
       content:
         'application/json':
           schema:
-            $ref: '#/components/schemas/UnprocessableContentError'
+            $ref: '#/components/schemas/Error'
     WrongAuth:
       description: Unauthorized. Wrong username or password.
       content:

@@ -45,9 +45,8 @@ class QuestionController extends Controller
      * @param Question $question
      * @return JsonResponse
      */
-    public function update(UpdateQuestionRequest $request): JsonResponse
+    public function update(Question $question, UpdateQuestionRequest $request): JsonResponse
     {
-        $question = Question::find($request->id);
         $question->title = $request->title;
         $question->description = $request->description;
         $question->save();
@@ -60,9 +59,8 @@ class QuestionController extends Controller
      * @param $id
      * @return JsonResponse
      */
-    public function destroy(DestroyQuestionRequest $request): JsonResponse
+    public function destroy(Question $question): JsonResponse
     {
-        $question = Question::find($request->id);
         $question->answers()->delete();
         $question->delete();
         return response()->json("Deleted");
