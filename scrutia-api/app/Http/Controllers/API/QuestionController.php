@@ -30,23 +30,27 @@ class QuestionController extends Controller
         ]);
         $project_version = Version::where('project_id', $request->project_id)->where('number', $request->version_number)->first();
 
-        //$question->author()->associate(auth()->user()->id); TODO : uncomment when there's the middleware in place
-        $user = User::find($request->user_id);
-        $question->user()->associate($user);
+        $question->user()->associate(auth()->user()->id);
         $question->version()->associate($project_version);
         $question->save();
 
-        return response()->json($question, 201);
+        return response()->json("Created", 201);
     }
    /**
      * Update the specified resource in storage.
      *
      * @param UpdateQuestionRequest $request
-     * @param Question $question
+     * @param int $question
      * @return JsonResponse
      */
-    public function update(Question $question, UpdateQuestionRequest $request): JsonResponse
+    public function update(int $id, UpdateQuestionRequest $request): JsonResponse
     {
+        $question = Question::find($id);
+        if($question == null){
+            return response()->json(["message" => "Not Found", "errors" => [
+                "Question id does not exist"
+            ]], 404);
+        }
         $question->title = $request->title;
         $question->description = $request->description;
         $question->save();
@@ -59,8 +63,14 @@ class QuestionController extends Controller
      * @param $id
      * @return JsonResponse
      */
-    public function destroy(Question $question): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
+        $question = Question::find($id);
+        if($question == null){
+            return response()->json(["message" => "Not Found", "errors" => [
+                "Question id does not exist"
+            ]], 404);
+        }
         $question->answers()->delete();
         $question->delete();
         return response()->json("Deleted");
