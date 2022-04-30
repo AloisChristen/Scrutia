@@ -258,6 +258,48 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         403:
           $ref: '#/components/responses/NotEnoughReputation'
+    put:
+      tags:
+        - Questions
+      summary: Edit a question
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/QuestionUpdateDTO'
+      responses:
+        200:
+          description: Updated
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/NotEnoughReputation'
+    delete:
+      tags:
+        - Questions
+      summary: Delete a question
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/QuestionDeleteDTO'
+      responses:
+        200:
+          description: Deleted
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/NotEnoughReputation'
   /tags:
     get:
       tags:
@@ -518,9 +560,24 @@ components:
           type: integer
         title:
           type: string
-          maxLength: 255
+          maxLength: 50
         description:
           type: string
+    QuestionUpdateDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+          maxLength: 50
+        description:
+          type: string
+    QuestionDeleteDTO:
+      type: object
+      properties:
+        id:
+          type: integer
     QuestionsDTO:
       type: object
       properties:

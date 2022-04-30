@@ -13,7 +13,7 @@ class UpdateQuestionRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -26,8 +26,6 @@ class UpdateQuestionRequest extends FormRequest
         return [
             "title" => "required|max:50",
             "description" => "required",
-            "project_id" => "required",
-            "version_number" => "required",
         ];
     }
 }
