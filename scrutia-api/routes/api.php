@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\ProjectController;
+use App\Http\Controllers\API\TagController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegistrationController;
@@ -34,7 +35,11 @@ Route::controller(ProjectController::class)->prefix('/projects')->group( // TODO
     }
 );
 
-
+Route::controller(TagController::class)->prefix('tags')->group(
+    function () {
+        Route::get('/', 'index')->name('tag.index');
+    }
+);
 
 Route::controller(QuestionController::class)->prefix('/questions')->group( // TODO: put in middleware auth
     function () {
