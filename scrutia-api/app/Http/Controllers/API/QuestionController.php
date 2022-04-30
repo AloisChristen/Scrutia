@@ -45,9 +45,9 @@ class QuestionController extends Controller
      * @param Question $question
      * @return JsonResponse
      */
-    public function update(UpdateQuestionRequest $request, Question $question): JsonResponse
+    public function update(UpdateQuestionRequest $request): JsonResponse
     {
-        dd($question);
+        $question = Question::find($request->id);
         $question->title = $request->title;
         $question->description = $request->description;
         $question->save();

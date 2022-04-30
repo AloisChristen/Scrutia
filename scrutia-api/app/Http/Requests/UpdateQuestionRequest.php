@@ -24,6 +24,7 @@ class UpdateQuestionRequest extends FormRequest
     public function rules()
     {
         return [
+            "id" => "required",
             "title" => "required|max:50",
             "description" => "required",
         ];
