@@ -1,12 +1,5 @@
-/*
- * Default Router
- */
-
-// Vue and Vue Router
 import Vue from 'vue'
 import Router from 'vue-router'
-
-// Main layouts
 import LayoutBackendBoxed from '@/layouts/variations/BackendBoxed.vue'
 import LayoutSimple from '@/layouts/variations/Simple.vue'
 
@@ -18,12 +11,24 @@ const AuthSignIn = () => import("@/views/pages/auth/SignIn.vue")
 const AuthSignUp = () => import("@/views/pages/auth/SignUp.vue")
 const AuthReminder = () => import("@/views/pages/auth/Reminder.vue")
 
-
 // Pages: Boxed Backend
-const Blank = () => import("@/views/pages/Blank.vue")
+const Home = () => import("@/views/pages/Home.vue")
+const BrowseIdeas = () => import("@/views/pages/BrowseIdeas.vue")
+const AddIdea = () => import("@/views/pages/AddIdea.vue")
+const IdeaDetails = () => import("@/views/pages/IdeaDetails.vue")
+const Chat = () => import("@/views/pages/Chat.vue")
+const BrowseInitiatives = () => import("@/views/pages/BrowseInitiatives.vue")
+const InitiativeDetails = () => import("@/views/pages/InitiativeDetails.vue")
+const UserIdeasAndInitiatives = () => import("@/views/pages/UserIdeasAndInitiatives.vue")
+const UserProfile = () => import("@/views/pages/UserProfile.vue")
+const Favorites = () => import("@/views/pages/Favorites.vue")
+const Landing = () => import("@/views/pages/Landing.vue")
+const Search = () => import("@/views/pages/Search.vue")
+const Error404 = () => import("@/views/pages/errors/404.vue")
 
 // Router Configuration
 export default new Router({
+  mode: 'history',
   linkActiveClass: 'active',
   linkExactActiveClass: '',
   scrollBehavior() {
@@ -32,13 +37,68 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect: '/Home',
+      redirect: '/home',
       component: LayoutBackendBoxed,
       children: [
         {
-          path: 'Home',
-          name: 'Scrutia | Home',
-          component: Blank
+          path: 'home',
+          name: 'Scrutia | Accueil',
+          component: Home
+        },
+        {
+          path: 'browseIdeas',
+          name: 'Scrutia | Parcourir les idées',
+          component: BrowseIdeas
+        },
+        {
+          path: 'addIdea',
+          name: 'Scrutia | Ajouter une idée',
+          component: AddIdea
+        },
+        {
+          path: 'ideaDetails',
+          name: 'Scrutia | Détails de l\'idée',
+          component: IdeaDetails
+        },
+        {
+          path: 'chat',
+          name: 'Scrutia | Discussions',
+          component: Chat
+        },
+        {
+          path: 'browseInitiatives',
+          name: 'Scrutia | Parcourir les initiatives',
+          component: BrowseInitiatives
+        },
+        {
+          path: 'initiativeDetails',
+          name: 'Scrutia | Détails de l\'initiative',
+          component: InitiativeDetails
+        },
+        {
+          path: 'favorites',
+          name: 'Scrutia | Mes favoris',
+          component: Favorites
+        },
+        {
+          path: 'userIdeasAndInitiatives',
+          name: 'Scrutia | Mes idées et initiatives',
+          component: UserIdeasAndInitiatives
+        },
+        {
+          path: 'userProfile',
+          name: 'Scrutia | Mon profil',
+          component: UserProfile
+        },
+        {
+          path: 'search',
+          name: 'Scrutia | Recherche',
+          component: Search
+        },
+        {
+          path: 'about',
+          name: 'Scrutia | A propos',
+          component: Landing
         },
       ]
     },
@@ -48,20 +108,21 @@ export default new Router({
       children: [
         {
           path: 'signin',
-          name: 'Sign In',
+          name: 'Scrutia | Connexion',
           component: AuthSignIn
         },
         {
           path: 'signup',
-          name: 'Sign Up',
+          name: 'Scrutia | Inscription',
           component: AuthSignUp
         },
         {
           path: 'reminder',
-          name: 'Auth Reminder',
+          name: 'Scrutia | Changer de mot de passe',
           component: AuthReminder
         },
       ]
     },
+    { path: "*", component: Error404 }
   ]
 })

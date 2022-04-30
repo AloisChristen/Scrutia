@@ -2,10 +2,12 @@
 
 namespace Database\Factories;
 
+use App\Models\Question;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Answer>
+ * @extends Factory
  */
 class AnswerFactory extends Factory
 {
@@ -14,10 +16,13 @@ class AnswerFactory extends Factory
      *
      * @return array<string, mixed>
      */
-    public function definition()
+    public function definition(): array
     {
         return [
-            //
+            'title' => $this->faker->sentence(),
+            'content' => $this->faker->text(),
+            'question_id' =>  Question::pluck('id')[$this->faker->numberBetween(1, Question::count() - 1)],
+            'author' => User::pluck('id')[$this->faker->numberBetween(1, User::count() - 1)],
         ];
     }
 }

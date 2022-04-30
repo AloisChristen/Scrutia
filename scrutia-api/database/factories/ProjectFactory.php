@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Project>
+ * @extends Factory
  */
 class ProjectFactory extends Factory
 {
@@ -18,7 +19,7 @@ class ProjectFactory extends Factory
     {
         return [
             'title' => $this->faker->sentence(),
-            // QUESTION: comment faire pour prendre un tag au hasard ?
+            'user_id' => User::pluck('id')[$this->faker->numberBetween(1, User::count() - 1)],
         ];
     }
 }

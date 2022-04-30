@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Version;
 use Illuminate\Database\Seeder;
 
 class VersionSeeder extends Seeder
@@ -12,8 +12,8 @@ class VersionSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
-        Version::factory(10)->create();
+        Version::factory(25)->create();
     }
 }

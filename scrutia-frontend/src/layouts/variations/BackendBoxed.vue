@@ -12,7 +12,7 @@
             to="/"
             class="font-w600 font-size-h5 tracking-wider text-dual mr-3"
           >
-            OneUI <span class="font-w400">Vue</span>
+            {{ $store.getters.appName }}
           </router-link>
           <!-- END Logo -->
 
@@ -97,7 +97,8 @@
           >
             <b-input-group size="sm">
               <b-form-input
-                placeholder="Search.."
+                id="searchInput"
+                placeholder="Rechercher..."
                 v-model="baseSearchTerm"
                 class="form-control-alt"
               ></b-form-input>
@@ -121,7 +122,7 @@
             ref="oneDropdownBoxedUser"
           >
             <template #button-content>
-              <div class="d-flex align-items-center">
+              <div class="d-flex align-items-center" id="userProfile">
                 <img
                   class="rounded-circle"
                   src="img/avatars/avatar10.jpg"
@@ -145,38 +146,34 @@
                 <p class="mb-0 text-white-50 font-size-sm">Web Developer</p>
               </div>
               <div class="p-2">
-                <a
-                  class="dropdown-item d-flex align-items-center justify-content-between"
-                  href="javascript:void(0)"
-                >
-                  <span class="font-size-sm font-w500">Inbox</span>
-                  <span class="badge badge-pill badge-primary ml-2">3</span>
-                </a>
                 <router-link
                   class="dropdown-item d-flex align-items-center justify-content-between"
-                  to="/backend/pages/generic/profile"
+                  to="/favorites"
                 >
-                  <span class="font-size-sm font-w500">Profile</span>
+                  <span class="font-size-sm font-w500">Favoris</span>
+                  <span class="badge badge-pill badge-primary ml-2">3</span>
+                </router-link>
+                <router-link
+                  class="dropdown-item d-flex align-items-center justify-content-between"
+                  to="/userIdeasAndInitiatives"
+                >
+                  <span class="font-size-sm font-w500"
+                    >Idées et initiatives</span
+                  >
                   <span class="badge badge-pill badge-primary ml-2">1</span>
                 </router-link>
-                <a
-                  class="dropdown-item d-flex align-items-center justify-content-between"
-                  href="javascript:void(0)"
-                >
-                  <span class="font-size-sm font-w500">Settings</span>
-                </a>
                 <div role="separator" class="dropdown-divider"></div>
                 <router-link
                   class="dropdown-item d-flex align-items-center justify-content-between"
-                  to="/auth/lock"
+                  to="/userProfile"
                 >
-                  <span class="font-size-sm font-w500">Lock Account</span>
+                  <span class="font-size-sm font-w500">Profil</span>
                 </router-link>
                 <router-link
                   class="dropdown-item d-flex align-items-center justify-content-between"
                   to="/auth/signin"
                 >
-                  <span class="font-size-sm font-w500">Log Out</span>
+                  <span class="font-size-sm font-w500">Se déconnecter</span>
                 </router-link>
               </div>
             </li>
@@ -274,6 +271,7 @@
 
 <script>
 import BaseLayout from '../Base'
+import { Navigation } from '../../router/navigation'
 
 export default {
   name: 'LayoutBackend',
@@ -289,93 +287,14 @@ export default {
         header: '',
         footer: '',
       },
-      navigation: [
-        {
-          name: 'Dashboard',
-          to: '/backend-boxed/dashboard',
-          icon: 'si si-compass',
-        },
-        {
-          name: 'Pages',
-          heading: true,
-        },
-        {
-          name: 'Variations',
-          icon: 'si si-puzzle',
-          sub: [
-            {
-              name: 'Simple 1',
-              to: '/backend-boxed/simple1',
-            },
-            {
-              name: 'Simple 2',
-              to: '/backend-boxed/simple2',
-            },
-            {
-              name: 'Image 1',
-              to: '/backend-boxed/image1',
-            },
-            {
-              name: 'Image 2',
-              to: '/backend-boxed/image2',
-            },
-          ],
-        },
-        {
-          name: 'Search',
-          to: '/backend-boxed/search',
-          icon: 'si si-magnifier',
-        },
-        {
-          name: 'Go Back',
-          to: '/backend/dashboard',
-          icon: 'si si-action-undo',
-        },
-      ],
+      navigation: Navigation,
       baseSearchTerm: '',
-      notifications: [
-        {
-          href: 'javascript:void(0)',
-          icon: 'fa fa-fw fa-check-circle text-success',
-          title: 'You have a new follower',
-          time: '15 min ago',
-        },
-        {
-          href: 'javascript:void(0)',
-          icon: 'fa fa-fw fa-plus-circle text-info',
-          title: '1 new sale, keep it up',
-          time: '22 min ago',
-        },
-        {
-          href: 'javascript:void(0)',
-          icon: 'fa fa-fw fa-times-circle text-danger',
-          title: 'Update failed, restart server',
-          time: '15 min ago',
-        },
-        {
-          href: 'javascript:void(0)',
-          icon: 'fa fa-fw fa-plus-circle text-info',
-          title: '2 new sales, keep it up',
-          time: '33 min ago',
-        },
-        {
-          href: 'javascript:void(0)',
-          icon: 'fa fa-fw fa-user-plus text-success',
-          title: 'You have a new subscriber',
-          time: '41 min ago',
-        },
-        {
-          href: 'javascript:void(0)',
-          icon: 'fa fa-fw fa-check-circle text-success',
-          title: 'You have a new follower',
-          time: '42 min ago',
-        },
-      ],
+      notifications: [],
     }
   },
   methods: {
     onSubmit() {
-      this.$router.push('/backend-boxed/search?' + this.baseSearchTerm)
+      this.$router.push('/search?question=' + this.baseSearchTerm)
     },
     eventHeaderSearch(event) {
       // When ESCAPE key is hit close the header search section
@@ -395,9 +314,6 @@ export default {
     // Set default elements for this layout
     this.$store.commit('setLayout', {
       header: true,
-      sidebar: false,
-      sideOverlay: false,
-      footer: true,
     })
 
     // Set various template options
