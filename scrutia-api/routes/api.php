@@ -33,7 +33,8 @@ Route::controller(ProjectController::class)->prefix('/projects')->group( // TODO
         Route::post('/', 'store')->name('project.store');
         Route::delete('/{id}', 'destroy')->name('project.delete');
         Route::get('/ideas', 'showIdeas')->name('project.show.ideas');
-        Route::get('initiatives', 'showInitiatives')->name('project.show.initiatives');
+        Route::get('/initiatives', 'showInitiatives')->name('project.show.initiatives');
+        Route::put('/{id}/promote', 'promote')->name('project.promote');
     }
 );
 

@@ -39,6 +39,13 @@ class ProjectController extends Controller
 
     }
 
+    public function promote($id) {
+        $project = Project::where('id', $id);
+        // TODO: how to do there ?
+        // idea: duplicate last version and have "initiative" instead of "idee" in the status field
+        // to confirm
+    }
+
     public function getProject($id)
     {
 
