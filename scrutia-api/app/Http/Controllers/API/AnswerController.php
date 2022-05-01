@@ -5,7 +5,9 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreAnswerRequest;
 use App\Http\Requests\UpdateAnswerRequest;
+use App\Http\Service\UserService;
 use App\Models\Answer;
+use App\Models\Question;
 use Illuminate\Http\JsonResponse;
 
 class AnswerController extends Controller
@@ -13,12 +15,29 @@ class AnswerController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreAnswerRequest  $request
-     * @return \Illuminate\Http\Response
+     * @param StoreAnswerRequest $request
+     * @return JsonResponse
      */
-    public function store(StoreAnswerRequest $request)
+    public function store(StoreAnswerRequest $request): JsonResponse
     {
-        //
+        $question = Question::find($request->question_id);
+        if($question == null)
+            return response()->json(["message" => "Not Found", "errors" => [
+                "Question does not exist"
+            ]], 404);
+
+        $answer = Answer::create([
+            'title' =>  $request->title,
+            'description' => $request->description,
+        ]);
+
+        $answer->user()->associate(auth()->user()->id);
+        $answer->question()->associate($question);
+        $answer->save();
+
+        UserService::addAnswerReputation($answer->user);
+
+        return response()->json("Created", 201);
     }
 
     /**
