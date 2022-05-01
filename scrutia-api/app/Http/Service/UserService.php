@@ -11,4 +11,10 @@ class UserService
         $user->reputation += 10;
         $user->save();
     }
+
+    public static function addAnswerReputation(User $user): void
+    {
+        $user->reputation += 5;
+        $user->save();
+    }
 }
