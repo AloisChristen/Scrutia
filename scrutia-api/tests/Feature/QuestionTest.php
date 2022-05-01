@@ -22,25 +22,27 @@ class QuestionTest extends TestCase
     public function test_user_can_create_question(): void
     {
         $user = User::factory()->create();
-        $project = Project::factory()->create();
+        $project = Project::create([
+            "title" => "Test"
+        ]);
+        $project->user()->associate($user);
         $version = Version::create([
             'number' => 1,
             'status' => Status::INITIATIVE,
-            'description' => $this->faker->text(),
+            'description' => "Test",
             'project_id' => $project->id,
             'user_id' => $project->user->id,
         ]);
-        $token = $user->createToken('test')->plainTextToken;
+        $version->project()->associate($project);
 
-        $response = $this->actingAs($user)->withHeaders([
-            'Authorization' => 'Bearer ' . $token
-        ])->post('/api/questions', [
-            "title" => $this->faker->words(10),
-            "description" => $this->faker->sentences(),
-            "project_id" => $project->id,
-            "version_number" => $version->number,
-        ]);
-
+        $response =
+            $this->actingAs($user)
+            ->post('/api/questions', [
+                "title" => "test",
+                "description" => "Lorem Ipsum",
+                "project_id" => $version->project->id,
+                "version_number" => $version->number,
+            ]);
         $response->assertCreated();
 
     }

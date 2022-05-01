@@ -29,7 +29,6 @@ class QuestionController extends Controller
             'description' => $request->description,
         ]);
         $project_version = Version::where('project_id', $request->project_id)->where('number', $request->version_number)->first();
-
         $question->user()->associate(auth()->user()->id);
         $question->version()->associate($project_version);
         $question->save();
