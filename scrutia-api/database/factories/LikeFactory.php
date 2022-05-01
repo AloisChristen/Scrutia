@@ -29,10 +29,13 @@ class LikeFactory extends Factory
         ];
 
         $likeable = Arr::random( $likeables )::inRandomOrder()->first();
+        $user_id = null;
+        if(User::count() != 0)
+            $user_id = User::pluck('id')[$this->faker->numberBetween(1, User::count() - 1)];
 
         return [
             'value' => $this->faker->randomElement([-1, 1]),
-            'user_id' => User::pluck('id')[$this->faker->numberBetween(1, User::count() - 1)],
+            'user_id' => $user_id,
             'likeable_id' => $likeable->id,
             'likeable_type' => $likeable->getMorphClass(),
         ];

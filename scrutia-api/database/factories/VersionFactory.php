@@ -18,7 +18,10 @@ class VersionFactory extends Factory
      */
     public function definition()
     {
-        $project_id = Project::pluck('id')[$this->faker->numberBetween(1, Project::count() - 1)];
+        $project_id = null;
+        if(Project::count() != 0)
+            $project_id = Project::pluck('id')[$this->faker->numberBetween(1, Project::count() - 1)];
+
         $project = Project::with('versions')->find($project_id);
         return [
             'number' => $this->faker->numberBetween(2,9),
