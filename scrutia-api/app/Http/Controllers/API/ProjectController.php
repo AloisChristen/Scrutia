@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Http\Service\ProjectService;
 use App\Models\Project;
+use App\Models\Version;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -14,6 +15,7 @@ use Illuminate\Pagination\Paginator;
 
 class ProjectController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      *
@@ -33,6 +35,8 @@ class ProjectController extends Controller
         // donc version qui ont status=idee et dont il n'existe aucune version avec le meme project_ide qui ont status=initiative
         // + mettre data venant du project avec le project_id semblable
         // -> pareil pour showInitiatives
+        $versionIdees = Version::where('status', 'idee');
+        // note: an idee cannot have a different version number than 1
     }
 
     public function showInitiatives() {
@@ -72,13 +76,15 @@ class ProjectController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $user_id = 11; // TODO: get user id from token or something
+        // todo: creation de la version
 
         $project = Project::create([
             'title' => $request->title,
             'description' => $request->description,
-            'user_id' => $user_id, // QUESTION: why not taken in account ? -> create sql exception
         ]);
+
+        $project->user()->associate(auth()->user()->id);
+        auth()->user()->projects()->save($project);
 
         ProjectService::createAndAttachTags($project, $request->tags);
 

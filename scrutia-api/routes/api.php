@@ -26,17 +26,6 @@ Route::post('/login', [LoginController::class, 'login'])
     ->name('login');
 
 
-Route::controller(ProjectController::class)->prefix('/projects')->group( // TODO: put in middleware auth
-    function () {
-        Route::get('/', 'index')->name('project.index');
-        Route::get('/{id}', 'show')->name('project.show');
-        Route::post('/', 'store')->name('project.store');
-        Route::delete('/{id}', 'destroy')->name('project.delete');
-        Route::get('/ideas', 'showIdeas')->name('project.show.ideas');
-        Route::get('/initiatives', 'showInitiatives')->name('project.show.initiatives');
-        Route::put('/{id}/promote', 'promote')->name('project.promote');
-    }
-);
 
 Route::controller(TagController::class)->prefix('tags')->group(
     function () {
@@ -73,4 +62,17 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     // _> documentation readme to complete
     Route::post('/logout', [LoginController::class, 'logout'])
         ->name('logout');
+
+    Route::controller(ProjectController::class)->prefix('/projects')->group( // TODO: put in middleware auth
+        function () {
+            Route::get('/', 'index')->name('project.index');
+            Route::get('/{id}', 'show')->name('project.show');
+            Route::post('/', 'store')->name('project.store');
+            Route::delete('/{id}', 'destroy')->name('project.delete');
+            Route::get('/ideas', 'showIdeas')->name('project.show.ideas');
+            Route::get('/initiatives', 'showInitiatives')->name('project.show.initiatives');
+            Route::put('/{id}/promote', 'promote')->name('project.promote');
+        }
+    );
+
 });

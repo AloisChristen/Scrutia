@@ -109,3 +109,41 @@ en local il faut utiliser `sail` à la place de `php` (selon alias)
 ```bash
 sail artisan migrate:refresh --seed
 ```
+
+
+# a faire lors de changement dans les routes
+
+```bash
+sail artisan optimize
+```
+
+# good example for error return and parameter input
+
+```php
+/**
+     * Update the specified resource in storage.
+     *
+     * @param UpdateQuestionRequest $request
+     * @param int $question
+     * @return JsonResponse
+     */
+    public function update(int $id, UpdateQuestionRequest $request): JsonResponse
+    {
+        $question = Question::find($id);
+        if($question == null){
+            return response()->json(["message" => "Not Found", "errors" => [
+                "Question id does not exist"
+            ]], 404);
+        }
+        $question->title = $request->title;
+        $question->description = $request->description;
+        $question->save();
+        return response()->json($question);
+    }
+```
+
+# pour debug facilement
+
+```php
+    dd($tags);
+```
