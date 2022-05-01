@@ -6,29 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreAnswerRequest;
 use App\Http\Requests\UpdateAnswerRequest;
 use App\Models\Answer;
+use Illuminate\Http\JsonResponse;
 
 class AnswerController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
     /**
      * Store a newly created resource in storage.
      *
@@ -41,48 +22,48 @@ class AnswerController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Answer  $answer
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Answer $answer)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Answer  $answer
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Answer $answer)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateAnswerRequest  $request
-     * @param  \App\Models\Answer  $answer
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @param UpdateAnswerRequest $request
+     * @return JsonResponse
      */
-    public function update(UpdateAnswerRequest $request, Answer $answer)
+    public function update(int $id, UpdateAnswerRequest $request): JsonResponse
     {
-        //
+        $answer = Answer::find($id);
+        if($answer == null){
+            return response()->json(["message" => "Not Found", "errors" => [
+                "Question id does not exist"
+            ]], 404);
+        }
+        $answer->title = $request->title;
+        $answer->description = $request->description;
+        $answer->save();
+        return response()->json($answer);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Answer  $answer
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return JsonResponse
      */
-    public function destroy($id)
+    public function destroy(int $id): JsonResponse
     {
-        $res=Answer::where('id',$id)->delete();
-        return response()->json($res);
+        $answer= Answer::find($id);
+        if(auth()->user()->id != $answer->user->id && auth()->user()->reputation < 200)
+            return response()->json(["message" => "Not Allowed", "errors" => [
+                "User is not allowed to perform this action"
+            ]], 403);
+
+
+        if($answer == null)
+            return response()->json(["message" => "Not Found", "errors" => [
+                "Answer does not exist"
+            ]], 404);
+
+        $answer->likes()->delete();
+        $answer->delete();
+        return response()->json("Deleted");
     }
 }
