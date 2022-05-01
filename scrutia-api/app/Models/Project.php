@@ -16,6 +16,14 @@ class Project extends Model
       'title',
     ];
 
+    /**
+     * Get the project's newest version.
+     */
+    public function newestVersion()
+    {
+        return $this->hasOne(Version::class)->ofMany('number', 'max');
+    }
+
     public function tags(): BelongsToMany
     {
         return $this->belongsToMany(Tag::class)->withTimestamps();

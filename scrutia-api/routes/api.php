@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\ProjectController;
+use App\Http\Controllers\API\QuestionController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegistrationController;
@@ -36,14 +37,7 @@ Route::controller(ProjectController::class)->prefix('/projects')->group( // TODO
 
 
 
-Route::controller(QuestionController::class)->prefix('/questions')->group( // TODO: put in middleware auth
-    function () {
-        Route::get('/', 'index')->name('question.index');
-        Route::post('/', 'store')->name('question.store');
-        Route::delete('/{id}', 'destroy')->name('question.delete');
 
-    }
-);
 
 Route::controller(UserController::class)->prefix('/users')->group( // TODO: put in middleware auth
     function () {
@@ -54,15 +48,15 @@ Route::controller(UserController::class)->prefix('/users')->group( // TODO: put 
 );
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
-    Route::get('/hello', function (Request $request) {
-        return 'Hello, World!';
-    });
 
-    // QUESTION : how to have id argument ?
-    // route::get("/projects/id"[\App\Http\Controllers\ProjectController::class, 'show']) _> need argument to function
-    // Question best way to group routes ?
+    Route::controller(QuestionController::class)->prefix('/questions')->group(
+        function () {
+            Route::post('/', 'store')->name('question.store');
+            Route::put('/{id}', 'update')->name('question.update');
+            Route::delete('/{id}', 'destroy')->name('question.delete');
+        }
+    );
 
-    // _> documentation readme to complete
     Route::post('/logout', [LoginController::class, 'logout'])
         ->name('logout');
 });

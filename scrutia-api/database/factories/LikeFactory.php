@@ -32,7 +32,7 @@ class LikeFactory extends Factory
 
         return [
             'value' => $this->faker->randomElement([-1, 1]),
-            'user_id' => User::pluck('id')[$this->faker->numberBetween(1, User::count() - 1)],
+            'user_id' => User::factory(),
             'likeable_id' => $likeable->id,
             'likeable_type' => $likeable->getMorphClass(),
         ];

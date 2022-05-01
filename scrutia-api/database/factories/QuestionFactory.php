@@ -21,8 +21,8 @@ class QuestionFactory extends Factory
         return [
             'title' => $this->faker->sentence(),
             'description' => $this->faker->text(50),
-            'version_id' => Version::pluck('id')[$this->faker->numberBetween(1, Version::count() - 1)],
-            'author' => User::pluck('id')[$this->faker->numberBetween(1, User::count() - 1)],
+            'version_id' => Version::factory(),
+            'user_id' => User::factory(),
         ];
     }
 }
