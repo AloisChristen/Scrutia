@@ -24,11 +24,17 @@ class QuestionController extends Controller
      */
     public function store(StoreQuestionRequest $request): JsonResponse
     {
+        $project_version = Version::where('project_id', $request->project_id)->where('number', $request->version_number)->first();
+        if($project_version == null)
+            return response()->json(["message" => "Not Found", "errors" => [
+                "Project id or version number does not exist"
+            ]], 404);
+
         $question = Question::create([
             'title' =>  $request->title,
             'description' => $request->description,
         ]);
-        $project_version = Version::where('project_id', $request->project_id)->where('number', $request->version_number)->first();
+
         $question->user()->associate(auth()->user()->id);
         $question->version()->associate($project_version);
         $question->save();
@@ -65,6 +71,10 @@ class QuestionController extends Controller
     public function destroy(int $id): JsonResponse
     {
         $question = Question::find($id);
+        if(auth()->user()->id != $question->user->id)
+            return response()->json(["message" => "Not Allowed", "errors" => [
+                "User is not allowed to perform this action"
+            ]], 403);
         if($question == null){
             return response()->json(["message" => "Not Found", "errors" => [
                 "Question id does not exist"
