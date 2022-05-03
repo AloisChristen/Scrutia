@@ -18,7 +18,7 @@ return new class extends Migration
         Schema::create('answers', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->longText('content');
+            $table->longText('description');
             $table->foreignIdFor(Question::class)->nullable();
             $table->foreignIdFor(User::class, 'author')->nullable();
             $table->timestamps();

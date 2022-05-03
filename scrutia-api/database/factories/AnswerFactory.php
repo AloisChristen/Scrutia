@@ -23,6 +23,10 @@ class AnswerFactory extends Factory
             'author' => User::pluck('id')[$this->faker->numberBetween(1, User::count() - 1)],
             'title' => $this->faker->sentence(),
             'content' => $this->faker->sentences(3, true),
+            'description' => $this->faker->text(),
+            'question_id' =>  Question::factory(),
+            'user_id' => User::factory(),
+
         ];
     }
 }
