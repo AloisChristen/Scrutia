@@ -15,7 +15,7 @@ class UpdateQuestionRequest extends FormRequest
     public function authorize()
     {
         $question = Question::find($this->route()->parameter("id"));
-        return auth()->user()->id == $question->user->id;
+        return auth()->user()->id == $question->user->id || auth()->user()->reputation >= 250;
     }
 
     /**
