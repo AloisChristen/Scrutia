@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('title');
             $table->longText('description');
             $table->foreignIdFor(Question::class)->nullable();
-            $table->foreignIdFor(User::class)->nullable();
+            $table->foreignIdFor(User::class, 'author')->nullable();
             $table->timestamps();
         });
     }
