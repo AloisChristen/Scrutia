@@ -1,8 +1,6 @@
 <template>
   <base-block
     :title="shortedTitle"
-    :fx-rotate-right="evenIndex"
-    :fx-rotate-left="!evenIndex"
     rounded
     tag="a"
     href="javascript:void(0)"
