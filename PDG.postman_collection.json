@@ -1,10 +1,121 @@
 {
 	"info": {
-		"_postman_id": "0f68c2ca-2e2a-412f-87c3-800dd1955730",
+		"_postman_id": "78089332-cc26-4779-ac08-e3c0ea6b48b4",
 		"name": "PDG",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
+		{
+			"name": "authenticated",
+			"item": [
+				{
+					"name": "projects",
+					"item": [
+						{
+							"name": "get all projects",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{localhost}}:80/api/projects",
+									"host": [
+										"{{localhost}}"
+									],
+									"port": "80",
+									"path": [
+										"api",
+										"projects"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create a new project",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"title\": \"project of czr 32\",\r\n  \"description\": \"a wonderful project 32\",\r\n  \"tags\": [ \r\n    {\r\n      \"title\": \"et\"\r\n    },\r\n    {\r\n      \"title\": \"officiis\"\r\n    },\r\n    {\r\n      \"title\": \"a new tag\"\r\n    }\r\n  ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{localhost}}:80/api/projects",
+									"host": [
+										"{{localhost}}"
+									],
+									"port": "80",
+									"path": [
+										"api",
+										"projects"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "tags",
+					"item": [
+						{
+							"name": "get all tags",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{localhost}}:80/api/tags",
+									"host": [
+										"{{localhost}}"
+									],
+									"port": "80",
+									"path": [
+										"api",
+										"tags"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
 		{
 			"name": "projectd",
 			"request": {
@@ -33,23 +144,33 @@
 					"mode": "formdata",
 					"formdata": [
 						{
-							"key": "name",
-							"value": "hakim",
+							"key": "username",
+							"value": "test",
+							"type": "text"
+						},
+						{
+							"key": "firstname",
+							"value": "admin",
+							"type": "text"
+						},
+						{
+							"key": "lastname",
+							"value": "Test",
 							"type": "text"
 						},
 						{
 							"key": "email",
-							"value": "hakim@hak.com",
+							"value": "test@example.com",
 							"type": "text"
 						},
 						{
 							"key": "password",
-							"value": "salut123",
+							"value": "password",
 							"type": "text"
 						},
 						{
 							"key": "password_confirmation",
-							"value": "salut123",
+							"value": "password",
 							"type": "text"
 						}
 					]
@@ -71,10 +192,63 @@
 		{
 			"name": "login",
 			"request": {
-				"method": "GET",
-				"header": []
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{localhost}}:80/api/login?username=test&password=password",
+					"host": [
+						"{{localhost}}"
+					],
+					"port": "80",
+					"path": [
+						"api",
+						"login"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "test"
+						},
+						{
+							"key": "password",
+							"value": "password"
+						}
+					]
+				}
 			},
 			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "localhost",
+			"value": "http://localhost",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "1|AW83f5dJ7kIKqMkXgHKiFkdWO77PrvIsz8nmU1h3",
+			"type": "string"
 		}
 	]
 }

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Http\Service\ProjectService;
 use App\Models\Project;
+use App\Models\Status;
 use App\Models\Version;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -32,28 +33,33 @@ class ProjectController extends Controller
      * @return Response
      */
     public function showIdeas() {
-        // donc version qui ont status=idee et dont il n'existe aucune version avec le meme project_ide qui ont status=initiative
-        // + mettre data venant du project avec le project_id semblable
-        // -> pareil pour showInitiatives
-        $versionIdees = Version::where('status', 'idee');
-        // note: an idee cannot have a different version number than 1
+        // TODO: project qui sont encore des idées:
+        // "select project_id, count(*) c from versions group by project_id having c=1" -> comment faire en laravel
+        return Project::paginate();
     }
 
     public function showInitiatives() {
-
+        // TODO: showInitiatives
+        // "select project_id, count(*) c from versions group by project_id having c=1"
+        // enlever ces projet de tout les projets
+        return Project::paginate();
     }
 
     public function promote($id) {
         $project = Project::where('id', $id);
-        // TODO: how to do there ?
-        // idea: duplicate last version and have "initiative" instead of "idee" in the status field
-        // to confirm
-    }
+        $ideaVersion = Version::where('project_id', $project['id']);
 
-    public function getProject($id)
-    {
+        $v2 = Version::create([
+            'number' => 2,
+            'author' => $ideaVersion['author'],
+            'status' => Status::INITIATIVE,
+            'description' => $ideaVersion['description']
+        ]);
+        $v2->project()->associate($project);
+        $v2->save();
+        $project->versions->save($v2);
 
-        return Project::where('id', $id);
+        return $project;
     }
 
     /**
@@ -64,8 +70,8 @@ class ProjectController extends Controller
      */
     public function show($id): JsonResponse
     {
-        //TODO Check DTO on swagger, it misses some informations
-        return response()->json(Project::find($id));
+        $result = Project::with('versions', 'tags')->find($id);
+        return response()->json($result);
     }
 
     /**
@@ -76,14 +82,23 @@ class ProjectController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        // todo: creation de la version
+        $author = auth()->user();
 
         $project = Project::create([
             'title' => $request->title,
-            'description' => $request->description,
         ]);
 
-        $project->user()->associate(auth()->user()->id);
+        $v0 = Version::create([
+            'number' => 1,
+            'status' => Status::IDEE,
+            'description' => $request->description,
+            'author' => $author->id
+        ]);
+        $v0->project()->associate($project);
+        $v0->save();
+
+
+        $project->user()->associate($author->id);
         auth()->user()->projects()->save($project);
 
         ProjectService::createAndAttachTags($project, $request->tags);

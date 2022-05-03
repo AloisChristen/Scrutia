@@ -18,8 +18,8 @@ return new class extends Migration
         Schema::create('versions', function (Blueprint $table) {
             $table->id();
             $table->integer('number');
-            $table->foreignIdFor(Project::class);
-            $table->foreignIdFor(User::class, 'author');
+            $table->foreignIdFor(Project::class)->nullable();
+            $table->foreignIdFor(User::class, 'author')->nullable();
             $table->string('status');
             $table->longText('description');
             $table->timestamps();
