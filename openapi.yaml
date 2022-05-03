@@ -111,6 +111,55 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         403:
           $ref: '#/components/responses/NotEnoughReputation'
+  /answers/{answer}:
+    put:
+      tags:
+        - Answers
+      summary: Edit a Answer
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: answer
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/AnswerUpdateDTO'
+      responses:
+        200:
+          description: Updated
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/NotEnoughReputation'
+    delete:
+      tags:
+        - Answers
+      summary: Delete a answer
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: answer
+          schema:
+            type: integer
+          required: true
+      responses:
+        200:
+          description: Deleted
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/NotEnoughReputation'
   /projects:
     get:
       tags:
@@ -404,8 +453,17 @@ components:
     Answer:
       type: object
       properties:
-        questionId:
+        question_id:
           type: integer
+        title:
+          type: string
+        description:
+          type: string
+    AnswerUpdateDTO:
+      type: object
+      properties:
+        title:
+          type: string
         description:
           type: string
     AnswersDTO:
@@ -577,12 +635,7 @@ components:
           type: string
           maxLength: 50
         description:
-          type: string
-    # QuestionDeleteDTO:
-    #   type: object
-    #   properties:
-    #     id:
-    #       type: integer
+          type: string        
     QuestionsDTO:
       type: object
       properties:

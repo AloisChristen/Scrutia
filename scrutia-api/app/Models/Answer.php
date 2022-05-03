@@ -13,7 +13,7 @@ class Answer extends Model
 
     protected $fillable = [
         'title',
-        'content'
+        'description'
     ];
 
     public function user(): BelongsTo

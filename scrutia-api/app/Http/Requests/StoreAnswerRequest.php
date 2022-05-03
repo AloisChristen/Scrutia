@@ -13,7 +13,7 @@ class StoreAnswerRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,9 @@ class StoreAnswerRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            "question_id" => "required",
+            "title" => "required|max:50",
+            "description" => "required"
         ];
     }
 }

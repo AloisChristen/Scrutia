@@ -85,6 +85,7 @@ class QuestionController extends Controller
             ]], 404);
 
         $question->answers()->delete();
+        $question->likes()->delete();
         $question->delete();
         return response()->json("Deleted");
     }

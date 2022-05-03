@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\AnswerController;
 use App\Http\Controllers\API\ProjectController;
 use App\Http\Controllers\API\QuestionController;
 use App\Http\Controllers\API\UserController;
@@ -35,10 +36,6 @@ Route::controller(ProjectController::class)->prefix('/projects')->group( // TODO
     }
 );
 
-
-
-
-
 Route::controller(UserController::class)->prefix('/users')->group( // TODO: put in middleware auth
     function () {
         Route::get('/', 'index')->name('user.index');
@@ -48,6 +45,14 @@ Route::controller(UserController::class)->prefix('/users')->group( // TODO: put 
 );
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
+
+    Route::controller(AnswerController::class)->prefix('/answers')->group(
+        function () {
+            Route::post('/', 'store')->name('answer.store');
+            Route::put('/{id}', 'update')->name('answer.update');
+            Route::delete('/{id}', 'destroy')->name('answer.delete');
+        }
+    );
 
     Route::controller(QuestionController::class)->prefix('/questions')->group(
         function () {
