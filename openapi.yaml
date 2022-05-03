@@ -258,6 +258,55 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         403:
           $ref: '#/components/responses/NotEnoughReputation'
+  /questions/{question}:
+    put:
+      tags:
+        - Questions
+      summary: Edit a question
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: question
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/QuestionUpdateDTO'
+      responses:
+        200:
+          description: Updated
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/NotEnoughReputation'
+    delete:
+      tags:
+        - Questions
+      summary: Delete a question
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: question
+          schema:
+            type: integer
+          required: true
+      responses:
+        200:
+          description: Deleted
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/NotEnoughReputation'
   /tags:
     get:
       tags:
@@ -388,10 +437,10 @@ components:
     Error:
       type: object
       properties:
-        title:
+        message:
           type: string
-        description:
-          type: string
+        errors:
+          type: object
     Login:
       type: object
       properties:
@@ -411,7 +460,7 @@ components:
         tags:
           type: array
           items:
-            $ref: '#/components/schemas/Tags'
+            $ref: '#/components/schemas/TagsDTO'
     ProjectDetailsDTO:
       type: object
       properties:
@@ -512,13 +561,28 @@ components:
     Question:
       type: object
       properties:
-        projectId:
+        project_id:
+          type: integer
+        version_number:
           type: integer
         title:
           type: string
-          maxLength: 255
+          maxLength: 50
         description:
           type: string
+    QuestionUpdateDTO:
+      type: object
+      properties:
+        title:
+          type: string
+          maxLength: 50
+        description:
+          type: string
+    # QuestionDeleteDTO:
+    #   type: object
+    #   properties:
+    #     id:
+    #       type: integer
     QuestionsDTO:
       type: object
       properties:
@@ -572,13 +636,12 @@ components:
         title:
           type: string
           maxLength: 30
-    UnprocessableContentError:
+    TagsDTO:
       type: object
       properties:
-        message:
+        title:
           type: string
-        errors:
-          type: object
+          maxLength: 30
     User:
       type: object
       properties:
@@ -675,7 +738,7 @@ components:
       content:
         'application/json':
           schema:
-            $ref: '#/components/schemas/UnprocessableContentError'
+            $ref: '#/components/schemas/Error'
     WrongAuth:
       description: Unauthorized. Wrong username or password.
       content:
