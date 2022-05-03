@@ -32,12 +32,28 @@
 						},
 						{
 							"name": "create a new project",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"set created project id in environment\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.collectionVariables.set(\"project_id\", jsonData.id);\r",
+											"});\r",
+											"\r",
+											"1"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"method": "POST",
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"title\": \"liberation des panda\",\r\n  \"description\": \"very importnatn thing to do\",\r\n  \"tags\": [ \r\n    {\r\n      \"title\": \"panda\"\r\n    }\r\n  ]\r\n}",
+									"raw": "{\r\n  \"title\": \"liberation des pandas\",\r\n  \"description\": \"very important thing to do\",\r\n  \"tags\": [ \r\n    {\r\n      \"title\": \"panda\"\r\n    }\r\n  ]\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -64,7 +80,7 @@
 								"method": "PUT",
 								"header": [],
 								"url": {
-									"raw": "{{localhost}}:80/api/projects/23/promote",
+									"raw": "{{localhost}}:80/api/projects/{{project_id}}/promote",
 									"host": [
 										"{{localhost}}"
 									],
@@ -72,7 +88,7 @@
 									"path": [
 										"api",
 										"projects",
-										"23",
+										"{{project_id}}",
 										"promote"
 									]
 								}
@@ -85,7 +101,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{localhost}}:80/api/projects/29",
+									"raw": "{{localhost}}:80/api/projects/{{project_id}}",
 									"host": [
 										"{{localhost}}"
 									],
@@ -93,7 +109,7 @@
 									"path": [
 										"api",
 										"projects",
-										"29"
+										"{{project_id}}"
 									]
 								}
 							},
@@ -321,6 +337,10 @@
 		},
 		{
 			"key": "authToken",
+			"value": ""
+		},
+		{
+			"key": "project_id",
 			"value": ""
 		}
 	]
