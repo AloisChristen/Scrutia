@@ -71,7 +71,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
             Route::delete('/{id}', 'destroy')->name('project.delete');
             Route::get('/ideas', 'showIdeas')->name('project.show.ideas');
             Route::get('/initiatives', 'showInitiatives')->name('project.show.initiatives');
-            Route::put('/{id}/promote', 'promote')->name('project.promote');
+            Route::put('/{id}/promote', 'promoteToInitiative')->name('project.promote');
         }
     );
 

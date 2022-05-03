@@ -45,15 +45,17 @@ class ProjectController extends Controller
         return Project::paginate();
     }
 
-    public function promote($id) {
-        $project = Project::where('id', $id);
-        $ideaVersion = Version::where('project_id', $project['id']);
+    public function promoteToInitiative($id) {
+        $projectToPromote = Project::where('id', $id);
+        dd($projectToPromote);
+        $ideaVersion = Version::where('project_id',$id);
+        return response()->json($project);
 
         $v2 = Version::create([
             'number' => 2,
-            'author' => $ideaVersion['author'],
+            'author' => $ideaVersion->author,
             'status' => Status::INITIATIVE,
-            'description' => $ideaVersion['description']
+            'description' => $ideaVersion->description
         ]);
         $v2->project()->associate($project);
         $v2->save();
