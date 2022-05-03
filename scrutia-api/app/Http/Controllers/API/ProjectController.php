@@ -90,7 +90,19 @@ class ProjectController extends Controller
     {
         return response()->json(
                 (new Project)
-                ->createdBetween($start, $end)
+                ->whereBetween('created_at', $start, $end)
+                ->get()
+        );
+    }
+
+    public function displayByTagsAndDates($tag, $start, $end): JsonResponse
+    {
+        return response()->json(
+                (new Project)
+                ->whereBetween('created_at', $start, $end)
+                ->whereHas('tag', function ($query) use ($tag) {
+                    $query->where('name', $tag);
+                })
                 ->get()
         );
     }
