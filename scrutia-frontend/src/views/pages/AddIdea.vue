@@ -1,5 +1,5 @@
 <template>
-  <div class="content">
+  <div class="content" style="margin-bottom: 30px">
     <b-row class="justify-content-center">
       <b-col md="8" lg="8" xl="8">
         <base-block
@@ -20,8 +20,6 @@
           <div class="p-sm-2 px-lg-2 py-lg-2">
             <h1 class="h4 mb-1">Vous avez pris la bonne décision !</h1>
             <p class="text-muted">Remplissez le formulaire suivant</p>
-
-            <!-- Sign Up Form -->
             <b-form @submit.stop.prevent="onSubmit">
               <div class="py-3">
                 <div class="form-group">
