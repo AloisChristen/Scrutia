@@ -97,7 +97,8 @@
           >
             <b-input-group size="sm">
               <b-form-input
-                placeholder="Search.."
+                id="searchInput"
+                placeholder="Rechercher..."
                 v-model="baseSearchTerm"
                 class="form-control-alt"
               ></b-form-input>
@@ -121,7 +122,7 @@
             ref="oneDropdownBoxedUser"
           >
             <template #button-content>
-              <div class="d-flex align-items-center">
+              <div class="d-flex align-items-center" id="userProfile">
                 <img
                   class="rounded-circle"
                   src="img/avatars/avatar10.jpg"
@@ -293,7 +294,7 @@ export default {
   },
   methods: {
     onSubmit() {
-      this.$router.push('/backend-boxed/search?' + this.baseSearchTerm)
+      this.$router.push('/search?question=' + this.baseSearchTerm)
     },
     eventHeaderSearch(event) {
       // When ESCAPE key is hit close the header search section
