@@ -1,9 +1,7 @@
 <template>
-  <!-- Page Content -->
   <div class="content">
     <b-row class="justify-content-center">
       <b-col md="8" lg="8" xl="8">
-        <!-- Sign Up Block -->
         <base-block
           rounded
           themed
@@ -11,8 +9,16 @@
           header-class="bg-primary-dark"
           title="Ajout de l'idée"
         >
-          <div class="p-sm-3 px-lg-4 py-lg-5">
-            <h1 class="h2 mb-1">Vous avez pris la bonne décision !</h1>
+          <template #options>
+            <i
+              class="fa fa-question"
+              v-b-tooltip.hover.bottom="
+                'Saisissez un titre à votre idée et ajoutez une description complète qui présente l\'ensemble de vos motivations. Choisissez des tags pour permettre à votre idée d\'être facilement recherchée. Une fois celle-ci publiée, vous devrez atteindre un nombre de soutient s\'élevant à 500 pour pouvoir la convertir en projet d\'initiative.'
+              "
+            ></i>
+          </template>
+          <div class="p-sm-2 px-lg-2 py-lg-2">
+            <h1 class="h4 mb-1">Vous avez pris la bonne décision !</h1>
             <p class="text-muted">Remplissez le formulaire suivant</p>
 
             <!-- Sign Up Form -->
@@ -21,7 +27,6 @@
                 <div class="form-group">
                   <b-form-input
                     size="lg"
-                    class="form-control-alt"
                     id="title"
                     name="title"
                     placeholder="Choisissez un titre..."
@@ -36,7 +41,6 @@
                 <div class="form-group">
                   <b-form-textarea
                     size="lg"
-                    class="form-control-alt"
                     id="description"
                     name="description"
                     placeholder="Décrivez votre idée..."
@@ -50,47 +54,41 @@
                   </b-form-invalid-feedback>
                 </div>
                 <div class="form-group">
-                  <b-form-group
+                  <v-select
                     size="lg"
                     class="form-control-alt"
-                    id="tags"
-                    name="tags"
-                    placeholder="Tags"
-                    v-model="$v.form.tags.$model"
-                    :state="!$v.form.tags.$error && null"
-                    aria-describedby="tags-feedback"
-                  >
-                    <v-select
-                      multiple
-                      v-model="vSelectOptionsMultipleSelected"
-                      :options="vSelectOptionsMultiple"
-                      placeholder="Définissez des tags..."
-                    ></v-select>
-                  </b-form-group>
+                    taggable
+                    multiple
+                    v-model="vSelectOptionsMultipleSelected"
+                    :options="vSelectOptionsMultiple"
+                    placeholder="Définissez des tags..."
+                  ></v-select>
                   <b-form-invalid-feedback id="tags-feedback">
                     Vous devez au moins définir un tag
                   </b-form-invalid-feedback>
                 </div>
               </div>
               <b-row class="form-group">
-                <b-col md="6" xl="5">
+                <b-col md="6" xl="6">
                   <b-button type="submit" variant="alt-success" block>
-                    <i class="fa fa-fw fa-plus mr-1"></i> Sign Up
+                    <i class="fa fa-lightbulb mr-1"></i> Publier votre idée
+                  </b-button>
+                </b-col>
+                <b-col md="6" xl="6">
+                  <b-button type="submit" variant="alt-warning" block>
+                    <i class="fa fa-trash mr-1"></i> Réinitialiser
                   </b-button>
                 </b-col>
               </b-row>
             </b-form>
-            <!-- END Sign Up Form -->
           </div>
         </base-block>
-        <!-- END Sign Up Block -->
       </b-col>
     </b-row>
   </div>
 </template>
 
 <style lang="scss">
-// Vue Select + Custom overrides
 @import '~vue-select/src/scss/vue-select';
 @import './src/assets/scss/vendor/vue-select';
 </style>
