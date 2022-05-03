@@ -11,6 +11,8 @@ class Project extends Model
 
     // Question check here how to do it with belongs to many ->
     // many to many guide
+    private mixed $created_at;
+
     /**
      * The roles that belong to the user.
      */
@@ -19,4 +21,8 @@ class Project extends Model
         return $this->belongsToMany(Tag::class);
     }
 
+    public function createdBetween($startDate, $endDate)
+    {
+        return $this->created_at->between($startDate, $endDate);
+    }
 }

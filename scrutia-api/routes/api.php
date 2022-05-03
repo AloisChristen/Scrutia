@@ -23,10 +23,13 @@ Route::post('/register', [RegistrationController::class, 'register'])
 Route::post('/login', [LoginController::class, 'login'])
     ->name('login');
 
-Route::controller(ProjectController::class)->prefix('/projects')->group( // TODO: put in middleware auth
+Route::controller(ProjectController::class)->prefix('/projects')->group(
     function () {
         Route::get('/', 'index')->name('project.index');
         Route::get('/{id}', 'show')->name('projet.show');
+        //we have to put "/tag" in front because otherwise we would have conflict with the route above
+        Route::get('/tag/{tag}', 'displayByTags')->name('project.showByTag');
+        Route::get('/date/{startDate}/{endDate}', 'displayBetweenDates')->name('project.showByDate');
     }
 );
 

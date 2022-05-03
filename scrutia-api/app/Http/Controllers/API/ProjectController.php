@@ -75,4 +75,23 @@ class ProjectController extends Controller
     {
         // QUESTION DELETE cascade
     }
+
+    public function displayByTags($tag): JsonResponse
+    {
+        $projects = Project::with('tag')->whereHas('tag', function ($query) use ($tag) {
+            $query->where('name', $tag);
+        })->get();
+
+        return response()->json($projects);
+    }
+
+
+    public function displayBetweenDates($start, $end): JsonResponse
+    {
+        return response()->json(
+                (new Project)
+                ->createdBetween($start, $end)
+                ->get()
+        );
+    }
 }
