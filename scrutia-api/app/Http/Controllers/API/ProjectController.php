@@ -140,4 +140,35 @@ class ProjectController extends Controller
         $project->delete();
         return response()->json($project);
     }
+
+    public function displayByTags($tag): JsonResponse
+    {
+        $projects = Project::with('tag')->whereHas('tag', function ($query) use ($tag) {
+            $query->where('name', $tag);
+        })->get();
+
+        return response()->json($projects);
+    }
+
+
+    public function displayBetweenDates($start, $end): JsonResponse
+    {
+        return response()->json(
+                (new Project)
+                ->whereBetween('created_at', $start, $end)
+                ->get()
+        );
+    }
+
+    public function displayByTagsAndDates($tag, $start, $end): JsonResponse
+    {
+        return response()->json(
+                (new Project)
+                ->whereBetween('created_at', $start, $end)
+                ->whereHas('tag', function ($query) use ($tag) {
+                    $query->where('name', $tag);
+                })
+                ->get()
+        );
+    }
 }

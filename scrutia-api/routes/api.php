@@ -79,6 +79,10 @@ Route::controller(QuestionController::class)->prefix('/questions')->group( // TO
                     Route::get('/ideas', 'showIdeas')->name('project.show.ideas');
                     Route::get('/initiatives', 'showInitiatives')->name('project.show.initiatives');
                     Route::put('/{id}/promote', 'promoteToInitiative')->name('project.promote');
+                    //we have to put "/tag" in front because otherwise we would have conflict with the route above
+                    Route::get('/search/tag={tag}', 'displayByTags')->name('project.showByTag');
+                    Route::get('/search/start={startDate}&end={endDate}', 'displayBetweenDates')->name('project.showByDate');
+                    Route::get('/search/tag={tag}&start={startDate}&end={endDate}');
                 }
             );
 
