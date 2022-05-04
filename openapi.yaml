@@ -504,6 +504,77 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         403:
           $ref: '#/components/responses/NotAProject'
+  /versions/{version_id}:
+    put:
+      tags:
+        - Versions
+      summary: Edit a text version
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: version_id
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/VersionDTO'
+      responses:
+        201:
+          description: Updated
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/NotAProject'
+    delete:
+      tags:
+        - Versions
+      summary: Delete a text version
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: version_id
+          schema:
+            type: integer
+          required: true  
+      responses:
+        201:
+          description: Deleted
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/NotAProject'
+  /versions/{version_id}/like:
+    post:
+      tags:
+        - Versions
+      summary: Like a text version
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/LikeDTO'
+      responses:
+        201:
+          description: Created
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/NotAProject'
 components:
   schemas:
     Answer:
@@ -795,10 +866,13 @@ components:
     Version:
       type: object
       properties:
-        projectId:
+        project_id:
           type: integer
-        parentId:
-          type: integer
+        description:
+          type: string
+    VersionDTO:
+      type: object
+      properties:
         description:
           type: string
     Vote:
