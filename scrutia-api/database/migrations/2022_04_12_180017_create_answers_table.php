@@ -19,7 +19,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->longText('description');
-            $table->foreignIdFor(Question::class)->nullable();
+            $table->foreignIdFor(Question::class)->onDelete("cascade")->nullable();
             $table->foreignIdFor(User::class)->nullable();
             $table->timestamps();
         });

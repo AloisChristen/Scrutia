@@ -18,7 +18,7 @@ return new class extends Migration
         Schema::create('versions', function (Blueprint $table) {
             $table->id();
             $table->integer('number');
-            $table->foreignIdFor(Project::class)->nullable();
+            $table->foreignIdFor(Project::class)->onDelete("cascade")->nullable();
             $table->foreignIdFor(User::class)->nullable();
             $table->string('status');
             $table->longText('description');
