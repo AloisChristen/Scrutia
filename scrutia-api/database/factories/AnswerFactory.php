@@ -19,14 +19,10 @@ class AnswerFactory extends Factory
     public function definition(): array
     {
         return [
-            'question_id' =>  Question::pluck('id')[$this->faker->numberBetween(1, Question::count() - 1)],
-            'author' => User::pluck('id')[$this->faker->numberBetween(1, User::count() - 1)],
-            'title' => $this->faker->sentence(),
-            'content' => $this->faker->sentences(3, true),
+            'title' => $this->faker->sentence(5),
             'description' => $this->faker->text(),
             'question_id' =>  Question::factory(),
             'user_id' => User::factory(),
-
         ];
     }
 }
