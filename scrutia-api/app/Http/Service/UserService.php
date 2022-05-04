@@ -17,4 +17,10 @@ class UserService
         $user->reputation += 5;
         $user->save();
     }
+
+    public static function addVersionReputation(User $user): void
+    {
+        $user->reputation += 15;
+        $user->save();
+    }
 }
