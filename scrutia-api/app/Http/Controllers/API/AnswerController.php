@@ -96,13 +96,21 @@ class AnswerController extends Controller
                 "Answer does not exist"
             ]], 404);
 
-        $like = Like::create([
-            "value" => $request->value
-        ]);
+        $like = Like::where("user_id", $answer->user->id)
+            ->where("likeable_id",$answer->id)
+            ->where("likeable_type", "App\Models\Answer")
+            ->firstOr(function() use($answer, $request) {
+                $like = Like::create([
+                    "value" => $request->value
+                ]);
+                $like->user()->associate(auth()->user());
+                $answer->likes()->save($like);
+                return $like;
+            });
 
-        $like->user()->associate(auth()->user());
-        $answer->likes()->save($like);
+        $like->value = $request->value;
+        $like->save();
 
-        return response()->json();
+        return response()->json("Liked");
     }
 }

@@ -86,7 +86,6 @@ class QuestionController extends Controller
                 "Question id does not exist"
             ]], 404);
 
-        $question->answers()->delete();
         $question->likes()->delete();
         $question->delete();
         return response()->json("Deleted");
@@ -100,13 +99,21 @@ class QuestionController extends Controller
                 "Question does not exist"
             ]], 404);
 
-        $like = Like::create([
-            "value" => $request->value
-        ]);
+        $like = Like::where("user_id", $question->user->id)
+            ->where("likeable_id",$question->id)
+            ->where("likeable_type", "App\Models\Question")
+            ->firstOr(function() use($question, $request) {
+                $like = Like::create([
+                    "value" => $request->value
+                ]);
+                $like->user()->associate(auth()->user());
+                $question->likes()->save($like);
+                return $like;
+            });
 
-        $like->user()->associate(auth()->user());
-        $question->likes()->save($like);
+        $like->value = $request->value;
+        $like->save();
 
-        return response()->json();
+        return response()->json("Liked");
     }
 }
