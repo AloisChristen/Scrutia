@@ -17,7 +17,6 @@ class Version extends Model
         'number',
         'status',
         'description',
-        'author'
     ];
 
     protected $casts = [
