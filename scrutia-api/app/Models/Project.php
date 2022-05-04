@@ -13,7 +13,7 @@ class Project extends Model
     use HasFactory;
 
     protected $fillable = [
-      'title',
+        'title',
     ];
 
     /**
@@ -37,5 +37,27 @@ class Project extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function scopeEndDate(Builder $query, $date): Builder
+    {
+        return $query->where('created_at', '<=', Carbon::parse($date));
+    }
+
+    public function scopeStartDate(Builder $query, $date): Builder
+    {
+        return $query->where('created_at', '>=', Carbon::parse($date));
+    }
+
+    public function scopeTags(Builder $query, $tags): Builder
+    {
+        return $query->whereHas('tags', function (Builder $query) use ($tags) {
+            $query->whereIn('title', $tags);
+        });
+    }
+
+    public function scopeContent(Builder $query, $content): Builder
+    {
+        return $query->where('title', 'like', "%{$content}%");
     }
 }

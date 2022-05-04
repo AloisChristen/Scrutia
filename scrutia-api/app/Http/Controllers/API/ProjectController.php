@@ -11,12 +11,13 @@ use App\Models\Version;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Validation\ValidationException;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Validation\ValidationException;
+use Spatie\QueryBuilder\QueryBuilder;
+
 
 class ProjectController extends Controller
 {
-
     /**
      * Display a listing of the resource.
      *
@@ -24,7 +25,22 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        return Project::paginate();
+        return QueryBuilder::for(Project::class)
+            ->allowedFilters(['start_date'])
+            ->allowedFilters(['end_date'])
+            ->allowedFilters(['tags'])
+            ->allowedFilters(['content'])
+            ->get();
+        //return Project::paginate();
+    }
+
+    public function showAll()
+    {
+        return QueryBuilder::for(Project::class)
+            ->allowedFilters([
+                AllowedFilter::scope('start_date'),
+            ])
+            ->get();
     }
 
     /**
@@ -32,30 +48,34 @@ class ProjectController extends Controller
      *
      * @return Response
      */
-    public function showIdeas() {
+    public function showIdeas()
+    {
         // TODO: project qui sont encore des idées:
         // "select project_id, count(*) c from versions group by project_id having c=1" -> comment faire en laravel
         return Project::paginate();
     }
 
-    public function showInitiatives() {
+    public function showInitiatives()
+    {
         // TODO: showInitiatives
         // "select project_id, count(*) c from versions group by project_id having c=1"
         // enlever ces projet de tout les projets
         return Project::paginate();
     }
 
-    public function promoteToInitiative($id) {
+    public function promoteToInitiative($id)
+    {
         $projectToPromote = Project::where('id', $id);
         dd($projectToPromote);
-        $ideaVersion = Version::where('project_id',$id);
+        $ideaVersion = Version::where('project_id', $id);
+
         return response()->json($project);
 
         $v2 = Version::create([
             'number' => 2,
             'author' => $ideaVersion->author,
             'status' => Status::INITIATIVE,
-            'description' => $ideaVersion->description
+            'description' => $ideaVersion->description,
         ]);
         $v2->project()->associate($project);
         $v2->save();
@@ -73,6 +93,7 @@ class ProjectController extends Controller
     public function show($id): JsonResponse
     {
         $result = Project::with('versions', 'tags')->find($id);
+
         return response()->json($result);
     }
 
@@ -94,11 +115,10 @@ class ProjectController extends Controller
             'number' => 1,
             'status' => Status::IDEE,
             'description' => $request->description,
-            'author' => $author->id
+            'author' => $author->id,
         ]);
         $v0->project()->associate($project);
         $v0->save();
-
 
         $project->user()->associate($author->id);
         auth()->user()->projects()->save($project);
@@ -138,6 +158,37 @@ class ProjectController extends Controller
         $project = Project::find($id);
         $project->tags()->detach();
         $project->delete();
+
         return response()->json($project);
+    }
+
+    public function displayByTags($tag): JsonResponse
+    {
+        $projects = Project::with('tag')->whereHas('tag', function ($query) use ($tag) {
+            $query->where('name', $tag);
+        })->get();
+
+        return response()->json($projects);
+    }
+
+    public function displayBetweenDates($start, $end): JsonResponse
+    {
+        return response()->json(
+            (new Project)
+                ->whereBetween('created_at', $start, $end)
+                ->get()
+        );
+    }
+
+    public function displayByTagsAndDates($tag, $start, $end): JsonResponse
+    {
+        return response()->json(
+            (new Project)
+                ->whereBetween('created_at', $start, $end)
+                ->whereHas('tag', function ($query) use ($tag) {
+                    $query->where('name', $tag);
+                })
+                ->get()
+        );
     }
 }
