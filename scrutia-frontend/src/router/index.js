@@ -20,10 +20,15 @@ const Chat = () => import("@/views/pages/Chat.vue")
 const BrowseInitiatives = () => import("@/views/pages/BrowseInitiatives.vue")
 const InitiativeDetails = () => import("@/views/pages/InitiativeDetails.vue")
 const UserIdeasAndInitiatives = () => import("@/views/pages/UserIdeasAndInitiatives.vue")
+const UserProfile = () => import("@/views/pages/UserProfile.vue")
+const Favorites = () => import("@/views/pages/Favorites.vue")
 const Landing = () => import("@/views/pages/Landing.vue")
+const Search = () => import("@/views/pages/Search.vue")
+const Error404 = () => import("@/views/pages/errors/404.vue")
 
 // Router Configuration
 export default new Router({
+  mode: 'history',
   linkActiveClass: 'active',
   linkExactActiveClass: '',
   scrollBehavior() {
@@ -71,13 +76,28 @@ export default new Router({
           component: InitiativeDetails
         },
         {
-          path: 'user',
+          path: 'favorites',
+          name: 'Scrutia | Mes favoris',
+          component: Favorites
+        },
+        {
+          path: 'userIdeasAndInitiatives',
           name: 'Scrutia | Mes idées et initiatives',
           component: UserIdeasAndInitiatives
         },
         {
+          path: 'userProfile',
+          name: 'Scrutia | Mon profil',
+          component: UserProfile
+        },
+        {
+          path: 'search',
+          name: 'Scrutia | Recherche',
+          component: Search
+        },
+        {
           path: 'about',
-          name: 'Scrutia | Mes idées et initiatives',
+          name: 'Scrutia | A propos',
           component: Landing
         },
       ]
@@ -103,5 +123,6 @@ export default new Router({
         },
       ]
     },
+    { path: "*", component: Error404 }
   ]
 })

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->id();
             $table->integer('number');
             $table->foreignIdFor(Project::class)->nullable();
-            $table->foreignIdFor(User::class)->nullable();
+            $table->foreignIdFor(User::class, 'author')->nullable();
             $table->string('status');
             $table->longText('description');
             $table->timestamps();

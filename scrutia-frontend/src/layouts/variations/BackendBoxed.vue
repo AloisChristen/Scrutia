@@ -12,7 +12,7 @@
             to="/"
             class="font-w600 font-size-h5 tracking-wider text-dual mr-3"
           >
-            Scrutia
+            {{ $store.getters.appName }}
           </router-link>
           <!-- END Logo -->
 
@@ -97,7 +97,8 @@
           >
             <b-input-group size="sm">
               <b-form-input
-                placeholder="Search.."
+                id="searchInput"
+                placeholder="Rechercher..."
                 v-model="baseSearchTerm"
                 class="form-control-alt"
               ></b-form-input>
@@ -121,7 +122,7 @@
             ref="oneDropdownBoxedUser"
           >
             <template #button-content>
-              <div class="d-flex align-items-center">
+              <div class="d-flex align-items-center" id="userProfile">
                 <img
                   class="rounded-circle"
                   src="img/avatars/avatar10.jpg"
@@ -145,16 +146,16 @@
                 <p class="mb-0 text-white-50 font-size-sm">Web Developer</p>
               </div>
               <div class="p-2">
-                <a
+                <router-link
                   class="dropdown-item d-flex align-items-center justify-content-between"
-                  href="javascript:void(0)"
+                  to="/favorites"
                 >
                   <span class="font-size-sm font-w500">Favoris</span>
                   <span class="badge badge-pill badge-primary ml-2">3</span>
-                </a>
+                </router-link>
                 <router-link
                   class="dropdown-item d-flex align-items-center justify-content-between"
-                  to="/backend/pages/generic/profile"
+                  to="/userIdeasAndInitiatives"
                 >
                   <span class="font-size-sm font-w500"
                     >Idées et initiatives</span
@@ -164,7 +165,7 @@
                 <div role="separator" class="dropdown-divider"></div>
                 <router-link
                   class="dropdown-item d-flex align-items-center justify-content-between"
-                  to="/auth/lock"
+                  to="/userProfile"
                 >
                   <span class="font-size-sm font-w500">Profil</span>
                 </router-link>
@@ -270,6 +271,7 @@
 
 <script>
 import BaseLayout from '../Base'
+import { Navigation } from '../../router/navigation'
 
 export default {
   name: 'LayoutBackend',
@@ -285,48 +287,14 @@ export default {
         header: '',
         footer: '',
       },
-      navigation: [
-        {
-          name: 'Accueil',
-          to: '/home',
-          icon: 'si si-home',
-        },
-        {
-          name: 'Pages',
-          heading: true,
-        },
-        {
-          name: 'Urne à idées',
-          icon: 'si si-bulb',
-          sub: [
-            {
-              name: 'Parcourir',
-              to: '/browseIdeas',
-            },
-            {
-              name: 'Ajouter une idée',
-              to: '/addIdea',
-            },
-          ],
-        },
-        {
-          name: "Projets d'initiative",
-          to: '/browseInitiatives',
-          icon: 'si si-puzzle',
-        },
-        {
-          name: 'À propos',
-          to: '/about',
-          icon: 'si si-question',
-        },
-      ],
+      navigation: Navigation,
       baseSearchTerm: '',
       notifications: [],
     }
   },
   methods: {
     onSubmit() {
-      this.$router.push('/backend-boxed/search?' + this.baseSearchTerm)
+      this.$router.push('/search?question=' + this.baseSearchTerm)
     },
     eventHeaderSearch(event) {
       // When ESCAPE key is hit close the header search section
