@@ -1,6 +1,8 @@
+import { PAGE_HOME, PAGE_IDEAS, PAGE_BROWSE_IDEAS, PAGE_ADD_IDEA, PAGE_PROJECTS, PAGE_ABOUT } from "../strings"
+
 export const Navigation = [
   {
-    name: 'Accueil',
+    name: PAGE_HOME,
     to: '/home',
     icon: 'si si-home',
   },
@@ -9,26 +11,26 @@ export const Navigation = [
     heading: true,
   },
   {
-    name: 'Urne à idées',
+    name: PAGE_IDEAS,
     icon: 'si si-bulb',
     sub: [
       {
-        name: 'Parcourir',
+        name: PAGE_BROWSE_IDEAS,
         to: '/browseIdeas',
       },
       {
-        name: 'Ajouter une idée',
+        name: PAGE_ADD_IDEA,
         to: '/addIdea',
       },
     ],
   },
   {
-    name: "Projets d'initiative",
+    name: PAGE_PROJECTS,
     to: '/browseInitiatives',
     icon: 'si si-puzzle',
   },
   {
-    name: 'À propos',
+    name: PAGE_ABOUT,
     to: '/about',
     icon: 'si si-question',
   },

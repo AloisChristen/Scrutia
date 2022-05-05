@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import { APP_NAME } from '../strings'
 
 // Register Vuex
 Vue.use(Vuex)
@@ -19,7 +20,7 @@ export default new Vuex.Store({
   state: {
     // App vital details
     app: {
-      name: 'Scrutia',
+      name: APP_NAME,
       version: process.env.PACKAGE_VERSION,
       copyright: helpers.getCurrentYear()
     },
