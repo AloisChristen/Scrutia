@@ -44,13 +44,17 @@ class Project extends Model
         return $query->where('created_at', '<=', Carbon::parse($date));
     }
 
-    public function scopeStartDate(Builder $query, $date): Builder
+    public function scopeStartDate(Builder $query, $date = null): Builder
     {
+        error_log('scopeStartDate with date : ' + $date);
+
         return $query->where('created_at', '>=', Carbon::parse($date));
     }
 
     public function scopeTags(Builder $query, $tags): Builder
     {
+        error_log('scopeTags with tags : ' + $tags);
+
         return $query->whereHas('tags', function (Builder $query) use ($tags) {
             $query->whereIn('title', $tags);
         });

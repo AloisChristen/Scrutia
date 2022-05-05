@@ -9,11 +9,13 @@ use App\Models\Project;
 use App\Models\Status;
 use App\Models\Version;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Validation\ValidationException;
+use Request;
 use Spatie\QueryBuilder\QueryBuilder;
+use Spatie\QueryBuilder\AllowedFilter;
+
 
 
 class ProjectController extends Controller
@@ -21,16 +23,41 @@ class ProjectController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @return \Illuminate\Database\Eloquent\Collection|QueryBuilder[]
      */
     public function index()
     {
-        return QueryBuilder::for(Project::class)
-            ->allowedFilters(['start_date'])
-            ->allowedFilters(['end_date'])
-            ->allowedFilters(['tags'])
-            ->allowedFilters(['content'])
-            ->get();
+        error_log('ProjectController::index');
+        $startDate = Request::get('start_date');
+        $endDate = Request::get('end_date');
+        $tags = Request::get('tags');
+        $content = Request::get('content');
+        error_log($tags);
+
+        //if startDate and endDate and tags and content are not set, return all projects
+        if (! $startDate && ! $endDate && ! $tags && ! $content) {
+            error_log('ProjectController::index - no filter');
+
+            return Project::paginate();
+        } else {
+            error_log('ProjectController::index - filter');
+
+            return QueryBuilder::for(Project::class)
+                ->allowedFilters([
+                    AllowedFilter::scope('start_date'),
+                    AllowedFilter::scope('end_date'),
+                    AllowedFilter::scope('tags'),
+                    AllowedFilter::scope('content'),
+                ])
+                ->get();
+
+            /*->when($startDate, function ($query) use ($content, $tags, $startDate, $endDate) {
+                return $query
+                    //->where('created_at', '>=', $startDate);
+                    ->where('created_at', '>=', $startDate)
+            })->get();*/
+        }
+
         //return Project::paginate();
     }
 
