@@ -15,65 +15,6 @@
             {{ $store.getters.appName }}
           </router-link>
           <!-- END Logo -->
-
-          <!-- Notifications Dropdown -->
-          <b-dropdown
-            size="sm"
-            variant="dual"
-            class="d-inline-block mr-2"
-            menu-class="dropdown-menu-lg p-0 border-0 font-size-sm"
-            no-caret
-          >
-            <template #button-content>
-              <i class="fa fa-fw fa-bell"></i>
-              <span v-if="notifications.length" class="text-primary">•</span>
-            </template>
-            <li>
-              <div class="p-2 bg-primary-dark text-center rounded-top">
-                <h5 class="dropdown-header text-uppercase text-white">
-                  Notifications
-                </h5>
-              </div>
-              <ul class="nav-items mb-0">
-                <li
-                  v-for="(notification, index) in notifications"
-                  :key="`notification-${index}`"
-                >
-                  <a
-                    class="text-dark media py-2"
-                    :href="`${notification.href}`"
-                  >
-                    <div class="mr-2 ml-3">
-                      <i :class="`${notification.icon}`"></i>
-                    </div>
-                    <div class="media-body pr-2">
-                      <div class="font-w600">{{ notification.title }}</div>
-                      <span class="font-w500 text-muted">{{
-                        notification.time
-                      }}</span>
-                    </div>
-                  </a>
-                </li>
-                <li v-if="!notifications.length" class="p-2">
-                  <b-alert variant="warning" class="text-center m-0" show>
-                    <p class="mb-0">No new notifications!</p>
-                  </b-alert>
-                </li>
-              </ul>
-              <div v-if="notifications.length" class="p-2 border-top">
-                <b-button
-                  size="sm"
-                  variant="light"
-                  class="text-center"
-                  block
-                  href="javascript:void(0)"
-                >
-                  <i class="fa fa-fw fa-arrow-down mr-1"></i> Load More..
-                </b-button>
-              </div>
-            </li>
-          </b-dropdown>
-          <!-- END Notifications Dropdown -->
         </div>
         <!-- END Left Section -->
 
