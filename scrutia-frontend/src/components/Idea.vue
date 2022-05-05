@@ -37,13 +37,13 @@
 export default {
   name: 'ReducedIdea',
   props: {
-    project: {
+    idea: {
       type: Object,
       description: 'The idea to display',
     },
-    evenIndex: {
+    reducedDisplay: {
       type: Boolean,
-      description: 'If the idea index is even',
+      description: 'If the component is in reduced stated',
     },
   },
   computed: {
@@ -57,26 +57,15 @@ export default {
       return Math.random() < 0.5
     },
     shortedTitle() {
-      const title = this.project.title
+      const title = this.idea.title
       if (title.length > 40) return title.substring(0, 37) + '...'
       else return title
     },
     shortedDescription() {
-      const description = this.project.description
+      const description = this.idea.description
       if (description.length > 200) return description.substring(0, 197) + '...'
       else return description
     },
   },
 }
 </script>
-
-<style scoped>
-.block-title,
-.block-header,
-.block-content {
-  font-size: 12px;
-}
-.block-content {
-  padding-top: 20px;
-}
-</style>

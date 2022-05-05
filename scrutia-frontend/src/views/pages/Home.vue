@@ -6,12 +6,12 @@
       <b-row>
         <b-col sm="12" md="4" xl="4" v-for="index in 6" :key="index">
           <idea
-            v-bind:project="{
+            v-bind:idea="{
               title: 'Sauver les pandas en Asie',
               description:
                 'Description de mon projet. Ce texte peut parfois être super long. Ce texte peut parfois être super long. Ce texte peut parfois être super long.',
             }"
-            :evenIndex="index % 2 == 0"
+            :reducedDisplay="true"
           />
         </b-col>
       </b-row>
