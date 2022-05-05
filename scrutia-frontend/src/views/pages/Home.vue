@@ -5,7 +5,7 @@
 
       <b-row>
         <b-col sm="12" md="4" xl="4" v-for="index in 6" :key="index">
-          <reduced-idea
+          <idea
             v-bind:project="{
               title: 'Sauver les pandas en Asie',
               description:
@@ -26,7 +26,7 @@
       <h2 class="content-heading">Projets d'initiative les plus actifs...</h2>
       <b-row>
         <b-col sm="12" md="6" xl="6" v-for="index in 4" :key="index">
-          <reduced-projet
+          <projet
             v-bind:project="{
               title: 'Sauver les pandas en Asie',
               description:
@@ -56,13 +56,13 @@
 </style>
 
 <script>
-import ReducedProjet from '../../components/ReducedProjet.vue'
-import ReducedIdea from '../../components/ReducedIdea.vue'
+import Projet from '../../components/Project.vue'
+import Idea from '../../components/Idea.vue'
 
 export default {
   components: {
-    ReducedProjet,
-    ReducedIdea,
+    Projet,
+    Idea,
   },
 }
 </script>
