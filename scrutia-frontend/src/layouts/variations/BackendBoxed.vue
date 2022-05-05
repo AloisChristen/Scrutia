@@ -104,7 +104,31 @@
           </b-dropdown>
         </div>
       </div>
-
+      <div
+        id="page-header-search"
+        class="overlay-header bg-white"
+        :class="{ show: $store.state.settings.headerSearch }"
+        @keydown.esc="() => $store.commit('headerSearch', { mode: 'off' })"
+      >
+        <div class="content-header">
+          <b-form @submit.stop.prevent="onSubmit" class="w-100">
+            <b-input-group>
+              <b-form-input
+                placeholder="Search or hit ESC.."
+                v-model="baseSearchTerm"
+              ></b-form-input>
+              <b-input-group-append>
+                <base-layout-modifier
+                  action="headerSearchOff"
+                  variant="alt-danger"
+                >
+                  <i class="fa fa-fw fa-times-circle"></i>
+                </base-layout-modifier>
+              </b-input-group-append>
+            </b-input-group>
+          </b-form>
+        </div>
+      </div>
       <div
         id="page-header-loader"
         class="overlay-header bg-primary-lighter"
