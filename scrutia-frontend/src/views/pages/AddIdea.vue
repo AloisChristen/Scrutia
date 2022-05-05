@@ -18,7 +18,7 @@
             ></i>
           </template>
           <div class="p-sm-2 px-lg-2 py-lg-2">
-            <h1 class="h4 mb-1">Vous avez pris la bonne décision !</h1>
+            <h1 class="h4 mb-1 mt-1">Vous avez pris la bonne décision !</h1>
             <p class="text-muted">Remplissez le formulaire suivant</p>
             <b-form @submit.stop.prevent="onSubmit">
               <div class="py-3">
