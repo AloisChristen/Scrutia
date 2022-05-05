@@ -2,7 +2,7 @@
   <div>
     <div class="content">
       <h1 class="content-heading">Parcourir les idées</h1>
-      <p id="subtitle">
+      <p>
         Laissez vous convaincre et apportez votre soutient aux bonnes idées.
       </p>
       <p></p>
@@ -28,17 +28,6 @@
     </div>
   </div>
 </template>
-
-<style>
-.block-title,
-.block-header,
-.block-content {
-  font-size: 12px;
-}
-#subtitle {
-  font-size: 14px;
-}
-</style>
 
 <script>
 import Idea from '../../components/Idea.vue'

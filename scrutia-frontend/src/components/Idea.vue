@@ -26,13 +26,6 @@
     </address>
   </base-block>
 </template>
-
-<style>
-.block-content {
-  padding-top: 0px;
-}
-</style>
-
 <script>
 export default {
   name: 'ReducedIdea',

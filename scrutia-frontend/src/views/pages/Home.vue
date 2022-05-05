@@ -47,14 +47,6 @@
   </div>
 </template>
 
-<style>
-.block-title,
-.block-header,
-.block-content {
-  font-size: 12px;
-}
-</style>
-
 <script>
 import Projet from '../../components/Project.vue'
 import Idea from '../../components/Idea.vue'

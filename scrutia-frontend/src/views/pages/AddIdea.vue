@@ -68,7 +68,12 @@
               </div>
               <b-row class="form-group">
                 <b-col md="6" xl="6">
-                  <b-button type="submit" variant="alt-success" block>
+                  <b-button
+                    class="mb-4"
+                    type="submit"
+                    variant="alt-success"
+                    block
+                  >
                     <i class="fa fa-lightbulb mr-1"></i> Publier votre idée
                   </b-button>
                 </b-col>
