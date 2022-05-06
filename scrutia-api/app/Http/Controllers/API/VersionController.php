@@ -3,85 +3,134 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\LikeRequest;
 use App\Http\Requests\StoreVersionRequest;
 use App\Http\Requests\UpdateVersionRequest;
+use App\Http\Service\UserService;
+use App\Models\Like;
+use App\Models\Project;
+use App\Models\Status;
 use App\Models\Version;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Arr;
 
 class VersionController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreVersionRequest  $request
-     * @return \Illuminate\Http\Response
+     * @param StoreVersionRequest $request
+     * @return JsonResponse
      */
-    public function store(StoreVersionRequest $request)
+    public function store(StoreVersionRequest $request): JsonResponse
     {
-        //
-    }
+        $project = Project::find($request->project_id);
+        if($project == null)
+            return response()->json(["message" => "Not Found", "errors" => [
+                "Project does not exist"
+            ]], 404);
+        if($project->user->id != auth()->user()->id)
+            return response()->json(["message" => "Not Allowed", "errors" => [
+                "User is not allowed to perform this action"
+            ]], 403);
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Version  $version
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Version $version)
-    {
-        //
-    }
+        $version = Version::create([
+            "number" => Version::where("project_id", $project->id)->count() + 1,
+            "description" => $request->description,
+            "status" => Status::INITIATIVE
+        ]);
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Version  $version
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Version $version)
-    {
-        //
+        $version->project()->associate($project);
+        $version->user()->associate(auth()->user());
+        $version->save();
+
+        UserService::addVersionReputation($version->user);
+
+        return response()->json("Created", 201);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateVersionRequest  $request
-     * @param  \App\Models\Version  $version
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @param UpdateVersionRequest $request
+     * @return JsonResponse
      */
-    public function update(UpdateVersionRequest $request, Version $version)
+    public function update(int $id, UpdateVersionRequest $request): JsonResponse
     {
-        //
+        $version = Version::find($id);
+        if($version->user->id != auth()->user()->id)
+            return response()->json(["message" => "Not Allowed", "errors" => [
+                "User is not allowed to perform this action"
+            ]], 403);
+
+        if($version == null)
+            return response()->json(["message" => "Not Found", "errors" => [
+                "Version does not exists"
+            ]], 404);
+
+        $version->description = $request->description;
+        $version->save();
+
+        return response()->json("Updated");
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Version  $version
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return JsonResponse
      */
-    public function destroy(Version $version)
+    public function destroy(int $id): JsonResponse
     {
-        //
+        $version = Version::find($id);
+        if(auth()->user()->id != $version->user->id)
+            return response()->json(["message" => "Not Allowed", "errors" => [
+                "User is not allowed to perform this action"
+            ]], 403);
+
+
+        if($version == null)
+            return response()->json(["message" => "Not Found", "errors" => [
+                "Version does not exist"
+            ]], 404);
+
+
+        $version->likes()->delete();
+        $version->delete();
+
+        return response()->json("Deleted");
+    }
+
+    /**
+     * Like the specified resource from storage.
+     *
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function like(int $id, LikeRequest $request): JsonResponse
+    {
+        $version = Version::find($id);
+        if($version == null)
+            return response()->json(["message" => "Not Found", "errors" => [
+                "Version does not exist"
+            ]], 404);
+
+        $like = Like::where("user_id", $version->user->id)
+            ->where("likeable_id",$version->id)
+            ->where("likeable_type", "App\Models\Version")
+            ->firstOr(function() use($version, $request) {
+                $like = Like::create([
+                    "value" => $request->value
+                ]);
+                $like->user()->associate(auth()->user());
+                $version->likes()->save($like);
+                return $like;
+            });
+
+        $like->value = $request->value;
+        $like->save();
+
+        return response()->json("Liked");
     }
 }

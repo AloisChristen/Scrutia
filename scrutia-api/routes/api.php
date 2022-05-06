@@ -5,6 +5,7 @@ use App\Http\Controllers\API\ProjectController;
 use App\Http\Controllers\API\TagController;
 use App\Http\Controllers\API\QuestionController;
 use App\Http\Controllers\API\UserController;
+use App\Http\Controllers\API\VersionController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegistrationController;
 use Illuminate\Http\Request;
@@ -72,6 +73,16 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
             Route::get('/', 'index')->name('user.index');
             Route::get('/{id}', 'show')->name('user.show');
             Route::delete('/{id}', 'destroy')->name('user.delete');
+        }
+    );
+
+    Route::controller(VersionController::class)->prefix('/versions')->group(
+        function () {
+            Route::post('/', 'store')->name('version.store');
+            Route::put('/{id}', 'update')->name('version.update');
+            Route::delete('/{id}', 'destroy')->name('version.delete');
+
+            Route::post('/{id}/like','like')->name('version.like');
         }
     );
 

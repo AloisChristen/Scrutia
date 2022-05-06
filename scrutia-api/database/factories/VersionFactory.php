@@ -19,13 +19,12 @@ class VersionFactory extends Factory
      */
     public function definition()
     {
-        $project = Project::factory();
         return [
             'number' => $this->faker->numberBetween(2,9),
             'status' => Status::INITIATIVE,
             'description' => $this->faker->text(),
-            'project_id' => $project,
-            'user_id' => User::factory(),
+            'project_id' => Project::factory()->create(),
+            'user_id' => User::factory()->create(),
         ];
     }
 }
