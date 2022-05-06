@@ -13,6 +13,7 @@
               title: 'Sauver les pandas en Asie',
               description:
                 'Description de mon projet. Ce texte peut parfois être super long. Ce texte peut parfois être super long. Ce texte peut parfois être super long.',
+              isProjectInitiative: false,
             }"
             :reducedDisplay="false"
           />
@@ -30,7 +31,7 @@
 </template>
 
 <script>
-import Idea from '../../components/Idea.vue'
+import Idea from '../../components/Project.vue'
 
 export default {
   components: {

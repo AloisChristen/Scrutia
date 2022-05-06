@@ -5,11 +5,12 @@
 
       <b-row>
         <b-col sm="12" md="4" xl="4" v-for="index in 6" :key="index">
-          <idea
-            v-bind:idea="{
+          <project
+            v-bind:project="{
               title: 'Sauver les pandas en Asie',
               description:
                 'Description de mon projet. Ce texte peut parfois être super long. Ce texte peut parfois être super long. Ce texte peut parfois être super long.',
+              isProjectInitiative: false,
             }"
             :reducedDisplay="true"
           />
@@ -26,11 +27,12 @@
       <h2 class="content-heading">Projets d'initiative les plus actifs...</h2>
       <b-row>
         <b-col sm="12" md="6" xl="6" v-for="index in 4" :key="index">
-          <projet
+          <project
             v-bind:project="{
               title: 'Sauver les pandas en Asie',
               description:
                 'Description de mon projet. Ce texte peut parfois être super long. Ce texte peut parfois être super long. Ce texte peut parfois être super long.',
+              isProjectInitiative: true,
             }"
           />
         </b-col>
@@ -48,13 +50,11 @@
 </template>
 
 <script>
-import Projet from '../../components/Project.vue'
-import Idea from '../../components/Idea.vue'
+import Project from '../../components/Project.vue'
 
 export default {
   components: {
-    Projet,
-    Idea,
+    Project,
   },
 }
 </script>
