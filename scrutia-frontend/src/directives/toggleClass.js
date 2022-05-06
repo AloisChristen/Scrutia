@@ -12,7 +12,7 @@ export default {
       let target = document.getElementById(targetId)
 
       if (target && classList) {
-        classList.forEach(item => {
+        classList.forEach((item) => {
           target.classList.toggle(item)
         })
       }
@@ -25,5 +25,5 @@ export default {
   },
   unbind: function (el) {
     el.removeEventListener('click', el.toggleClass)
-  }
+  },
 }

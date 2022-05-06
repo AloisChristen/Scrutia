@@ -1,4 +1,11 @@
-import { PAGE_HOME, PAGE_IDEAS, PAGE_BROWSE_IDEAS, PAGE_ADD_IDEA, PAGE_PROJECTS, PAGE_ABOUT } from "../strings"
+import {
+  PAGE_HOME,
+  PAGE_IDEAS,
+  PAGE_BROWSE_IDEAS,
+  PAGE_ADD_IDEA,
+  PAGE_PROJECTS,
+  PAGE_ABOUT,
+} from '../strings'
 
 export const Navigation = [
   {

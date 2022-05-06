@@ -8,11 +8,15 @@ Vue.use(Vuex)
 // Helpers
 const helpers = {
   getWindowWidth() {
-    return window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth
+    return (
+      window.innerWidth ||
+      document.documentElement.clientWidth ||
+      document.body.clientWidth
+    )
   },
   getCurrentYear() {
     return new Date().getFullYear()
-  }
+  },
 }
 
 // Vuex Store
@@ -22,7 +26,7 @@ export default new Vuex.Store({
     app: {
       name: APP_NAME,
       version: process.env.PACKAGE_VERSION,
-      copyright: helpers.getCurrentYear()
+      copyright: helpers.getCurrentYear(),
     },
 
     // Default layout options
@@ -42,8 +46,8 @@ export default new Vuex.Store({
       pageLoader: false,
       rtlSupport: false,
       sideTransitions: true,
-      mainContent: '' // 'boxed', ''narrow'
-    }
+      mainContent: '', // 'boxed', ''narrow'
+    },
   },
   getters: {
     // Get App name
@@ -61,7 +65,7 @@ export default new Vuex.Store({
     // Get app color theme
     appColorTheme: (state) => {
       return state.settings.colorTheme
-    }
+    },
   },
   mutations: {
     // Sets the layout, useful for setting different layouts (under layouts/variations/)
@@ -154,5 +158,5 @@ export default new Vuex.Store({
         document.body.classList.add('theme-' + payload.theme)
       }
     },
-  }
+  },
 })
