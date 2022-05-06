@@ -2,65 +2,43 @@
 
 namespace Tests\Feature;
 
-use App\Models\User;
+use App\Models\Answer;
+use App\Models\Question;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class LikeTest extends TestCase
 {
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
-    public function test_example()
+    use RefreshDatabase;
+
+    public function test_user_that_has_more_than_100_reputation_can_like_a_question(): void
     {
-        $response = $this->get('/');
-
-        $response->assertStatus(200);
-    }
-
-    public function test_guest_cannot_like_anything()
-    {
-        $response = $this->post('/replies/1/likes');
-
-        $response->assertRedirect('/login');
-    }
-
-    public function test_an_authenticated_user_can_like_any_reply()
-    {
-        $user = User::factory()->create();
-
-        $response = $this->post('/api/login', [
-            'username' => $user->username,
-            'password' => 'password',
+        $question = Question::factory()->create();
+        $response =
+            $this->actingAs($question->user)
+                ->post('/api/questions/'. $question->id . '/like',[
+                    "value" => 1
+                ]);
+        $response->assertSuccessful();
+        $this->assertDatabaseHas("likes",[
+            "likeable_type" => "App\Models\Question",
+            "likeable_id" => $question->id
         ]);
-
-        $response->assertStatus(200);
-
-        $reply = create('App\Reply');
-
-        $response = $this->post('/api/replies/' . $reply->id . '/likes');
-
-        $response->assertStatus(200);
     }
 
-    public function test_an_authenticated_user_can_unlike_any_reply()
+    public function test_user_that_has_more_than_100_reputation_can_like_an_answer(): void
     {
-        $user = User::factory()->create();
-
-        $response = $this->post('/api/login', [
-            'username' => $user->username,
-            'password' => 'password',
+        $answer = Answer::factory()->create();
+        $response =
+            $this->actingAs($answer->user)
+                ->post('/api/answers/'. $answer->id . '/like',[
+                    "value" => 1
+                ]);
+        $response->assertSuccessful();
+        $this->assertDatabaseHas("likes",[
+            "likeable_type" => "App\Models\Answer",
+            "likeable_id" => $answer->id
         ]);
-
-        $response->assertStatus(200);
-
-        $reply = create('App\Reply');
-
-        $response = $this->delete('/api/replies/' . $reply->id . '/likes');
-        $response->assertStatus(200);
-
-
     }
-
 }

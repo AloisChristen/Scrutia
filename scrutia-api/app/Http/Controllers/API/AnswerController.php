@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\LikeRequest;
 use App\Http\Requests\StoreAnswerRequest;
 use App\Http\Requests\UpdateAnswerRequest;
 use App\Http\Service\UserService;
 use App\Models\Answer;
+use App\Models\Like;
 use App\Models\Question;
 use Illuminate\Http\JsonResponse;
 
@@ -84,5 +86,23 @@ class AnswerController extends Controller
         $answer->likes()->delete();
         $answer->delete();
         return response()->json("Deleted");
+    }
+
+    public function like(int $id, LikeRequest $request): JsonResponse
+    {
+        $answer = Answer::find($id);
+        if($answer == null)
+            return response()->json(["message" => "Not Found", "errors" => [
+                "Answer does not exist"
+            ]], 404);
+
+        $like = Like::create([
+            "value" => $request->value
+        ]);
+
+        $like->user()->associate(auth()->user());
+        $answer->likes()->save($like);
+
+        return response()->json();
     }
 }
