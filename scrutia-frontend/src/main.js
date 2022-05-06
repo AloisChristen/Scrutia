@@ -1,26 +1,13 @@
-/*
- * Main file
- */
-
-// Vue, Vue Router, App and Vuex store
 import Vue from 'vue'
 import router from './router/router.js'
-// You can use the following starter router instead of the default one as a clean starting point
-// import router from './router/starter'
 import App from './App.vue'
 import store from './store/store.js'
-
-// Bootstrap Vue
 import BootstrapVue from 'bootstrap-vue'
-
-// Custom components
 import BaseLayoutModifier from '@/components/BaseLayoutModifier'
 import BaseBlock from '@/components/BaseBlock'
 import BaseBackground from '@/components/BaseBackground'
 import BasePageHeading from '@/components/BasePageHeading'
 import BaseNavigation from '@/components/BaseNavigation'
-
-// Custom directives
 import clickRipple from '@/directives/clickRipple'
 import toggleClass from '@/directives/toggleClass'
 
