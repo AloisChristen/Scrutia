@@ -1,7 +1,3 @@
-/*
- * Ripple effect fuctionality
- */
-
 export default {
   bind: function (el) {
     // Add specific CSS styles to element

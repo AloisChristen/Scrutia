@@ -1,7 +1,3 @@
-/*
- * Toggle Class fuctionality
- */
-
 export default {
   bind: function (el, binding) {
     let targetId = binding.value.targetId || false

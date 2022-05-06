@@ -1,13 +1,9 @@
 <template>
   <div id="page-container" :class="classContainer">
-    <!-- Page Loader -->
     <div
       id="page-loader"
       :class="{ show: $store.state.settings.pageLoader }"
     ></div>
-    <!-- END Page Loader -->
-
-    <!-- Page Overlay -->
     <div
       id="page-overlay"
       v-if="
@@ -15,9 +11,6 @@
       "
       @click="() => $store.commit('sideOverlay', { mode: 'close' })"
     ></div>
-    <!-- END Page Overlay -->
-
-    <!-- Header -->
     <header
       v-if="$store.state.layout.header"
       :class="layoutClasses.header"
@@ -25,22 +18,16 @@
     >
       <slot name="header"></slot>
     </header>
-
-    <!-- END Header -->
-
-    <!-- Main Container -->
     <div id="main-container">
       <slot name="content"></slot>
       <transition name="fade" mode="out-in">
         <router-view></router-view>
       </transition>
     </div>
-    <!-- END Main Container -->
   </div>
 </template>
 
 <style lang="scss">
-// Custom router view transition
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.5s;
@@ -81,7 +68,6 @@ export default {
     },
   },
   created() {
-    // Set default color theme
     this.$store.commit('setColorTheme', {
       theme: this.$store.getters.appColorTheme,
     })
