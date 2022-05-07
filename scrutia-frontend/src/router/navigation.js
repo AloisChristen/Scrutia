@@ -1,6 +1,6 @@
 export const Navigation = [
   {
-    name: 'Accueil',
+    name: "Accueil",
     to: '/home',
     icon: 'si si-home',
   },
@@ -9,26 +9,26 @@ export const Navigation = [
     heading: true,
   },
   {
-    name: 'Urne à idées',
+    name: "Urne à idées",
     icon: 'si si-bulb',
     sub: [
       {
-        name: 'Parcourir',
+        name: "Parcourir les idées",
         to: '/browseIdeas',
       },
       {
-        name: 'Ajouter une idée',
+        name: "Ajouter une idée",
         to: '/addIdea',
       },
     ],
   },
   {
-    name: "Projets d'initiative",
+    name: "Projets d'initiatives",
     to: '/browseInitiatives',
     icon: 'si si-puzzle',
   },
   {
-    name: 'À propos',
+    name: "À propos",
     to: '/about',
     icon: 'si si-question',
   },

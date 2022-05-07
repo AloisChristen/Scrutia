@@ -1,7 +1,3 @@
-/*
- * Toggle Class fuctionality
- */
-
 export default {
   bind: function (el, binding) {
     let targetId = binding.value.targetId || false
@@ -12,7 +8,7 @@ export default {
       let target = document.getElementById(targetId)
 
       if (target && classList) {
-        classList.forEach(item => {
+        classList.forEach((item) => {
           target.classList.toggle(item)
         })
       }
@@ -25,5 +21,5 @@ export default {
   },
   unbind: function (el) {
     el.removeEventListener('click', el.toggleClass)
-  }
+  },
 }
