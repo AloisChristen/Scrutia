@@ -3,81 +3,76 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
     /**
-     * @OA\Get(
-     *     path="/users",
-     *     @OA\Response(response="200", description="Display a listing of users.")
-     * )
-     */
-    /**
-     * Display a listing of the resource.
+     * Get the authenticated user.
      *
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
-    public function index()
+    public function index(): JsonResponse
     {
-        return User::all();
-    }
-
-    /**
-     * @OA\Get(
-     *     path="/users/{id}",
-     *     @OA\Response(response="200", description="returns an user depending on his id.")
-     * )
-     */
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        return User::where('id', $id);
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
+        dd(auth()->user());
+        return response()->json("Created", 201);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @param UpdateUserRequest $request
+     * @return JsonResponse
      */
-    public function update(Request $request, User $user)
+    public function update(int $id, UpdateUserRequest $request): JsonResponse
     {
+        $user = User::find($id);
+
+        if($user == null) {
+            return response()->json(["message" => "Not Found", "errors" => [
+                "User does not exist"
+            ]], 404);
+        }
+
         $user->username = $request->username;
         $user->firstname = $request->firstname;
         $user->lastname = $request->lastname;
         $user->email = $request->email;
         $user->save();
-        return response()->json($user);
+
+        return response()->json("Updated");
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return JsonResponse
      */
-    public function destroy($id)
+    public function destroy(int $id): JsonResponse
     {
-        $res=User::where('id',$id)->delete();
-        return response()->json($res);
+        $user = User::find($id);
+
+        if($user == null) {
+            return response()->json(["message" => "Not Found", "errors" => [
+                "User does not exist"
+            ]], 404);
+        }
+
+        if($user->id != auth()->user()->id){
+            return response()->json(["message" => "Not Allowed", "errors" => [
+                "User not allowed to perform this action"
+            ]], 403);
+        }
+
+        auth()->user()->tokens()->where('tokenable_id', auth()->id() )->delete();
+        $user->likes()->delete();
+        $user->delete();
+
+        return response()->json("Deleted");
     }
 }
