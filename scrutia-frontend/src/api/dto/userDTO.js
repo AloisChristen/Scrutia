@@ -1,5 +1,4 @@
-
-export class User {
+export class UserDTO {
   constructor(id, username, password, firstname, lastname, email){
     this.id = id
     this.username = username
@@ -10,11 +9,11 @@ export class User {
   }
 }
 
-export class UserDTO {
+export class SessionDTO {
   constructor(token, id, username, password, firstname, lastname, email){
     this.token = token
-    this.user = new User(id, username, password, firstname, lastname, email)
+    this.user = new UserDTO(id, username, password, firstname, lastname, email)
   }
 
-  isConnected(){ return this.token == null; }
+  isConnected(){ return this.token == null }
 }
