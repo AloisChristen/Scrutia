@@ -27,7 +27,7 @@ class ProjectSeeder extends Seeder
             Version::create([
                 'number' => 1,
                 'project_id' => $project->id,
-                'author' => $project->user->id,
+                'user_id' => $project->user->id,
                 'status' => Status::IDEE,
                 'description' => 'Init project',
             ]);

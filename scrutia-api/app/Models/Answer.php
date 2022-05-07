@@ -13,10 +13,10 @@ class Answer extends Model
 
     protected $fillable = [
         'title',
-        'content'
+        'description'
     ];
 
-    public function author(): BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }

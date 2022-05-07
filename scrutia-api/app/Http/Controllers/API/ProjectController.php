@@ -6,13 +6,17 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Http\Service\ProjectService;
 use App\Models\Project;
+use App\Models\Status;
+use App\Models\Version;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Pagination\Paginator;
 
 class ProjectController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      *
@@ -20,7 +24,44 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        return Project::all();
+        return Project::paginate();
+    }
+
+    /**
+     * Display a listing of the resource (only ideas).
+     *
+     * @return Response
+     */
+    public function showIdeas() {
+        // TODO: project qui sont encore des idées:
+        // "select project_id, count(*) c from versions group by project_id having c=1" -> comment faire en laravel
+        return Project::paginate();
+    }
+
+    public function showInitiatives() {
+        // TODO: showInitiatives
+        // "select project_id, count(*) c from versions group by project_id having c=1"
+        // enlever ces projet de tout les projets
+        return Project::paginate();
+    }
+
+    public function promoteToInitiative($id) {
+        $projectToPromote = Project::where('id', $id);
+        dd($projectToPromote);
+        $ideaVersion = Version::where('project_id',$id);
+        return response()->json($project);
+
+        $v2 = Version::create([
+            'number' => 2,
+            'author' => $ideaVersion->author,
+            'status' => Status::INITIATIVE,
+            'description' => $ideaVersion->description
+        ]);
+        $v2->project()->associate($project);
+        $v2->save();
+        $project->versions->save($v2);
+
+        return $project;
     }
 
     /**
@@ -31,8 +72,8 @@ class ProjectController extends Controller
      */
     public function show($id): JsonResponse
     {
-        //TODO Check DTO on swagger, it misses some informations
-        return response()->json(Project::find($id));
+        $result = Project::with('versions', 'tags')->find($id);
+        return response()->json($result);
     }
 
     /**
@@ -43,10 +84,24 @@ class ProjectController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
+        $author = auth()->user();
+
         $project = Project::create([
             'title' => $request->title,
-            'description' => $request->description
         ]);
+
+        $v0 = Version::create([
+            'number' => 1,
+            'status' => Status::IDEE,
+            'description' => $request->description,
+            'author' => $author->id
+        ]);
+        $v0->project()->associate($project);
+        $v0->save();
+
+
+        $project->user()->associate($author->id);
+        auth()->user()->projects()->save($project);
 
         ProjectService::createAndAttachTags($project, $request->tags);
 
@@ -54,7 +109,7 @@ class ProjectController extends Controller
     }
 
     /**
-     * Updateª the specified resource in storage.
+     * Update the specified resource in storage.
      *
      * @param UpdateProjectRequest $request
      * @param int $id

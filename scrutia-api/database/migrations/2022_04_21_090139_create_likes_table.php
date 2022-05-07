@@ -17,9 +17,9 @@ return new class extends Migration
         Schema::create('likes', function (Blueprint $table) {
             $table->id();
             $table->integer('value');
-            $table->foreignIdFor(User::class);
-            $table->integer('likeable_id');
-            $table->string('likeable_type');
+            $table->foreignIdFor(User::class)->onDelete("cascade")->nullable();
+            $table->integer('likeable_id')->nullable();
+            $table->string('likeable_type')->nullable();
             $table->timestamps();
         });
     }

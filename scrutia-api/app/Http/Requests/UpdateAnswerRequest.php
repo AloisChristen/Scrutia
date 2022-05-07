@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Answer;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateAnswerRequest extends FormRequest
@@ -13,7 +14,8 @@ class UpdateAnswerRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        $answer = Answer::find($this->route()->parameter("id"));
+        return auth()->user()->id == $answer->user->id || auth()->user()->reputation >= 150;
     }
 
     /**
@@ -24,7 +26,8 @@ class UpdateAnswerRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            "title" => "required|max:50",
+            "description" => "required"
         ];
     }
 }
