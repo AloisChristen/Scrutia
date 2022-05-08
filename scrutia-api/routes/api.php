@@ -71,8 +71,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::controller(UserController::class)->prefix('/users')->group(
         function () {
             Route::get('/', 'index')->name('user.index');
-            Route::put('/{id}', 'update')->name('user.update');
-            Route::delete('/{id}', 'destroy')->name('user.delete');
+            Route::put('/', 'update')->name('user.update');
         }
     );
 
