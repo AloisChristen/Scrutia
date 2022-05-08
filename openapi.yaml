@@ -832,33 +832,6 @@ components:
         email:
           type: string
           format: email
-    UserUpdateDTO:
-      type: object
-      properties:
-        username:
-          type: string
-          minLength: 3
-          maxLength: 30
-          pattern: '^[A-Za-z][A-Za-z0-9_]{3,30}$'
-        firstname:
-          type: string
-        lastname:
-          type: string
-        email:
-          type: string
-          format: email
-        password_current:
-          type: string
-          minLength: 6
-          format: password
-        password:
-          type: string
-          minLength: 6
-          format: password
-        password_confirmation:
-          type: string
-          minLength: 6
-          format: password
     UserDTO:
       type: object
       properties:
@@ -874,6 +847,31 @@ components:
         email:
           type: string
           format: email
+        reputation:
+          type: integer
+    UserUpdateDTO:
+      type: object
+      properties:
+        username:
+          type: string
+          minLength: 3
+          maxLength: 30
+          pattern: '^[A-Za-z][A-Za-z0-9_]{3,30}$'
+        firstname:
+          type: string
+        lastname:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 6
+          format: password
+        password_confirmation:
+          type: string
+          minLength: 6
+          format: password
     Version:
       type: object
       properties:
