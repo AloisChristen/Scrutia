@@ -46,33 +46,4 @@ class UserController extends Controller
 
         return response()->json("Updated");
     }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param int $id
-     * @return JsonResponse
-     */
-    public function destroy(int $id): JsonResponse
-    {
-        $user = User::find($id);
-
-        if($user == null) {
-            return response()->json(["message" => "Not Found", "errors" => [
-                "User does not exist"
-            ]], 404);
-        }
-
-        if($user->id != auth()->user()->id){
-            return response()->json(["message" => "Not Allowed", "errors" => [
-                "User not allowed to perform this action"
-            ]], 403);
-        }
-
-        auth()->user()->tokens()->where('tokenable_id', auth()->id() )->delete();
-        $user->likes()->delete();
-        $user->delete();
-
-        return response()->json("Deleted");
-    }
 }
