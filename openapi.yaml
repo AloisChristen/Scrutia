@@ -847,6 +847,10 @@ components:
         email:
           type: string
           format: email
+        password_current:
+          type: string
+          minLength: 6
+          format: password
         password:
           type: string
           minLength: 6
