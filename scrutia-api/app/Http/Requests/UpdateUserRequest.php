@@ -12,10 +12,9 @@ class UpdateUserRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
-        $user = User::find($this->route()->parameter("id"));
-        return $user->id == auth()->user()->id;
+        return true;
     }
 
     /**
@@ -23,13 +22,15 @@ class UpdateUserRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
-            "username" => "required",
-            "firstname" => "required",
-            "lastname" => "required",
-            "email" => "required"
+            "username" => "string",
+            "firstname" => "string",
+            "lastname" => "string",
+            "email" => "string",
+            "password" => "string",
+            "password_confirmation" => "string",
         ];
     }
 }
