@@ -147,3 +147,13 @@ sail artisan optimize
 ```php
     dd($tags);
 ```
+
+# Exécuter un seul fichier test (exemple : ProjectTest)
+```
+    sail artisan test --filter ProjectTest
+```
+
+# Exécuter une méthode test dans un fichier (exemple ProjectTest, méthode test_can_create_a_project)
+```
+    sail artisan test --filter ProjectTest::can_create_user
+```
