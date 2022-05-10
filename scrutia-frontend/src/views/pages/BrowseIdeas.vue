@@ -29,17 +29,20 @@
             themed
           >
             <p>
-              <b-form @submit.stop.prevent="onSubmit">
+              <b-form>
                 <b-form-group
                   label="Contient le texte"
                   label-for="contains-text"
+                  class="text-center"
                 >
                   <b-form-input
                     id="contains-text"
                     placeholder="Votre recherche..."
+                    @keydown.enter="filterByText"
+                    @blur="(e) => filterByText(e.target.value())"
                   ></b-form-input>
                 </b-form-group>
-                <b-form-group label="Tags" label-for="tags">
+                <b-form-group label="Tags" label-for="tags" class="text-center">
                   <v-select
                     id="tags"
                     size="lg"
@@ -47,17 +50,22 @@
                     v-model="vSelectOptionsMultipleSelected"
                     :options="vSelectOptionsMultiple"
                     placeholder="Définissez des tags..."
+                    v-on:input="filterByTags"
                   ></v-select>
                 </b-form-group>
                 <b-form-group
                   label="Date de publication"
                   label-for="publication-date"
+                  class="text-center"
                 >
                   <b-button-group>
-                    <b-button variant="outline-primary">Tout</b-button>
-                    <b-button variant="outline-primary">-24h</b-button>
-                    <b-button variant="outline-primary">-48h</b-button>
-                    <b-button variant="outline-primary">-1 semaine</b-button>
+                    <b-button
+                      v-for="item in datesRanges"
+                      :key="item"
+                      variant="outline-primary"
+                      @click="filterByDate"
+                      >{{ item }}</b-button
+                    >
                   </b-button-group>
                 </b-form-group>
               </b-form>
@@ -89,8 +97,9 @@ import VueSelect from 'vue-select'
 export default {
   data() {
     return {
+      datesRanges: ['Tout', '-24h', '-48h', '-1 semaine'],
       rows: 30,
-      perPage: 10,
+      perPage: 3,
       currentPage: 1,
       vSelectOptionsMultiple: [
         'HTML',
@@ -105,6 +114,18 @@ export default {
       ],
       vSelectOptionsMultipleSelected: null,
     }
+  },
+  methods: {
+    filterByText(text) {
+      console.log(text)
+      console.log('Filter by text')
+    },
+    filterByTags() {
+      console.log('Filter by tags')
+    },
+    filterByDate() {
+      console.log('Filter by date')
+    },
   },
   components: {
     Project,
