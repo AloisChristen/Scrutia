@@ -2,10 +2,9 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Answer;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateAnswerRequest extends FormRequest
+class LikeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -14,8 +13,7 @@ class UpdateAnswerRequest extends FormRequest
      */
     public function authorize()
     {
-        $answer = Answer::find($this->route()->parameter("id"));
-        return auth()->user()->id == $answer->user->id || auth()->user()->reputation >= 150;
+        return auth()->user()->reputation >= 100;
     }
 
     /**
@@ -26,8 +24,7 @@ class UpdateAnswerRequest extends FormRequest
     public function rules()
     {
         return [
-            "title" => "required|max:50",
-            "description" => "required"
+            "value" => "required|numeric"
         ];
     }
 }

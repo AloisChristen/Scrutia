@@ -4,8 +4,11 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\DestroyQuestionRequest;
+use App\Http\Requests\LikeRequest;
 use App\Http\Requests\StoreQuestionRequest;
 use App\Http\Requests\UpdateQuestionRequest;
+use App\Http\Service\UserService;
+use App\Models\Like;
 use App\Models\Question;
 use App\Models\User;
 use App\Models\Version;
@@ -38,6 +41,7 @@ class QuestionController extends Controller
         $question->user()->associate(auth()->user()->id);
         $question->version()->associate($project_version);
         $question->save();
+        UserService::addQuestionReputation($question->user);
 
         return response()->json("Created", 201);
     }
@@ -71,17 +75,45 @@ class QuestionController extends Controller
     public function destroy(int $id): JsonResponse
     {
         $question = Question::find($id);
-        if(auth()->user()->id != $question->user->id)
-            return response()->json(["message" => "Not Allowed", "errors" => [
-                "User is not allowed to perform this action"
-            ]], 403);
-        if($question == null){
+        if(auth()->user()->id != $question->user->id && auth()->user()->reputation < 300)
+                return response()->json(["message" => "Not Allowed", "errors" => [
+                    "User is not allowed to perform this action"
+                ]], 403);
+
+
+        if($question == null)
             return response()->json(["message" => "Not Found", "errors" => [
                 "Question id does not exist"
             ]], 404);
-        }
-        $question->answers()->delete();
+
+        $question->likes()->delete();
         $question->delete();
         return response()->json("Deleted");
+    }
+
+    public function like(int $id, LikeRequest $request): JsonResponse
+    {
+        $question = Question::find($id);
+        if($question == null)
+            return response()->json(["message" => "Not Found", "errors" => [
+                "Question does not exist"
+            ]], 404);
+
+        $like = Like::where("user_id", $question->user->id)
+            ->where("likeable_id",$question->id)
+            ->where("likeable_type", "App\Models\Question")
+            ->firstOr(function() use($question, $request) {
+                $like = Like::create([
+                    "value" => $request->value
+                ]);
+                $like->user()->associate(auth()->user());
+                $question->likes()->save($like);
+                return $like;
+            });
+
+        $like->value = $request->value;
+        $like->save();
+
+        return response()->json("Liked");
     }
 }

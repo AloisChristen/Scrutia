@@ -19,8 +19,8 @@ class AnswerFactory extends Factory
     public function definition(): array
     {
         return [
-            'title' => $this->faker->sentence(),
-            'content' => $this->faker->text(),
+            'title' => $this->faker->sentence(5),
+            'description' => $this->faker->text(),
             'question_id' =>  Question::factory(),
             'user_id' => User::factory(),
         ];

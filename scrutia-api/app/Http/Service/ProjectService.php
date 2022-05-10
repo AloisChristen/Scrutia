@@ -11,9 +11,9 @@ class ProjectService
         $project->tags()->detach();
 
         foreach($tags as $tag){
-            $current_tag = Tag::where('title', $tag->title)->firstOr(function() use ($tag) {
+            $current_tag = Tag::where('title', $tag["title"])->firstOr(function() use ($tag) {
                 return Tag::create([
-                    'title' => $tag->title,
+                    'title' => $tag["title"],
                 ]);
             });
 

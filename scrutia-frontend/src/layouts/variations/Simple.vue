@@ -11,12 +11,9 @@ export default {
     BaseLayout,
   },
   created() {
-    // Set default elements for this layout
     this.$store.commit('setLayout', {
       header: false,
     })
-
-    // Set various template options
     this.$store.commit('mainContent', { mode: 'full' })
   },
 }

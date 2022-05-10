@@ -1,85 +1,16 @@
 <template>
   <base-layout :layout-classes="layoutClasses">
-    <!-- Header Content -->
-    <!-- Using the available v-slot, we can override the default Header content from layouts/partials/Header.vue -->
     <template #header>
-      <!-- Header Content -->
       <div class="content-header">
-        <!-- Left Section -->
         <div class="d-flex align-items-center">
-          <!-- Logo -->
           <router-link
             to="/"
             class="font-w600 font-size-h5 tracking-wider text-dual mr-3"
           >
             {{ $store.getters.appName }}
           </router-link>
-          <!-- END Logo -->
-
-          <!-- Notifications Dropdown -->
-          <b-dropdown
-            size="sm"
-            variant="dual"
-            class="d-inline-block mr-2"
-            menu-class="dropdown-menu-lg p-0 border-0 font-size-sm"
-            no-caret
-          >
-            <template #button-content>
-              <i class="fa fa-fw fa-bell"></i>
-              <span v-if="notifications.length" class="text-primary">•</span>
-            </template>
-            <li>
-              <div class="p-2 bg-primary-dark text-center rounded-top">
-                <h5 class="dropdown-header text-uppercase text-white">
-                  Notifications
-                </h5>
-              </div>
-              <ul class="nav-items mb-0">
-                <li
-                  v-for="(notification, index) in notifications"
-                  :key="`notification-${index}`"
-                >
-                  <a
-                    class="text-dark media py-2"
-                    :href="`${notification.href}`"
-                  >
-                    <div class="mr-2 ml-3">
-                      <i :class="`${notification.icon}`"></i>
-                    </div>
-                    <div class="media-body pr-2">
-                      <div class="font-w600">{{ notification.title }}</div>
-                      <span class="font-w500 text-muted">{{
-                        notification.time
-                      }}</span>
-                    </div>
-                  </a>
-                </li>
-                <li v-if="!notifications.length" class="p-2">
-                  <b-alert variant="warning" class="text-center m-0" show>
-                    <p class="mb-0">No new notifications!</p>
-                  </b-alert>
-                </li>
-              </ul>
-              <div v-if="notifications.length" class="p-2 border-top">
-                <b-button
-                  size="sm"
-                  variant="light"
-                  class="text-center"
-                  block
-                  href="javascript:void(0)"
-                >
-                  <i class="fa fa-fw fa-arrow-down mr-1"></i> Load More..
-                </b-button>
-              </div>
-            </li>
-          </b-dropdown>
-          <!-- END Notifications Dropdown -->
         </div>
-        <!-- END Left Section -->
-
-        <!-- Right Section -->
         <div class="d-flex align-items-center">
-          <!-- Open Search Section (visible on smaller screens) -->
           <base-layout-modifier
             action="headerSearchOn"
             variant="dual"
@@ -88,9 +19,6 @@
           >
             <i class="fa fa-search"></i>
           </base-layout-modifier>
-          <!-- END Open Search Section -->
-
-          <!-- Search Form (visible on larger screens) -->
           <b-form
             @submit.stop.prevent="onSubmit"
             class="d-none d-sm-inline-block"
@@ -109,9 +37,6 @@
               </b-input-group-append>
             </b-input-group>
           </b-form>
-          <!-- END Search Form -->
-
-          <!-- User Dropdown -->
           <b-dropdown
             size="sm"
             variant="dual"
@@ -178,13 +103,8 @@
               </div>
             </li>
           </b-dropdown>
-          <!-- END User Dropdown -->
         </div>
-        <!-- END Right Section -->
       </div>
-      <!-- END Header Content -->
-
-      <!-- Header Search -->
       <div
         id="page-header-search"
         class="overlay-header bg-white"
@@ -210,9 +130,6 @@
           </b-form>
         </div>
       </div>
-      <!-- END Header Search -->
-
-      <!-- Header Loader -->
       <div
         id="page-header-loader"
         class="overlay-header bg-primary-lighter"
@@ -224,17 +141,11 @@
           </div>
         </div>
       </div>
-      <!-- END Header Loader -->
     </template>
-    <!-- END Header Content -->
-
-    <!-- Navigation -->
     <template #content>
       <div class="bg-white">
         <div class="content py-3">
-          <!-- Toggle Navigation -->
           <div class="d-lg-none">
-            <!-- Class Toggle, functionality initialized in directives/toggle-class.js -->
             <b-button
               variant="alt-secondary"
               block
@@ -248,9 +159,6 @@
               <i class="fa fa-bars"></i>
             </b-button>
           </div>
-          <!-- END Toggle Navigation -->
-
-          <!-- Navigation -->
           <div
             id="horizontal-navigation"
             class="d-none d-lg-block mt-2 mt-lg-0"
@@ -261,11 +169,9 @@
               horizontal-hover
             ></base-navigation>
           </div>
-          <!-- END Navigation -->
         </div>
       </div>
     </template>
-    <!-- END Navigation -->
   </base-layout>
 </template>
 
