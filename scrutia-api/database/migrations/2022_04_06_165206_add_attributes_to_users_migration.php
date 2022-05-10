@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('username')->unique();
             $table->string('firstname');
             $table->string('lastname');
+            $table->bigInteger("reputation")->default(100);
             $table->dropColumn('name');
             $table->dropColumn('remember_token');
         });

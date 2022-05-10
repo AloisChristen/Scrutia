@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreTagRequest;
-use App\Http\Requests\UpdateTagRequest;
-use App\Models\Tag;
+use App\Http\Requests\StoreLikeRequest;
+use App\Http\Requests\UpdateLikeRequest;
+use App\Models\Like;
 
-class TagController extends Controller
+class LikeController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,7 +16,7 @@ class TagController extends Controller
      */
     public function index()
     {
-        return Tag::paginate();
+        //
     }
 
     /**
@@ -32,10 +32,10 @@ class TagController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreTagRequest  $request
+     * @param  \App\Http\Requests\StoreLikeRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreTagRequest $request)
+    public function store(StoreLikeRequest $request)
     {
         //
     }
@@ -43,10 +43,10 @@ class TagController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Tag  $tag
+     * @param  \App\Models\Like  $like
      * @return \Illuminate\Http\Response
      */
-    public function show(Tag $tag)
+    public function show(Like $like)
     {
         //
     }
@@ -54,10 +54,10 @@ class TagController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Tag  $tag
+     * @param  \App\Models\Like  $like
      * @return \Illuminate\Http\Response
      */
-    public function edit(Tag $tag)
+    public function edit(Like $like)
     {
         //
     }
@@ -65,26 +65,23 @@ class TagController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateTagRequest  $request
-     * @param  \App\Models\Tag  $tag
+     * @param  \App\Http\Requests\UpdateLikeRequest  $request
+     * @param  \App\Models\Like  $like
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateTagRequest $request, Tag $tag)
+    public function update(UpdateLikeRequest $request, Like $like)
     {
-        $tag->title = $request->title;
-        $tag->save();
-        return response()->json($tag);
+        //
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Tag  $tag
+     * @param  \App\Models\Like  $like
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Like $like)
     {
-        $res=Tag::where('id',$id)->delete();
-        return response()->json($res);
+        //
     }
 }

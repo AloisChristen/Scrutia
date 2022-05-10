@@ -2,8 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\Answer;
 use App\Models\Project;
 use App\Models\Question;
+use App\Models\Tag;
 use App\Models\User;
 use App\Models\Version;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;

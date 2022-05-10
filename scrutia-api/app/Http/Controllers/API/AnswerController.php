@@ -3,86 +3,114 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\LikeRequest;
 use App\Http\Requests\StoreAnswerRequest;
 use App\Http\Requests\UpdateAnswerRequest;
+use App\Http\Service\UserService;
 use App\Models\Answer;
+use App\Models\Like;
+use App\Models\Question;
+use Illuminate\Http\JsonResponse;
 
 class AnswerController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreAnswerRequest  $request
-     * @return \Illuminate\Http\Response
+     * @param StoreAnswerRequest $request
+     * @return JsonResponse
      */
-    public function store(StoreAnswerRequest $request)
+    public function store(StoreAnswerRequest $request): JsonResponse
     {
-        //
-    }
+        $question = Question::find($request->question_id);
+        if($question == null)
+            return response()->json(["message" => "Not Found", "errors" => [
+                "Question does not exist"
+            ]], 404);
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Answer  $answer
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Answer $answer)
-    {
-        //
-    }
+        $answer = Answer::create([
+            'title' =>  $request->title,
+            'description' => $request->description,
+        ]);
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Answer  $answer
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Answer $answer)
-    {
-        //
+        $answer->user()->associate(auth()->user()->id);
+        $answer->question()->associate($question);
+        $answer->save();
+
+        UserService::addAnswerReputation($answer->user);
+
+        return response()->json("Created", 201);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateAnswerRequest  $request
-     * @param  \App\Models\Answer  $answer
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @param UpdateAnswerRequest $request
+     * @return JsonResponse
      */
-    public function update(UpdateAnswerRequest $request, Answer $answer)
+    public function update(int $id, UpdateAnswerRequest $request): JsonResponse
     {
-        //
+        $answer = Answer::find($id);
+        if($answer == null){
+            return response()->json(["message" => "Not Found", "errors" => [
+                "Question id does not exist"
+            ]], 404);
+        }
+        $answer->title = $request->title;
+        $answer->description = $request->description;
+        $answer->save();
+        return response()->json($answer);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Answer  $answer
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return JsonResponse
      */
-    public function destroy($id)
+    public function destroy(int $id): JsonResponse
     {
-        $res=Answer::where('id',$id)->delete();
-        return response()->json($res);
+        $answer= Answer::find($id);
+        if(auth()->user()->id != $answer->user->id && auth()->user()->reputation < 200)
+            return response()->json(["message" => "Not Allowed", "errors" => [
+                "User is not allowed to perform this action"
+            ]], 403);
+
+
+        if($answer == null)
+            return response()->json(["message" => "Not Found", "errors" => [
+                "Answer does not exist"
+            ]], 404);
+
+        $answer->likes()->delete();
+        $answer->delete();
+        return response()->json("Deleted");
+    }
+
+    public function like(int $id, LikeRequest $request): JsonResponse
+    {
+        $answer = Answer::find($id);
+        if($answer == null)
+            return response()->json(["message" => "Not Found", "errors" => [
+                "Answer does not exist"
+            ]], 404);
+
+        $like = Like::where("user_id", $answer->user->id)
+            ->where("likeable_id",$answer->id)
+            ->where("likeable_type", "App\Models\Answer")
+            ->firstOr(function() use($answer, $request) {
+                $like = Like::create([
+                    "value" => $request->value
+                ]);
+                $like->user()->associate(auth()->user());
+                $answer->likes()->save($like);
+                return $like;
+            });
+
+        $like->value = $request->value;
+        $like->save();
+
+        return response()->json("Liked");
     }
 }

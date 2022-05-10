@@ -18,9 +18,9 @@ return new class extends Migration
         Schema::create('answers', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->longText('content');
-            $table->foreignIdFor(Question::class);
-            $table->foreignIdFor(User::class, 'author');
+            $table->longText('description');
+            $table->foreignIdFor(Question::class)->onDelete("cascade")->nullable();
+            $table->foreignIdFor(User::class)->nullable();
             $table->timestamps();
         });
     }

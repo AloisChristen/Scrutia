@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Version;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateVersionRequest extends FormRequest
@@ -11,9 +12,9 @@ class UpdateVersionRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,10 +22,10 @@ class UpdateVersionRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
-            //
+            "description"
         ];
     }
 }

@@ -17,7 +17,9 @@
       </div>
       <div class="content content-full text-muted">
         <!-- Error Footer -->
-        <router-link to="/" class="link-fx"> Go Back to home page </router-link>
+        <router-link to="/" class="link-fx"
+          >Retourner sur la page d'accueil</router-link
+        >
         <!-- END Error Footer -->
       </div>
     </div>
