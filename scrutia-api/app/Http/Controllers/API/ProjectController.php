@@ -9,10 +9,9 @@ use App\Http\Service\ProjectService;
 use App\Models\Project;
 use App\Models\Status;
 use App\Models\Version;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
-use Illuminate\Pagination\Paginator;
-use Illuminate\Validation\ValidationException;
 use Request;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -20,21 +19,11 @@ use Spatie\QueryBuilder\QueryBuilder;
 class ProjectController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Database\Eloquent\Collection|QueryBuilder[]
+     * Display projects based on filters.
+     * @return Collection|QueryBuilder[]
      */
     public function index()
     {
-        error_log('ProjectController::index');
-        $startDate = Request::get('start_date');
-        $endDate = Request::get('end_date');
-        $tags = Request::get('tags');
-        $content = Request::get('content');
-        error_log($tags);
-
-        error_log('ProjectController::index - filter');
-
         return QueryBuilder::for(Project::class)
                 ->allowedFilters([
                     AllowedFilter::scope('startDate'),
@@ -44,17 +33,6 @@ class ProjectController extends Controller
                     AllowedFilter::scope('content'),
                 ])
                 ->get();
-
-
-    }
-
-    public function showAll()
-    {
-        return QueryBuilder::for(Project::class)
-            ->allowedFilters([
-                AllowedFilter::scope('start_date'),
-            ])
-            ->get();
     }
 
     /**
@@ -69,6 +47,11 @@ class ProjectController extends Controller
         return Project::paginate();
     }
 
+    /**
+     * Display initiatives
+     *
+     * @return mixed
+     */
     public function showInitiatives()
     {
         // TODO: showInitiatives
@@ -77,6 +60,10 @@ class ProjectController extends Controller
         return Project::paginate();
     }
 
+    /**
+     * @param $id
+     * @return JsonResponse
+     */
     public function promoteToInitiative($id)
     {
         $projectToPromote = Project::where('id', $id);
@@ -120,9 +107,6 @@ class ProjectController extends Controller
     public function store(StoreProjectRequest $request): JsonResponse
     {
         $author = auth()->user();
-
-        //error_log($request);
-
         $project = Project::create([
             'title' => $request->title,
         ]);
@@ -176,35 +160,5 @@ class ProjectController extends Controller
         $project->delete();
 
         return response()->json($project);
-    }
-
-    public function displayByTags($tag): JsonResponse
-    {
-        $projects = Project::with('tag')->whereHas('tag', function ($query) use ($tag) {
-            $query->where('name', $tag);
-        })->get();
-
-        return response()->json($projects);
-    }
-
-    public function displayBetweenDates($start, $end): JsonResponse
-    {
-        return response()->json(
-            (new Project)
-                ->whereBetween('created_at', $start, $end)
-                ->get()
-        );
-    }
-
-    public function displayByTagsAndDates($tag, $start, $end): JsonResponse
-    {
-        return response()->json(
-            (new Project)
-                ->whereBetween('created_at', $start, $end)
-                ->whereHas('tag', function ($query) use ($tag) {
-                    $query->where('name', $tag);
-                })
-                ->get()
-        );
     }
 }
