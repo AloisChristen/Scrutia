@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Http\Service\ProjectService;
 use App\Models\Project;
@@ -13,10 +14,8 @@ use Illuminate\Http\Response;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Validation\ValidationException;
 use Request;
-use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
-
-
+use Spatie\QueryBuilder\QueryBuilder;
 
 class ProjectController extends Controller
 {
@@ -34,31 +33,19 @@ class ProjectController extends Controller
         $content = Request::get('content');
         error_log($tags);
 
-        //if startDate and endDate and tags and content are not set, return all projects
-        if (! $startDate && ! $endDate && ! $tags && ! $content) {
-            error_log('ProjectController::index - no filter');
+        error_log('ProjectController::index - filter');
 
-            return Project::paginate();
-        } else {
-            error_log('ProjectController::index - filter');
-
-            return QueryBuilder::for(Project::class)
+        return QueryBuilder::for(Project::class)
                 ->allowedFilters([
-                    AllowedFilter::scope('start_date'),
-                    AllowedFilter::scope('end_date'),
+                    AllowedFilter::scope('startDate'),
+                    AllowedFilter::scope('endDate'),
+                    AllowedFilter::scope('title'),
                     AllowedFilter::scope('tags'),
                     AllowedFilter::scope('content'),
                 ])
                 ->get();
 
-            /*->when($startDate, function ($query) use ($content, $tags, $startDate, $endDate) {
-                return $query
-                    //->where('created_at', '>=', $startDate);
-                    ->where('created_at', '>=', $startDate)
-            })->get();*/
-        }
 
-        //return Project::paginate();
     }
 
     public function showAll()
@@ -130,9 +117,11 @@ class ProjectController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function store(Request $request): JsonResponse
+    public function store(StoreProjectRequest $request): JsonResponse
     {
         $author = auth()->user();
+
+        //error_log($request);
 
         $project = Project::create([
             'title' => $request->title,

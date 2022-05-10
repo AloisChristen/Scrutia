@@ -16,7 +16,7 @@ class TagController extends Controller
      */
     public function index()
     {
-        return Tag::paginate();
+        return Tag::all();
     }
 
     /**
