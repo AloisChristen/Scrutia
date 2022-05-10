@@ -15,7 +15,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('favorites', function (Blueprint $table) {
+        Schema::create('project_user', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(User::class)->onDelete("cascade")->nullable();
             $table->foreignIdFor(Project::class)->onDelete("cascade")->nullable();
