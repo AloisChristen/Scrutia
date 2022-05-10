@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\AnswerController;
+use App\Http\Controllers\API\FavoriteController;
 use App\Http\Controllers\API\ProjectController;
 use App\Http\Controllers\API\QuestionController;
 use App\Http\Controllers\API\TagController;
@@ -8,7 +9,6 @@ use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\VersionController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegistrationController;
-use App\Http\Controllers\FavoriteController;
 use Illuminate\Support\Facades\Route;
 
 /*
