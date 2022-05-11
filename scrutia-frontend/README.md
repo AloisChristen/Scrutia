@@ -21,7 +21,7 @@ Add the following required extensions :
 
 **Install Yarn**
 
-Install Yarn from [https://yarnpkg.com/](https://yarnpkg.com/) 
+Install Yarn from [https://yarnpkg.com/](https://yarnpkg.com/)
 
 Or via NPM : `npm install yarn -g`
 
