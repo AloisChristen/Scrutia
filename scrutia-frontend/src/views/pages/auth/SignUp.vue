@@ -230,6 +230,8 @@
 import { validationMixin } from 'vuelidate'
 import { required, minLength, email, sameAs } from 'vuelidate/lib/validators'
 import { RegisterAccountDTO } from '../../../api/dto/registerAccountDTO'
+import { userService } from '../../../api/service/userService'
+import { SessionDTO } from '../../../api/dto/userDTO'
 
 export default {
   mixins: [validationMixin],
@@ -279,13 +281,25 @@ export default {
       this.$v.form.$touch()
 
       let account = new RegisterAccountDTO(this.form)
-      console.log(account)
       if (this.$v.form.$anyError) {
         return
       }
 
       // Form submit logic
-      account.submit().then((resp) => console.log(resp))
+      userService.register(account).then((resp) => {
+        let body = resp.json()
+        let session = new SessionDTO(
+          body.token,
+          body.user.id,
+          body.user.username,
+          body.user.firstname,
+          body.user.lastname,
+          body.user.email,
+          body.user.email_verified_at,
+          body.user.reputation
+        )
+        this.$store.commit('session', session)
+      })
     },
   },
 }

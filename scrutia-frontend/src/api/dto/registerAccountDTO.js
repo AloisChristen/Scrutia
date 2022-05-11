@@ -7,7 +7,6 @@ class RegisterAccountDTO {
     this.password = formObject.password
     this.password_confirmation = formObject.password_confirmation
   }
-
 }
 
 export {RegisterAccountDTO}

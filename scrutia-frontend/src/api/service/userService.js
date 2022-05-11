@@ -1,9 +1,14 @@
 import { api } from "../api";
+import { SessionDTO } from "../dto/userDTO";
 
 class UserService {
 
+  constructor(api){
+    this.api = api
+  }
+
   async login(user){
-    let endpoint= api.auth.signin
+    let endpoint= this.api.auth.signin
     return fetch(
       endpoint.url,
       {
@@ -17,7 +22,7 @@ class UserService {
   }
 
   async logout(){
-    let endpoint = api.auth.signout
+    let endpoint = this.api.auth.signout
     return fetch(
       endpoint.url,
       {
@@ -30,7 +35,8 @@ class UserService {
   }
 
   async register(registerAccountDTO){
-    let endpoint = api.auth.register
+    let endpoint = this.api.auth.register
+    console.log(this.api)
     return fetch(
       endpoint.url,
       {
@@ -40,10 +46,22 @@ class UserService {
         },
         body: JSON.stringify(registerAccountDTO)
       }
-    )
+    ).then((resp) => {
+      let body = resp.json()
+      return new SessionDTO(
+        body.token,
+        body.user.id,
+        body.user.username,
+        body.user.firstname,
+        body.user.lastname,
+        body.user.email,
+        body.user.email_verified_at,
+        body.user.reputation
+        )
+    }
   }
 }
 
-let userService = new UserService();
+let userService = new UserService(api);
 
 export {userService}

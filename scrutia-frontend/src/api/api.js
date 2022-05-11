@@ -2,7 +2,7 @@ let baseUrl = "https://scrutia-api-dev.herokuapp.com/api"
 
 let api = {
   auth: {
-    signup: {
+    register: {
       url: baseUrl + "/register",
       method: "POST"
     },
