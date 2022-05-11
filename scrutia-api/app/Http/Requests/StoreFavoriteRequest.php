@@ -24,7 +24,7 @@ class StoreFavoriteRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "project_id" => "required"
+            "project_id" => "numeric"
         ];
     }
 }
