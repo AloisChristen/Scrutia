@@ -25,7 +25,7 @@ class FavoriteController extends Controller
             ]], 404);
         }
 
-        return $user->favorites()->paginate();
+        return response()->json($user->favorites()->paginate());
     }
 
     /**
@@ -86,6 +86,7 @@ class FavoriteController extends Controller
         }
 
         $user->favorites()->where("project_id",$project->id)->delete();
+
 
         return response()->json("Deleted");
     }
