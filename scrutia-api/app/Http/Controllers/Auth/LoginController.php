@@ -20,34 +20,29 @@ class LoginController extends Controller
      */
     public function login(LoginRequest $request)
     {
-        $validated = $request->validated();
-        if ($validated) {
-            $user = User::where('username', $request->username)->first();
+        $user = User::where('username', $request->username)->first();
 
-            if (!$user) {
-                return response()->json([
-                    'title' => 'error',
-                    'description' => 'User not found'
-                ], 404);
-            }
-
-            if (!Hash::check($request->password, $user->password)) {
-                return response()->json([
-                    'title' => 'error',
-                    'description' => 'Wrong credentials'
-                ], 401);
-            }
-
-            return response()->json([
-                'token' => $user->createToken($request->header('User-Agent'))->plainTextToken,
-                'user' => $user
-            ]);
+        if (!$user) {
+            return response()->json(["message" => "Not Found", "errors" => [
+                "User not found"
+            ]], 404);
         }
+
+        if (!Hash::check($request->password, $user->password)) {
+            return response()->json(["message" => "Unauthorized", "errors" => [
+                "Wrong username or password"
+            ]], 401);
+        }
+
+        $user["nb_favorites"] = $user->favorites()->count();
+        $user["nb_projects"] = $user->projects()->count();
+
         return response()->json([
-            'title' => 'error',
-            'description' => 'Bad Request'
-        ],400);
+            'token' => $user->createToken($request->header('User-Agent'))->plainTextToken,
+            'user' => $user,
+        ]);
     }
+
 
     /**
      * Handle an incoming logout request.

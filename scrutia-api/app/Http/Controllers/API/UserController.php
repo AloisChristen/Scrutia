@@ -26,6 +26,9 @@ class UserController extends Controller
             ]], 404);
         }
 
+        $user["nb_favorites"] = $user->favorites()->count();
+        $user["nb_projects"] = $user->projects()->count();
+
         return response()->json($user);
     }
 
