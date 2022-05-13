@@ -46,8 +46,6 @@ paths:
                 $ref: '#/components/schemas/AuthUser'
         400:
           $ref: '#/components/responses/BadRequest'
-        422:
-          $ref: '#/components/responses/UnprocessableContent'
         
   /login:
     post:
@@ -66,8 +64,6 @@ paths:
             'application/json':
               schema:
                 $ref: '#/components/schemas/AuthUser'
-        400:
-          $ref: '#/components/responses/BadRequest'
         401:
           $ref: '#/components/responses/WrongAuth'
         404:
@@ -88,7 +84,6 @@ paths:
             'application/json':
               schema:
                 type: string
-                
   /answers:
     post:
       tags:
@@ -832,6 +827,8 @@ components:
         email:
           type: string
           format: email
+        reputation:
+          type: integer
     UserDTO:
       type: object
       properties:
@@ -894,6 +891,12 @@ components:
         'application/json':
           schema:
             $ref: '#/components/schemas/Error'
+    NotAcceptable:
+      description: Not Acceptable
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/Error'
     NotAProject:
       description: Forbidden because project is still an idea
       content:
@@ -912,6 +915,7 @@ components:
         'application/json':
           schema:
             $ref: '#/components/schemas/Error'
+    
     NotExistingUser:
       description: Not found. Username does not exists.
       content:
