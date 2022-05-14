@@ -21,8 +21,8 @@ tags:
     description: Everything about questions
   - name: Tags
     description: Everything about tags
-  - name: Users
-    description: Everything about users
+  - name: User
+    description: Everything about authenticated user
   - name: Versions
     description: Everything about initiative text versions
 paths:
@@ -426,10 +426,10 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Tags'
-  /users:
+  /user:
     get:
       tags:
-        - Users
+        - User
       summary: Get authenticated user informations
       security:
         - bearerAuth: []
@@ -442,31 +442,9 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/UserDTO'
-    post:
-      tags:
-        - Users
-      summary: Create a user account
-      requestBody:
-        required: true
-        content:
-          'application/json':
-            schema:
-              $ref: '#/components/schemas/User'
-      responses:
-        201:
-          description: Created
-          content:
-            text/plain:
-              schema:
-                type: string
-                description: JWT Token
-        400:
-          description: Bad request. A field is invalid.
-        409:
-          description: Conflict. Username or email already exists.
     put:
       tags:
-        - Users
+        - User
       summary: Update a user account
       security:
         - bearerAuth: []
@@ -476,7 +454,7 @@ paths:
         content:
           'application/json':
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: '#/components/schemas/UserUpdateDTO'
       responses:
         204:
           description: Updated
@@ -560,6 +538,12 @@ paths:
       summary: Like a text version
       security:
         - bearerAuth: []
+      parameters:
+        - in: path
+          name: version_id
+          schema:
+            type: integer
+          required: true  
       requestBody:
         required: true
         content:
@@ -863,6 +847,31 @@ components:
         email:
           type: string
           format: email
+        reputation:
+          type: integer
+    UserUpdateDTO:
+      type: object
+      properties:
+        username:
+          type: string
+          minLength: 3
+          maxLength: 30
+          pattern: '^[A-Za-z][A-Za-z0-9_]{3,30}$'
+        firstname:
+          type: string
+        lastname:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 6
+          format: password
+        password_confirmation:
+          type: string
+          minLength: 6
+          format: password
     Version:
       type: object
       properties:
