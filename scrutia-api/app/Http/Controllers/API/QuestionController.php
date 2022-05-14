@@ -7,14 +7,11 @@ use App\Http\Requests\DestroyQuestionRequest;
 use App\Http\Requests\LikeRequest;
 use App\Http\Requests\StoreQuestionRequest;
 use App\Http\Requests\UpdateQuestionRequest;
-use App\Http\Service\UserService;
+use App\Http\Service\LikeService;
 use App\Models\Like;
 use App\Models\Question;
-use App\Models\User;
 use App\Models\Version;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
-use phpDocumentor\Reflection\Project;
 
 class QuestionController extends Controller
 {
@@ -41,7 +38,6 @@ class QuestionController extends Controller
         $question->user()->associate(auth()->user()->id);
         $question->version()->associate($project_version);
         $question->save();
-        UserService::addQuestionReputation($question->user);
 
         return response()->json("Created", 201);
     }
@@ -113,6 +109,15 @@ class QuestionController extends Controller
 
         $like->value = $request->value;
         $like->save();
+
+        /**
+         * TODO Discuss if we let this "bug" with the group
+         * Check if it's the first like or not, if it's not, we have to remove old reputation and add the new (positiv or negativ)
+         * Otherwise, you can put upvote, then downvote and then upvote again and you can gain reputation infinitely
+         * As upvoting gain more reputation than downvoting remove reputation
+         * (addAnswerVoteReputation implementing a third parameter for that with a default value to false meaning that he's not been modified)
+         **/
+        LikeService::addVoteReputation($question->user, $like->value, auth()->id);
 
         return response()->json("Liked");
     }

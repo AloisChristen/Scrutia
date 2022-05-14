@@ -6,13 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\LikeRequest;
 use App\Http\Requests\StoreVersionRequest;
 use App\Http\Requests\UpdateVersionRequest;
-use App\Http\Service\UserService;
 use App\Models\Like;
 use App\Models\Project;
 use App\Models\Status;
 use App\Models\Version;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Arr;
 
 class VersionController extends Controller
 {
@@ -43,8 +41,6 @@ class VersionController extends Controller
         $version->project()->associate($project);
         $version->user()->associate(auth()->user());
         $version->save();
-
-        UserService::addVersionReputation($version->user);
 
         return response()->json("Created", 201);
     }
