@@ -72,15 +72,15 @@ export default new Vuex.Store({
       return state.settings.colorTheme
     },
     isConnected: (state) => {
-      return state.currentUser != null && state.authToken != null;
+      return state.session.currentUser != null && state.session.authToken != null;
     },
     // Get current connected User
     currentUser: (state) => {
-      return state.currentUser.user
+      return state.session.currentUser
     },
     // GET authToken
     authToken: (state) => {
-      return state.authToken
+      return state.session.authToken
     },
   },
   mutations: {

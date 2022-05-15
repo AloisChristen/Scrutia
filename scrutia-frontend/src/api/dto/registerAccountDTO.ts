@@ -1,5 +1,11 @@
 class RegisterAccountDTO {
-  constructor(formObject){
+  username: string
+  firstname: string
+  lastname: string
+  email: string
+  password: string
+  password_confirmation: string
+  constructor(formObject:any){
     this.username = formObject.username
     this.firstname = formObject.firstname
     this.lastname = formObject.lastname

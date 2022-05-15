@@ -1,6 +1,7 @@
-let baseUrl = "https://scrutia-api-dev.herokuapp.com/api"
+//TODO change this depending on dev/prod
+const baseUrl = "https://scrutia-api-dev.herokuapp.com/api"
 
-let api = {
+const api = {
   auth: {
     register: {
       url: baseUrl + "/register",

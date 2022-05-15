@@ -1,14 +1,17 @@
 import { api } from "../api";
-import { SessionDTO } from "../dto/userDTO";
+import { LoginDTO } from "../dto/loginDTO";
+import { RegisterAccountDTO } from "../dto/registerAccountDTO";
+import { SessionDTO, UserDTO } from "../dto/userDTO";
 
 class UserService {
+  api: any;
 
-  constructor(api){
+  constructor(api:any){
     this.api = api
   }
 
-  async login(user){
-    let endpoint= this.api.auth.signin
+  async login(user:LoginDTO){
+    const endpoint= this.api.auth.signin
     return fetch(
       endpoint.url,
       {
@@ -22,7 +25,7 @@ class UserService {
   }
 
   async logout(){
-    let endpoint = this.api.auth.signout
+    const endpoint = this.api.auth.signout
     return fetch(
       endpoint.url,
       {
@@ -34,8 +37,8 @@ class UserService {
     )
   }
 
-  async register(registerAccountDTO){
-    let endpoint = this.api.auth.register
+  async register(registerAccountDTO:RegisterAccountDTO){
+    const endpoint = this.api.auth.register
     console.log(this.api)
     return fetch(
       endpoint.url,
@@ -46,22 +49,15 @@ class UserService {
         },
         body: JSON.stringify(registerAccountDTO)
       }
-    ).then((resp) => {
-      let body = resp.json()
-      return new SessionDTO(
-        body.token,
-        body.user.id,
-        body.user.username,
-        body.user.firstname,
-        body.user.lastname,
-        body.user.email,
-        body.user.email_verified_at,
-        body.user.reputation
-        )
-    }
+    ).then(async (resp:any) => {
+      if(!resp.ok){
+        console.log(resp.statusText)
+      } else {
+        const body:SessionDTO = await resp.json() as SessionDTO
+        return body
+      }
+    })
   }
 }
-
-let userService = new UserService(api);
-
+const userService = new UserService(api)
 export {userService}
