@@ -53,14 +53,16 @@
                 </div>
                 <div class="form-group">
                   <v-select
+                    id="tags"
                     size="lg"
                     class="form-control-alt"
                     taggable
                     multiple
-                    v-model="vSelectOptionsMultipleSelected"
-                    :options="vSelectOptionsMultiple"
+                    v-model="$v.form.tags.$model"
+                    :options="options"
                     placeholder="Définissez des tags..."
-                  ></v-select>
+                  >
+                  </v-select>
                   <b-form-invalid-feedback id="tags-feedback">
                     Vous devez au moins définir un tag
                   </b-form-invalid-feedback>
@@ -78,7 +80,7 @@
                   </b-button>
                 </b-col>
                 <b-col md="6" xl="6">
-                  <b-button type="submit" variant="alt-warning" block>
+                  <b-button variant="alt-warning" block>
                     <i class="fa fa-trash mr-1"></i> Réinitialiser
                   </b-button>
                 </b-col>
@@ -96,10 +98,12 @@
 @import './src/assets/scss/vendor/vue-select';
 </style>
 
-<script>
+<script lang="ts">
 import { validationMixin } from 'vuelidate'
 import { required, minLength } from 'vuelidate/lib/validators'
 import VueSelect from 'vue-select'
+import { Project } from '../../typings/scrutia-types'
+import { addIdea } from '../../api/services/IdeaService'
 
 export default {
   name: 'AddIdeaView',
@@ -114,7 +118,7 @@ export default {
         description: null,
         tags: [],
       },
-      vSelectOptionsMultiple: [
+      options: [
         'HTML',
         'CSS',
         'JavaScript',
@@ -125,7 +129,6 @@ export default {
         'React',
         'Vue.js',
       ],
-      vSelectOptionsMultipleSelected: null,
     }
   },
   validations: {
@@ -138,22 +141,38 @@ export default {
         required,
         minLength: minLength(50),
       },
-      tags: {
-        required,
-        minLength: minLength(5),
-      },
+      tags: {},
     },
   },
   methods: {
-    onSubmit() {
+    async onSubmit() {
       this.$v.form.$touch()
 
+      console.log('Submit')
+
       if (this.$v.form.$anyError) {
+        console.log('Error')
+
         return
       }
 
+      // const tags =
+      //   this.form.tags.length === 0
+      //     ? []
+      //     : this.form.tags.foreach((tag: string) => {
+      //         return { id: 0, title: tag }
+      //       })
+
+      const ideaToAdd: Project = {
+        title: this.form.title,
+        description: this.form.description,
+        tags: [],
+      }
+
+      await addIdea(ideaToAdd)
+
       // Form submit logic
-      this.$router.push('/todo')
+      // this.$router.push('/todo')
     },
   },
 }
