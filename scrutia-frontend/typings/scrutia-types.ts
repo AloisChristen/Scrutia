@@ -1,4 +1,14 @@
-export type Answer = {
+export type AnswerDetailsDTO = {
+  id: number
+  description: string
+  author: string
+  date: string
+  nbLikes: number
+  nbDislikes: number
+  userVote: VoteDTO
+}
+
+export type AnswerStoreDTO = {
   question_id: number
   title: string
   description: string
@@ -7,16 +17,6 @@ export type Answer = {
 export type AnswerUpdateDTO = {
   title: string
   description: string
-}
-
-export type AnswersDTO = {
-  id: number
-  description: string
-  author: string
-  date: Date
-  nbLikes: number
-  nbDislikes: number
-  userVote: Vote
 }
 
 export type AuthUser = {
@@ -33,7 +33,7 @@ export type LikeDTO = {
   value: number
 }
 
-export type Login = {
+export type LoginDTO = {
   username: string
   password: string
 }
@@ -41,7 +41,7 @@ export type Login = {
 export type Project = {
   title: string
   description: string
-  tags: TagsDTO[]
+  tags: TagDTO[]
 }
 
 export type ProjectDetailsDTO = {
@@ -50,12 +50,12 @@ export type ProjectDetailsDTO = {
   description: string
   author: string
   date: Date
-  tags: TagsDTO[]
+  tags: TagDTO[]
   nbLikes: number
   nbDislikes: number
-  userVote: Vote
+  userVote: VoteDTO
   status: ProjectStatus
-  questions: QuestionsDTO[]
+  questions: QuestionDetailsDTO[]
 }
 
 export type ProjectDTO = {
@@ -64,10 +64,10 @@ export type ProjectDTO = {
   description: string
   author: string
   date: Date
-  tags: TagsDTO[]
+  tags: TagDTO[]
   nbLikes: number
   nbDislikes: number
-  userVote: Vote
+  userVote: VoteDTO
   status: ProjectStatus
 }
 
@@ -88,7 +88,18 @@ export type ProjectPagination = {
 
 export type ProjectStatus = ['idea', 'initiative']
 
-export type Question = {
+export type QuestionDetailsDTO = {
+  id: number
+  title: string
+  author: string
+  date: string
+  nbLikes: number
+  nbDislikes: number
+  userVote: VoteDTO
+  answers: AnswerDetailsDTO[]
+}
+
+export type QuestionStoreDTO = {
   project_id: number
   version_number: number
   title: string
@@ -100,17 +111,6 @@ export type QuestionUpdateDTO = {
   description: string
 }
 
-export type QuestionsDTO = {
-  id: number
-  title: string
-  author: string
-  date: string
-  nbLikes: number
-  nbDislikes: number
-  userVote: Vote
-  answers: AnswersDTO[]
-}
-
 export type RegisterUser = {
   username: string
   firstname: string
@@ -120,12 +120,8 @@ export type RegisterUser = {
   password_confirmation: string
 }
 
-export type Tags = {
+export type TagDTO = {
   id: number
-  title: string
-}
-
-export type TagsDTO = {
   title: string
 }
 
@@ -139,19 +135,30 @@ export type User = {
 }
 
 export type UserDTO = {
+  id: number
   username: string
   firstname: string
   lastname: string
   email: string
+  reputation: number
 }
 
-export type Version = {
+export type UserUdpateDTO = {
+  username: string
+  firstname: string
+  lastname: string
+  email: string
+  password: string
+  password_confirmation: string
+}
+
+export type VersionStore = {
   project_id: number
   description: string
 }
 
-export type VersionDTO = {
+export type VersionUpdateDTO = {
   description: string
 }
 
-export type Vote = [-1, 0, 1]
+export type VoteDTO = [-1, 0, 1]
