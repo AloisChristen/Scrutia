@@ -36,18 +36,16 @@ paths:
         content:
           'application/json':
             schema:
-              $ref: '#/components/schemas/RegisterUser'
+              $ref: '#/components/schemas/RegisterDTO'
       responses:
         201:
           description: Created
           content:
             'application/json':
               schema:
-                $ref: '#/components/schemas/AuthUser'
+                $ref: '#/components/schemas/AuthUserDTO'
         400:
           $ref: '#/components/responses/BadRequest'
-        422:
-          $ref: '#/components/responses/UnprocessableContent'
         
   /login:
     post:
@@ -58,20 +56,18 @@ paths:
         content:
           'application/json':
             schema:
-              $ref: '#/components/schemas/Login'
+              $ref: '#/components/schemas/LoginDTO'
       responses:
         200:
           description: OK
           content:
             'application/json':
               schema:
-                $ref: '#/components/schemas/AuthUser'
-        400:
-          $ref: '#/components/responses/BadRequest'
+                $ref: '#/components/schemas/AuthUserDTO'
         401:
           $ref: '#/components/responses/WrongAuth'
         404:
-          $ref: '#/components/responses/NotExistingUser'
+          $ref: '#/components/responses/NotFound'
         422:
           $ref: '#/components/responses/UnprocessableContent'
   /logout:
@@ -88,7 +84,6 @@ paths:
             'application/json':
               schema:
                 type: string
-                
   /answers:
     post:
       tags:
@@ -101,16 +96,16 @@ paths:
         content:
           'application/json':
             schema:
-              $ref: '#/components/schemas/Answer'
+              $ref: '#/components/schemas/AnswerStoreDTO'
       responses:
         201:
           description: Created
-        400:
-          $ref: '#/components/responses/BadRequest'
-        401:
-          $ref: '#/components/responses/Unauthorized'
-        403:
+        404:
+          $ref: '#/components/responses/NotFound'
+        409:
           $ref: '#/components/responses/NotEnoughReputation'
+        422:
+          $ref: '#/components/responses/UnprocessableContent'
   /answers/{answer_id}:
     put:
       tags:
@@ -133,12 +128,12 @@ paths:
       responses:
         200:
           description: Updated
-        400:
-          $ref: '#/components/responses/BadRequest'
-        401:
-          $ref: '#/components/responses/Unauthorized'
-        403:
+        404:
+          $ref: '#/components/responses/NotFound'
+        409:
           $ref: '#/components/responses/NotEnoughReputation'
+        422:
+          $ref: '#/components/responses/UnprocessableContent'
     delete:
       tags:
         - Answers
@@ -154,12 +149,12 @@ paths:
       responses:
         200:
           description: Deleted
-        400:
-          $ref: '#/components/responses/BadRequest'
-        401:
-          $ref: '#/components/responses/Unauthorized'
-        403:
+        404:
+          $ref: '#/components/responses/NotFound'
+        409:
           $ref: '#/components/responses/NotEnoughReputation'
+        422:
+          $ref: '#/components/responses/UnprocessableContent'
   /answers/{answer_id}/like:
     post:
       tags:
@@ -181,13 +176,13 @@ paths:
               $ref: '#/components/schemas/LikeDTO'
       responses:
         200:
-          description: Updated
-        400:
-          $ref: '#/components/responses/BadRequest'
-        401:
-          $ref: '#/components/responses/Unauthorized'
-        403:
+          description: Liked
+        404:
+          $ref: '#/components/responses/NotFound'
+        409:
           $ref: '#/components/responses/NotEnoughReputation'
+        422:
+          $ref: '#/components/responses/UnprocessableContent'
   /projects:
     get:
       tags:
@@ -325,16 +320,16 @@ paths:
         content:
           'application/json':
             schema:
-              $ref: '#/components/schemas/Question'
+              $ref: '#/components/schemas/QuestionStoreDTO'
       responses:
         201:
           description: Created
-        400:
-          $ref: '#/components/responses/BadRequest'
-        401:
-          $ref: '#/components/responses/Unauthorized'
-        403:
+        404:
+          $ref: '#/components/responses/NotFound'
+        409:
           $ref: '#/components/responses/NotEnoughReputation'
+        422:
+          $ref: '#/components/responses/UnprocessableContent'
   /questions/{question_id}:
     put:
       tags:
@@ -357,12 +352,12 @@ paths:
       responses:
         200:
           description: Updated
-        400:
-          $ref: '#/components/responses/BadRequest'
-        401:
-          $ref: '#/components/responses/Unauthorized'
-        403:
+        404:
+          $ref: '#/components/responses/NotFound'
+        409:
           $ref: '#/components/responses/NotEnoughReputation'
+        422:
+          $ref: '#/components/responses/UnprocessableContent'
     delete:
       tags:
         - Questions
@@ -378,12 +373,12 @@ paths:
       responses:
         200:
           description: Deleted
-        400:
-          $ref: '#/components/responses/BadRequest'
-        401:
-          $ref: '#/components/responses/Unauthorized'
-        403:
+        404:
+          $ref: '#/components/responses/NotFound'
+        409:
           $ref: '#/components/responses/NotEnoughReputation'
+        422:
+          $ref: '#/components/responses/UnprocessableContent'
   /questions/{question_id}/like:
     post:
       tags:
@@ -406,12 +401,12 @@ paths:
       responses:
         200:
           description: Deleted
-        400:
-          $ref: '#/components/responses/BadRequest'
-        401:
-          $ref: '#/components/responses/Unauthorized'
-        403:
+        404:
+          $ref: '#/components/responses/NotFound'
+        409:
           $ref: '#/components/responses/NotEnoughReputation'
+        422:
+          $ref: '#/components/responses/UnprocessableContent'
   /tags:
     get:
       tags:
@@ -425,7 +420,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Tags'
+                  $ref: '#/components/schemas/TagDTO'
   /user:
     get:
       tags:
@@ -442,6 +437,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/UserDTO'
+        404:
+          $ref: '#/components/responses/NotFound'
     put:
       tags:
         - User
@@ -456,10 +453,14 @@ paths:
             schema:
               $ref: '#/components/schemas/UserUpdateDTO'
       responses:
-        204:
+        200:
           description: Updated
-        400:
-          description: Bad request. A field is invalid.
+        404:
+          $ref: '#/components/responses/NotFound'
+        409:
+          $ref: '#/components/responses/NotEnoughReputation'
+        422:
+          $ref: '#/components/responses/UnprocessableContent'
   /versions:
     post:
       tags:
@@ -472,16 +473,16 @@ paths:
         content:
           'application/json':
             schema:
-              $ref: '#/components/schemas/Version'
+              $ref: '#/components/schemas/VersionStoreDTO'
       responses:
         201:
           description: Created
-        400:
-          $ref: '#/components/responses/BadRequest'
-        401:
-          $ref: '#/components/responses/Unauthorized'
         403:
-          $ref: '#/components/responses/NotAProject'
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        422:
+          $ref: '#/components/responses/UnprocessableContent'
   /versions/{version_id}:
     put:
       tags:
@@ -500,16 +501,16 @@ paths:
         content:
           'application/json':
             schema:
-              $ref: '#/components/schemas/VersionDTO'
+              $ref: '#/components/schemas/VersionUpdateDTO'
       responses:
         201:
           description: Updated
-        400:
-          $ref: '#/components/responses/BadRequest'
-        401:
-          $ref: '#/components/responses/Unauthorized'
         403:
-          $ref: '#/components/responses/NotAProject'
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        422:
+          $ref: '#/components/responses/UnprocessableContent'
     delete:
       tags:
         - Versions
@@ -525,12 +526,12 @@ paths:
       responses:
         201:
           description: Deleted
-        400:
-          $ref: '#/components/responses/BadRequest'
-        401:
-          $ref: '#/components/responses/Unauthorized'
         403:
-          $ref: '#/components/responses/NotAProject'
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        422:
+          $ref: '#/components/responses/UnprocessableContent'
   /versions/{version_id}/like:
     post:
       tags:
@@ -553,31 +554,15 @@ paths:
       responses:
         201:
           description: Created
-        400:
-          $ref: '#/components/responses/BadRequest'
-        401:
-          $ref: '#/components/responses/Unauthorized'
         403:
-          $ref: '#/components/responses/NotAProject'
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        422:
+          $ref: '#/components/responses/UnprocessableContent'
 components:
   schemas:
-    Answer:
-      type: object
-      properties:
-        question_id:
-          type: integer
-        title:
-          type: string
-        description:
-          type: string
-    AnswerUpdateDTO:
-      type: object
-      properties:
-        title:
-          type: string
-        description:
-          type: string
-    AnswersDTO:
+    AnswerDetailsDTO:
       type: object
       properties:
         id:
@@ -595,14 +580,30 @@ components:
         nbDislikes:
           type: integer
         userVote:
-          $ref: '#/components/schemas/Vote'
-    AuthUser:
+          $ref: '#/components/schemas/VoteDTO'
+    AnswerStoreDTO:
+      type: object
+      properties:
+        question_id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+    AnswerUpdateDTO:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+    AuthUserDTO:
       type: object
       properties:
         token:
           type: string
         user:
-          $ref: '#/components/schemas/User'
+          $ref: '#/components/schemas/UserDTO'
     Error:
       type: object
       properties:
@@ -615,7 +616,7 @@ components:
       properties:
         value:
           type: integer
-    Login:
+    LoginDTO:
       type: object
       properties:
         username:
@@ -634,7 +635,7 @@ components:
         tags:
           type: array
           items:
-            $ref: '#/components/schemas/TagsDTO'
+            $ref: '#/components/schemas/TagDTO'
     ProjectDetailsDTO:
       type: object
       properties:
@@ -654,19 +655,19 @@ components:
         tags:
           type: array
           items:
-            $ref: '#/components/schemas/Tags'
+            $ref: '#/components/schemas/TagDTO'
         nbLikes:
           type: integer
         nbDislikes:
           type: integer
         userVote:
-          $ref: '#/components/schemas/Vote'
+          $ref: '#/components/schemas/VoteDTO'
         status:
           $ref: '#/components/schemas/ProjectStatus'
         questions:
           type: array
           items:
-            $ref: '#/components/schemas/QuestionsDTO'
+            $ref: '#/components/schemas/QuestionDetailsDTO'
     ProjectDTO:
       type: object
       properties:
@@ -686,13 +687,13 @@ components:
         tags:
           type: array
           items:
-            $ref: '#/components/schemas/Tags'
+            $ref: '#/components/schemas/TagDTO'
         nbLikes:
           type: integer
         nbDislikes:
           type: integer
         userVote:
-          $ref: '#/components/schemas/Vote'
+          $ref: '#/components/schemas/VoteDTO'
         status:
           $ref: '#/components/schemas/ProjectStatus'
     ProjectPagination:
@@ -732,7 +733,31 @@ components:
     ProjectStatus:
       type: string
       enum: [idea, initiative]
-    Question:
+    QuestionDetailsDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+          maxLength: 255
+        author:
+          type: string
+          maxLength: 30
+        date:
+          type: string
+          format: date-time
+        nbLikes:
+          type: integer
+        nbDislikes:
+          type: integer
+        userVote:
+          $ref: '#/components/schemas/VoteDTO'
+        answers:
+          type: array
+          items:
+            $ref: '#/components/schemas/AnswerDetailsDTO'
+    QuestionStoreDTO:
       type: object
       properties:
         project_id:
@@ -752,31 +777,7 @@ components:
           maxLength: 50
         description:
           type: string        
-    QuestionsDTO:
-      type: object
-      properties:
-        id:
-          type: integer
-        title:
-          type: string
-          maxLength: 255
-        author:
-          type: string
-          maxLength: 30
-        date:
-          type: string
-          format: date-time
-        nbLikes:
-          type: integer
-        nbDislikes:
-          type: integer
-        userVote:
-          $ref: '#/components/schemas/Vote'
-        answers:
-          type: array
-          items:
-            $ref: '#/components/schemas/AnswersDTO'
-    RegisterUser:
+    RegisterDTO:
       type: object
       properties: 
         username:
@@ -797,7 +798,7 @@ components:
         password_confirmation:
           type: string
           format: password
-    Tags:
+    TagDTO:
       type: object
       properties:
         id:
@@ -805,36 +806,11 @@ components:
         title:
           type: string
           maxLength: 30
-    TagsDTO:
-      type: object
-      properties:
-        title:
-          type: string
-          maxLength: 30
-    User:
-      type: object
-      properties:
-        id:
-          type: integer
-        username:
-          type: string
-          minLength: 3
-          maxLength: 30
-          pattern: '^[A-Za-z][A-Za-z0-9_]{3,30}$'
-        password:
-          type: string
-          minLength: 6
-          format: password
-        firstname:
-          type: string
-        lastname:
-          type: string
-        email:
-          type: string
-          format: email
     UserDTO:
       type: object
       properties:
+        id:
+          type: integer
         username:
           type: string
           minLength: 3
@@ -872,30 +848,24 @@ components:
           type: string
           minLength: 6
           format: password
-    Version:
+    VersionStoreDTO:
       type: object
       properties:
         project_id:
           type: integer
         description:
           type: string
-    VersionDTO:
+    VersionUpdateDTO:
       type: object
       properties:
         description:
           type: string
-    Vote:
+    VoteDTO:
       type: integer
       enum: [-1, 0, 1]
   responses:
     BadRequest:
       description: Bad request
-      content:
-        'application/json':
-          schema:
-            $ref: '#/components/schemas/Error'
-    NotAProject:
-      description: Forbidden because project is still an idea
       content:
         'application/json':
           schema:
@@ -912,12 +882,6 @@ components:
         'application/json':
           schema:
             $ref: '#/components/schemas/Error'
-    NotExistingUser:
-      description: Not found. Username does not exists.
-      content:
-        'application/json':
-          schema:
-            $ref: '#/components/schemas/Error'
     NotFound:
       description: Ressource was not found.
       content:
@@ -925,13 +889,13 @@ components:
           schema:
             $ref: '#/components/schemas/Error'
     Unauthorized:
-      description: Access token is missing or invalid.
+      description: Unauthorized.
       content:
         'application/json':
           schema:
             $ref: '#/components/schemas/Error'
     UnprocessableContent:
-      description: Unprocessable Content
+      description: Unprocessable Content.
       content:
         'application/json':
           schema:
