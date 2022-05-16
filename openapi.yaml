@@ -290,6 +290,52 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/ProjectDetailsDTO'
+    put:
+      tags:
+        - Projects
+      summary: Update project details
+      parameters:
+        - in: path
+          name: projectId
+          schema:
+            type: integer
+          required: true
+          description: Numeric ID of the project to update
+      requestBody:
+        required: true
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/Project'
+      responses:
+        200:
+          description: Updated
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/NotEnoughReputation'
+    delete:
+      tags:
+        - Projects
+      summary: Delete project
+      parameters:
+        - in: path
+          name: projectId
+          schema:
+            type: integer
+          required: true
+          description: Numeric ID of the project to delete
+      responses:
+        200:
+          description: Deleted
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/NotEnoughReputation'
   /projects/{projectId}/promote:
     put:
       tags:
