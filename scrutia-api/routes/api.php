@@ -45,6 +45,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
             Route::get('/', 'index')->name('project.index');
             Route::get('/{id}', 'show')->name('project.show');
             Route::post('/', 'store')->name('project.store');
+            Route::put('/{id}', 'update')->name('project.update');
             Route::delete('/{id}', 'destroy')->name('project.delete');
             Route::get('/ideas', 'showIdeas')->name('project.show.ideas');
             Route::get('/initiatives', 'showInitiatives')->name('project.show.initiatives');
