@@ -9,10 +9,7 @@
         'open': node.sub && node.subActivePaths ? subIsActive(node.subActivePaths) : false
       }"
     >
-      <!-- Heading -->
       {{ node.heading ? node.name : '' }}
-
-      <!-- Normal Link -->
       <router-link
         v-if="!node.heading && !node.sub"
         :to="node.to || '#'"
@@ -26,9 +23,6 @@
             :class="node['badge-variant'] ? `badge-${node['badge-variant']}` : 'badge-primary' "
         >{{ node.badge }}</span>
       </router-link>
-      <!-- END Normal Link -->
-
-      <!-- Submenu Link -->
       <a
         v-else-if="!node.heading && node.sub"
         href="#"
@@ -41,8 +35,6 @@
             :class="node['badge-variant'] ? `badge-${node['badge-variant']}` : 'badge-primary' "
         >{{ node.badge }}</span>
       </a>
-      <!-- END Submenu Link -->
-
       <base-navigation v-if="node.sub" :nodes="node.sub" sub-menu></base-navigation>
     </li>
   </ul>

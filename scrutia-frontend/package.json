@@ -1,6 +1,6 @@
 {
-  "name": "oneui-vue-edition",
-  "version": "1.7.0",
+  "name": "scrutia-frontend",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -30,18 +30,20 @@
     "bootstrap": "^4.6.1",
     "bootstrap-vue": "^2.21.2",
     "chart.js": "^2.9.4",
-    "core-js": "^3.17.3",
+    "core-js": "^3.8.3",
     "express": "^4.17.3",
     "simplebar-vue": "^1.6.7",
     "vue": "^2.6.14",
     "vue-chartjs": "^3.5.1",
+    "vue-class-component": "^7.2.3",
     "vue-color": "^2.8.1",
     "vue-cropperjs": "^4.2.0",
     "vue-easy-pie-chart": "^1.0.3",
     "vue-flatpickr-component": "^8.1.7",
     "vue-gallery": "^2.0.1",
     "vue-masked-input": "^0.5.2",
-    "vue-router": "^3.5.2",
+    "vue-property-decorator": "^9.1.2",
+    "vue-router": "^3.5.1",
     "vue-select": "^3.13.0",
     "vue-simplemde": "^2.0.0",
     "vue-slider-component": "^3.2.14",
@@ -52,29 +54,34 @@
     "vuex": "^3.6.2"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.18.0",
-    "@typescript-eslint/parser": "^5.18.0",
-    "@vue/cli-plugin-babel": "^4.5.15",
-    "@vue/cli-plugin-e2e-cypress": "~5.0.0",
-    "@vue/cli-plugin-eslint": "^4.5.15",
-    "@vue/cli-plugin-router": "^4.5.15",
+    "@babel/core": "^7.12.16",
+    "@babel/eslint-parser": "^7.12.16",
+    "@typescript-eslint/eslint-plugin": "^5.4.0",
+    "@typescript-eslint/parser": "^5.4.0",
+    "@vue/cli-plugin-babel": "~5.0.0",
+    "@vue/cli-plugin-e2e-cypress": "^5.0.4",
+    "@vue/cli-plugin-eslint": "~5.0.0",
+    "@vue/cli-plugin-router": "~5.0.0",
+    "@vue/cli-plugin-typescript": "^5.0.4",
     "@vue/cli-plugin-unit-jest": "^5.0.4",
-    "@vue/cli-plugin-vuex": "^4.5.15",
-    "@vue/cli-service": "^4.5.15",
+    "@vue/cli-plugin-vuex": "~5.0.0",
+    "@vue/cli-service": "~5.0.0",
+    "@vue/eslint-config-typescript": "^9.1.0",
     "@vue/test-utils": "^2.0.0-rc.19",
     "@vue/vue2-jest": "^27.0.0-alpha.2",
     "babel-eslint": "^10.1.0",
     "babel-jest": "^27.0.6",
-    "cypress": "9.5.2",
-    "eslint": "^6.8.0",
+    "cypress": "^8.3.0",
+    "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "eslint-plugin-vue": "^6.2.2",
+    "eslint-plugin-vue": "^8.0.3",
     "fibers": "^5.0.0",
     "jest": "^27.0.5",
     "prettier": "^2.6.2",
     "sass": "^1.48.0",
     "sass-loader": "^10.2.1",
+    "typescript": "~4.5.5",
     "vue-template-compiler": "^2.6.14"
   },
   "eslintConfig": {
@@ -84,12 +91,13 @@
     },
     "extends": [
       "plugin:vue/essential",
-      "eslint:recommended"
+      "eslint:recommended",
+      "@vue/typescript"
     ],
-    "rules": {},
     "parserOptions": {
-      "parser": "babel-eslint"
+      "parser": "@typescript-eslint/parser"
     },
+    "rules": {},
     "overrides": [
       {
         "files": [
@@ -102,21 +110,9 @@
       }
     ]
   },
-  "postcss": {
-    "plugins": {
-      "autoprefixer": {}
-    }
-  },
   "browserslist": [
-    ">= 1%",
-    "last 1 major version",
-    "not dead",
-    "Chrome >= 45",
-    "Firefox >= 38",
-    "Edge >= 12",
-    "iOS >= 9",
-    "Safari >= 9",
-    "Android >= 4.4",
-    "Opera >= 30"
+    "> 1%",
+    "last 2 versions",
+    "not dead"
   ]
 }

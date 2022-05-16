@@ -96,5 +96,9 @@ class Project extends Model
             $query->whereIn('title', [$tags]);
         });
     }
-
+  
+      public function favorites(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class)->withTimestamps();
+    }
 }

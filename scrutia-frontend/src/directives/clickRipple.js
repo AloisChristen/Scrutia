@@ -1,7 +1,3 @@
-/*
- * Ripple effect fuctionality
- */
-
 export default {
   bind: function (el) {
     // Add specific CSS styles to element
@@ -21,7 +17,8 @@ export default {
         elChild.classList.add(cssClass)
 
         el.insertBefore(elChild, el.firstChild)
-      } else { // ..else remove .animate class from ripple element
+      } else {
+        // ..else remove .animate class from ripple element
         ripple[0].classList.remove('animate')
       }
 
@@ -29,7 +26,10 @@ export default {
       ripple = el.querySelectorAll('.' + cssClass)[0]
 
       // If the ripple element doesn't have dimensions, set them accordingly
-      if ((getComputedStyle(ripple).height === '0px') || (getComputedStyle(ripple).width === '0px')) {
+      if (
+        getComputedStyle(ripple).height === '0px' ||
+        getComputedStyle(ripple).width === '0px'
+      ) {
         d = Math.max(el.offsetWidth, el.offsetHeight)
 
         ripple.style.height = d + 'px'
@@ -37,8 +37,14 @@ export default {
       }
 
       // Get coordinates for our ripple element
-      x = event.pageX - (el.getBoundingClientRect().left + window.scrollX) - parseFloat(getComputedStyle(ripple).width.replace('px', '')) / 2
-      y = event.pageY - (el.getBoundingClientRect().top + window.scrollY) - parseFloat(getComputedStyle(ripple).height.replace('px', '')) / 2
+      x =
+        event.pageX -
+        (el.getBoundingClientRect().left + window.scrollX) -
+        parseFloat(getComputedStyle(ripple).width.replace('px', '')) / 2
+      y =
+        event.pageY -
+        (el.getBoundingClientRect().top + window.scrollY) -
+        parseFloat(getComputedStyle(ripple).height.replace('px', '')) / 2
 
       // Position the ripple element and add the class .animate to it
       ripple.style.top = y + 'px'
@@ -53,5 +59,5 @@ export default {
   },
   unbind: function (el) {
     el.removeEventListener('click', el.clickRipple)
-  }
+  },
 }
