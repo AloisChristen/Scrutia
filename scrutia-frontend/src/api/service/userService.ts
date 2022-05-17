@@ -10,7 +10,7 @@ class UserService {
     this.api = api
   }
 
-  async login(user:LoginDTO){
+  async login(loginDTO:LoginDTO){
     const endpoint= this.api.auth.signin
     return fetch(
       endpoint.url,
@@ -19,9 +19,17 @@ class UserService {
         headers: {
           'Content-Type': 'application/json;charset=utf-8'
         },
-        body: JSON.stringify({username: user.username, password: user.password})
+        body: JSON.stringify({loginDTO})
       }
-    )
+    ).then(async (resp:any) => {
+      if(!resp.ok){
+        // TODO comment faire pour mettre les messages d'erreurs dans le formulaire ?
+        console.log(resp.statusText)
+      } else {
+        const body:SessionDTO = await resp.json() as SessionDTO
+        return body
+      }
+    })
   }
 
   async logout(){
@@ -51,6 +59,7 @@ class UserService {
       }
     ).then(async (resp:any) => {
       if(!resp.ok){
+        // TODO comment faire pour mettre les messages d'erreurs dans le formulaire ?
         console.log(resp.statusText)
       } else {
         const body:SessionDTO = await resp.json() as SessionDTO
