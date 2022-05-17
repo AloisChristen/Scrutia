@@ -39,6 +39,9 @@ Route::controller(ProjectController::class)->prefix('/projects')->group(
     }
 );
 
+
+
+
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::controller(AnswerController::class)->prefix('/answers')->group(
         function () {
@@ -54,18 +57,6 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
             Route::get('/', 'index')->name('favorite.index');
             Route::post('/', 'store')->name('favorite.store');
             Route::delete('/{id}', 'destroy')->name('favorite.destroy');
-        }
-    );
-
-    Route::controller(ProjectController::class)->prefix('/projects')->group(
-        function () {
-            Route::get('/', 'index')->name('project.index');
-            Route::get('/{id}', 'show')->name('project.show');
-            Route::post('/', 'store')->name('project.store');
-            Route::delete('/{id}', 'destroy')->name('project.delete');
-            Route::get('/ideas', 'showIdeas')->name('project.show.ideas');
-            Route::get('/initiatives', 'showInitiatives')->name('project.show.initiatives');
-            Route::put('/{id}/promote', 'promoteToInitiative')->name('project.promote');
         }
     );
 

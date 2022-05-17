@@ -13,7 +13,6 @@ use App\Models\Version;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
-use JetBrains\PhpStorm\NoReturn;
 use Request;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -72,7 +71,6 @@ class ProjectController extends Controller
         dd($projectToPromote);
         $ideaVersion = Version::where('project_id', $id);
 
-        return response()->json($project);
 
         $v2 = Version::create([
             'number' => 2,
@@ -140,7 +138,6 @@ class ProjectController extends Controller
     public function update(UpdateProjectRequest $request, int $id): JsonResponse
     {
         $project = Project::with('tags')->find($id);
-
         $project->title = $request->title;
         $project->description = $request->description;
         $project->save();
