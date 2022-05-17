@@ -11,6 +11,7 @@ use App\Models\Answer;
 use App\Models\Like;
 use App\Models\Likeable;
 use App\Models\Question;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 
 class AnswerController extends Controller
@@ -28,6 +29,13 @@ class AnswerController extends Controller
             return response()->json(["message" => "Not Found", "errors" => [
                 "Question does not exist"
             ]], 404);
+
+        $answers_count = Answer::where('user_id', auth()->id)->whereDate('created_at', Carbon::today())->count();
+        if(auth()->user()->reputation <= 0 && $answers_count >= 10){
+            return response()->json(["message" => "Not Allowed", "errors" => [
+                "reputation" => "The user already posted 10 answers today with less or equals than 0 reputation"
+            ]], 403);
+        }
 
         $answer = Answer::create([
             'title' =>  $request->title,
@@ -58,6 +66,13 @@ class AnswerController extends Controller
                 "Question id does not exist"
             ]], 404);
         }
+
+        if(auth()->user()->id != $answer->user->id && auth()->user()->reputation < 200){
+            return response()->json(["message" => "Not Allowed", "errors" => [
+                "reputation" => "User is not the author and do not have more than 200 reputation"
+            ]], 403);
+        }
+
         $answer->title = $request->title;
         $answer->description = $request->description;
         $answer->save();
@@ -96,6 +111,12 @@ class AnswerController extends Controller
             return response()->json(["message" => "Not Found", "errors" => [
                 "Answer does not exist"
             ]], 404);
+
+        if(auth()->user()->reputation <= 50){
+            return response()->json(["message" => "Not Allowed", "errors" => [
+                "reputation" => "The user cannot vote with less than or equals 50"
+            ]], 403);
+        }
 
         $like = Like::where("user_id", $answer->user->id)
             ->where("likeable_id",$answer->id)

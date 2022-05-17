@@ -12,6 +12,7 @@ use App\Models\Like;
 use App\Models\Likeable;
 use App\Models\Question;
 use App\Models\Version;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 
 class QuestionController extends Controller
@@ -28,8 +29,22 @@ class QuestionController extends Controller
         $project_version = Version::where('project_id', $request->project_id)->where('number', $request->version_number)->first();
         if($project_version == null)
             return response()->json(["message" => "Not Found", "errors" => [
-                "Project id or version number does not exist"
+                "project_id" => "Project id or version number does not exist"
             ]], 404);
+
+
+        $questions_count = Question::where('user_id', auth()->id)->whereDate('created_at', Carbon::today())->count();
+        if(auth()->user()->reputation <= 0 && $questions_count >= 1){
+            return response()->json(["message" => "Not Allowed", "errors" => [
+                "reputation" => "The user already posted today with less or equals than 0 reputation"
+            ]], 403);
+        }
+        elseif(auth()->user()->reputation < 100 && $questions_count >= 10){
+            return response()->json(["message" => "Not Allowed", "errors" => [
+                "reputation" => "The user already posted 10 questions today with less or equals than 100 reputation"
+            ]], 403);
+        }
+
 
         $question = Question::create([
             'title' =>  $request->title,
@@ -60,6 +75,13 @@ class QuestionController extends Controller
                 "Question id does not exist"
             ]], 404);
         }
+
+        if(auth()->user()->id != $question->user->id && auth()->user()->reputation < 200){
+            return response()->json(["message" => "Not Allowed", "errors" => [
+                "reputation" => "User is not the author and do not have more than 200 reputation"
+            ]], 403);
+        }
+
         $question->title = $request->title;
         $question->description = $request->description;
         $question->save();
@@ -99,6 +121,12 @@ class QuestionController extends Controller
                 "Question does not exist"
             ]], 404);
 
+        if(auth()->user()->reputation <= 50){
+            return response()->json(["message" => "Not Allowed", "errors" => [
+                "reputation" => "The user cannot vote with less than or equals 50"
+            ]], 403);
+        }
+
         $like = Like::where("user_id", $question->user->id)
             ->where("likeable_id",$question->id)
             ->where("likeable_type", "App\Models\Question")
@@ -115,7 +143,7 @@ class QuestionController extends Controller
         $like->save();
 
         /**
-         * TODO Discuss if we let this "bug" with the group
+         * TODO Discuss if we let this "bug" with the group NO
          * Check if it's the first like or not, if it's not, we have to remove old reputation and add the new (positiv or negativ)
          * Otherwise, you can put upvote, then downvote and then upvote again and you can gain reputation infinitely
          * As upvoting gain more reputation than downvoting remove reputation

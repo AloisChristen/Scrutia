@@ -114,6 +114,13 @@ class VersionController extends Controller
                 "Version does not exist"
             ]], 404);
 
+        if(auth()->user()->reputation <= 50){
+            return response()->json(["message" => "Not Allowed", "errors" => [
+                "reputation" => "The user cannot vote with less than or equals 50"
+            ]], 403);
+        }
+
+
         $like = Like::where("user_id", $version->user->id)
             ->where("likeable_id",$version->id)
             ->where("likeable_type", "App\Models\Version")
