@@ -28,6 +28,12 @@ Route::post('/register', [RegistrationController::class, 'register'])
 Route::post('/login', [LoginController::class, 'login'])
     ->name('login');
 
+Route::controller(TagController::class)->prefix('tags')->group(
+    function () {
+        Route::get('/', 'index')->name('tag.index');
+    }
+);
+
 Route::group(['middleware' => 'auth:sanctum'], function () {
 
     Route::controller(AnswerController::class)->prefix('/answers')->group(
@@ -70,11 +76,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         }
     );
 
-    Route::controller(TagController::class)->prefix('tags')->group(
-        function () {
-            Route::get('/', 'index')->name('tag.index');
-        }
-    );
+
 
     Route::controller(UserController::class)->prefix('/user')->group(
         function () {
