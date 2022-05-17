@@ -103,7 +103,7 @@ import { validationMixin } from 'vuelidate'
 import { required, minLength } from 'vuelidate/lib/validators'
 import VueSelect from 'vue-select'
 import { Project } from '../../typings/scrutia-types'
-import { addIdea } from '../../api/services/IdeaService'
+import { addProject } from '../../api/services/ProjectsService'
 
 export default {
   name: 'AddIdeaView',
@@ -169,7 +169,7 @@ export default {
         tags: [],
       }
 
-      await addIdea(ideaToAdd)
+      await addProject(ideaToAdd)
 
       // Form submit logic
       // this.$router.push('/todo')
