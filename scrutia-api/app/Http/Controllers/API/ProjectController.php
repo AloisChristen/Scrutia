@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateProjectRequest;
 use App\Http\Service\ProjectService;
 use App\Models\Project;
 use App\Models\Status;
+use App\Models\User;
 use App\Models\Version;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
@@ -106,7 +107,7 @@ class ProjectController extends Controller
      */
     public function store(StoreProjectRequest $request): JsonResponse
     {
-        $author = auth()->user();
+        $author = User::find(auth()->user()->id);
         $project = Project::create([
             'title' => $request->title,
         ]);
