@@ -121,7 +121,6 @@ export type RegisterUser = {
 }
 
 export type TagDTO = {
-  id: number
   title: string
 }
 

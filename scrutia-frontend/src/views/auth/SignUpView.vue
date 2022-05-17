@@ -225,12 +225,12 @@
   <!-- END Page Content -->
 </template>
 
-<script>
+<script lang="ts">
 // Vuelidate, for more info and examples you can check out https://github.com/vuelidate/vuelidate
 import { validationMixin } from 'vuelidate'
 import { required, minLength, email, sameAs } from 'vuelidate/lib/validators'
-import { RegisterAccountDTO } from '../../api/dto/registerAccountDTO'
-import { userService } from '../../api/service/userService'
+import { RegisterAccountDTO } from '@/typings/scrutia-types'
+import { register } from '@/api/services/AuthService'
 
 export default {
   mixins: [validationMixin],
@@ -279,7 +279,7 @@ export default {
     onSubmit() {
       this.$v.form.$touch()
 
-      let account = new RegisterAccountDTO(this.form)
+      const account = this.form as RegisterAccountDTO
       if (this.$v.form.$anyError) {
         return
       }
@@ -287,7 +287,7 @@ export default {
       // Form submit logic
 
       // TODO threat case when not connected
-      userService.register(account).then((session) => {
+      register(account).then((session) => {
         this.$store.commit('session', session)
         console.log(this.$store.getters.authToken)
         this.$router.push('/')

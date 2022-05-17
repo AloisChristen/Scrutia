@@ -1,10 +1,8 @@
-import { api, header } from '../api'
+import { api, makeHeader } from '../api'
 
 export async function getTags() {
-  const result = await fetch(api.tags, {
+  return await fetch(api.tags, {
     method: 'GET',
-    headers: header,
+    headers: makeHeader({}),
   })
-
-  console.log(result)
 }

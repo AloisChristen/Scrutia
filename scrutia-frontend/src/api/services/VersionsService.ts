@@ -3,46 +3,38 @@ import {
   VersionStore,
   VersionUpdateDTO,
 } from '@/typings/scrutia-types'
-import { api, header } from '../api'
+import { api, makeHeader } from '../api'
 
 export async function addVersion(version: VersionStore) {
-  const result = await fetch(api.versions, {
+  return await fetch(api.versions, {
     method: 'POST',
-    headers: header,
+    headers: makeHeader({}),
     body: JSON.stringify(version),
   })
-
-  console.log(result)
 }
 
 export async function updateVersion(
   versionId: number,
   version: VersionUpdateDTO
 ) {
-  const result = await fetch(`${api.versions}/${versionId}`, {
+  return await fetch(`${api.versions}/${versionId}`, {
     method: 'PUT',
-    headers: header,
+    headers: makeHeader({}),
     body: JSON.stringify(version),
   })
-
-  console.log(result)
 }
 
 export async function deleteVersion(versionId: number) {
-  const result = await fetch(`${api.versions}/${versionId}`, {
+  return await fetch(`${api.versions}/${versionId}`, {
     method: 'DELETE',
-    headers: header,
+    headers: makeHeader({}),
   })
-
-  console.log(result)
 }
 
 export async function likeVersion(versionId: number, like: LikeDTO) {
-  const result = await fetch(`${api.versions}/${versionId}/like`, {
+  return await fetch(`${api.versions}/${versionId}/like`, {
     method: 'POST',
-    headers: header,
+    headers: makeHeader({}),
     body: JSON.stringify(like),
   })
-
-  console.log(result)
 }

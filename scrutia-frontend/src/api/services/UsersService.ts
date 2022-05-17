@@ -1,21 +1,17 @@
 import { UserUdpateDTO } from '@/typings/scrutia-types'
-import { api, header } from '../api'
+import { api, makeHeader } from '../api'
 
 export async function getUser() {
-  const result = await fetch(api.user, {
+  return await fetch(api.user, {
     method: 'GET',
-    headers: header,
+    headers: makeHeader({}),
   })
-
-  console.log(result)
 }
 
 export async function updateUser(user: UserUdpateDTO) {
-  const result = await fetch(api.user, {
+  return await fetch(api.user, {
     method: 'PUT',
-    headers: header,
+    headers: makeHeader({}),
     body: JSON.stringify(user),
   })
-
-  console.log(result)
 }
