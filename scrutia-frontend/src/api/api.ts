@@ -1,24 +1,13 @@
+import { Dictionary } from 'vue-router/types/router'
+import store from '@/store'
+
+//TODO change this depending on dev/prod
 const baseUrl = 'https://scrutia-api-dev.herokuapp.com/api'
 
-const header = {
-  'Content-Type': 'application/json;charset=utf-8',
-}
-
-const api = {
-  auth: {
-    register: {
-      url: baseUrl + '/register',
-      method: 'POST',
-    },
-    signin: {
-      url: baseUrl + '/login',
-      method: 'POST',
-    },
-    signout: {
-      url: baseUrl + '/logout',
-      method: 'POST',
-    },
-  },
+export const api = {
+  register: baseUrl + '/register',
+  signin: baseUrl + '/login',
+  signout: baseUrl + '/logout',
   answers: baseUrl + '/answers',
   projects: baseUrl + '/projects',
   questions: baseUrl + '/questions',
@@ -27,4 +16,23 @@ const api = {
   versions: baseUrl + '/versions',
 }
 
-export { api, header }
+const staticHeader: Dictionary<string> = {
+  Accept: 'application/json',
+  'Content-Type': 'application/json',
+  // "User-Agent": "scrutia"
+}
+
+function makeBaseHeader() {
+  const baseHeader = staticHeader
+  if (store.getters.isConnected) {
+    baseHeader['Authorization'] = 'Bearer' + store.getters.token
+  }
+  return baseHeader
+}
+
+export function makeHeader(customHeaders: any) {
+  return {
+    ...makeBaseHeader(),
+    ...customHeaders,
+  }
+}

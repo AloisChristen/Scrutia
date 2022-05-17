@@ -3,81 +3,71 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
     /**
-     * @OA\Get(
-     *     path="/users",
-     *     @OA\Response(response="200", description="Display a listing of users.")
-     * )
-     */
-    /**
-     * Display a listing of the resource.
+     * Get the authenticated user.
      *
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
-    public function index()
+    public function index(): JsonResponse
     {
-        return User::all();
-    }
+        $user = User::find(auth()->user()->id);
 
-    /**
-     * @OA\Get(
-     *     path="/users/{id}",
-     *     @OA\Response(response="200", description="returns an user depending on his id.")
-     * )
-     */
+        if($user == null) {
+            return response()->json(["message" => "Not Found", "errors" => [
+                "User does not exist"
+            ]], 404);
+        }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        return User::where('id', $id);
-    }
+        $user["nb_favorites"] = $user->favorites()->count();
+        $user["nb_projects"] = $user->projects()->count();
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
+        return response()->json($user);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
+     * @param UpdateUserRequest $request
+     * @return JsonResponse
      */
-    public function update(Request $request, User $user)
+    public function update(UpdateUserRequest $request): JsonResponse
     {
-        $user->username = $request->username;
-        $user->firstname = $request->firstname;
-        $user->lastname = $request->lastname;
-        $user->email = $request->email;
-        $user->save();
-        return response()->json($user);
-    }
+        $user = User::find(auth()->user()->id);
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        $res=User::where('id',$id)->delete();
-        return response()->json($res);
+        if($user == null) {
+            return response()->json(["message" => "Not Found", "errors" => [
+                "User does not exist"
+            ]], 404);
+        }
+        if($request->password != null && $request->password_confirmation != null){
+
+            if($request->password != $request->password_confirmation){
+                return response()->json(["message" => "Not Allowed", "errors" => [
+                    "New password does not match with confirmation"
+                ]], 403);
+            }
+
+            $user->password = Hash::make($request->password);
+        }
+        if($request->username != null)
+            $user->username = $request->username;
+        if($request->firstname != null)
+            $user->firstname = $request->firstname;
+        if($request->lastname != null)
+            $user->lastname = $request->lastname;
+        if($request->email != null)
+            $user->email = $request->email;
+
+        $user->save();
+
+        return response()->json("Updated");
     }
 }

@@ -46,7 +46,7 @@
             no-caret
             ref="oneDropdownBoxedUser"
           >
-            <template #button-content>
+            <template #button-content v-if="isConnected">
               <div class="d-flex align-items-center" id="userProfile">
                 <img
                   class="rounded-circle"
@@ -54,7 +54,17 @@
                   alt="Header Avatar"
                   style="width: 21px"
                 />
-                <span class="d-none d-sm-inline-block ml-2">Adam</span>
+                <span class="d-none d-sm-inline-block ml-2">
+                  {{ $store.getters.currentUser.username }}
+                </span>
+                <i
+                  class="fa fa-fw fa-angle-down d-none d-sm-inline-block ml-1 mt-1"
+                ></i>
+              </div>
+            </template>
+            <template #button-content v-else>
+              <div class="d-flex align-items-center" id="connexion">
+                <span class="d-none d-sm-inline-block ml-2"> Connexion </span>
                 <i
                   class="fa fa-fw fa-angle-down d-none d-sm-inline-block ml-1 mt-1"
                 ></i>
@@ -67,8 +77,9 @@
                   src="img/avatars/avatar10.jpg"
                   alt="Avatar"
                 />
-                <p class="mt-2 mb-0 text-white font-w500">Adam Smith</p>
-                <p class="mb-0 text-white-50 font-size-sm">Web Developer</p>
+                <p class="mt-2 mb-0 text-white font-w500">
+                  {{ $store.getters.currentUser }}
+                </p>
               </div>
               <div class="p-2">
                 <router-link
@@ -208,6 +219,11 @@ export default {
         event.preventDefault()
         this.$store.commit('headerSearch', { mode: 'off' })
       }
+    },
+  },
+  computed: {
+    isConnected: function () {
+      return this.$store.getters.isConnected
     },
   },
   mounted() {

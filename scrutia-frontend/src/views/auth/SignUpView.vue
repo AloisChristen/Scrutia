@@ -19,7 +19,7 @@
                 class="btn-block-option font-size-sm"
                 v-b-modal.one-signup-terms
               >
-                View Terms
+                Voir les Termes
               </button>
               <b-modal
                 id="one-signup-terms"
@@ -32,7 +32,7 @@
                   class="block block-rounded block-themed block-transparent mb-0"
                 >
                   <div class="block-header bg-primary-dark">
-                    <h3 class="block-title">Terms &amp; Conditions</h3>
+                    <h3 class="block-title">Termes &amp; Conditions</h3>
                     <div class="block-options">
                       <button
                         type="button"
@@ -45,44 +45,8 @@
                   </div>
                   <div class="block-content">
                     <p>
-                      Dolor posuere proin blandit accumsan senectus netus nullam
-                      curae, ornare laoreet adipiscing luctus mauris adipiscing
-                      pretium eget fermentum, tristique lobortis est ut metus
-                      lobortis tortor tincidunt himenaeos habitant quis dictumst
-                      proin odio sagittis purus mi, nec taciti vestibulum quis
-                      in sit varius lorem sit metus mi.
-                    </p>
-                    <p>
-                      Dolor posuere proin blandit accumsan senectus netus nullam
-                      curae, ornare laoreet adipiscing luctus mauris adipiscing
-                      pretium eget fermentum, tristique lobortis est ut metus
-                      lobortis tortor tincidunt himenaeos habitant quis dictumst
-                      proin odio sagittis purus mi, nec taciti vestibulum quis
-                      in sit varius lorem sit metus mi.
-                    </p>
-                    <p>
-                      Dolor posuere proin blandit accumsan senectus netus nullam
-                      curae, ornare laoreet adipiscing luctus mauris adipiscing
-                      pretium eget fermentum, tristique lobortis est ut metus
-                      lobortis tortor tincidunt himenaeos habitant quis dictumst
-                      proin odio sagittis purus mi, nec taciti vestibulum quis
-                      in sit varius lorem sit metus mi.
-                    </p>
-                    <p>
-                      Dolor posuere proin blandit accumsan senectus netus nullam
-                      curae, ornare laoreet adipiscing luctus mauris adipiscing
-                      pretium eget fermentum, tristique lobortis est ut metus
-                      lobortis tortor tincidunt himenaeos habitant quis dictumst
-                      proin odio sagittis purus mi, nec taciti vestibulum quis
-                      in sit varius lorem sit metus mi.
-                    </p>
-                    <p>
-                      Dolor posuere proin blandit accumsan senectus netus nullam
-                      curae, ornare laoreet adipiscing luctus mauris adipiscing
-                      pretium eget fermentum, tristique lobortis est ut metus
-                      lobortis tortor tincidunt himenaeos habitant quis dictumst
-                      proin odio sagittis purus mi, nec taciti vestibulum quis
-                      in sit varius lorem sit metus mi.
+                      L'utilisateur s'engage à ne pas proférer des propos
+                      inconvenants.
                     </p>
                   </div>
                   <div
@@ -92,12 +56,12 @@
                       variant="alt-primary"
                       class="mr-1"
                       @click="$bvModal.hide('one-signup-terms')"
-                      >Close</b-button
+                      >Fermer</b-button
                     >
                     <b-button
                       variant="primary"
                       @click="$bvModal.hide('one-signup-terms')"
-                      >I Agree</b-button
+                      >J'accepte</b-button
                     >
                   </div>
                 </div>
@@ -114,26 +78,25 @@
             </template>
             <div class="p-sm-3 px-lg-4 py-lg-5">
               <h1 class="h2 mb-1">OneUI</h1>
-              <p class="text-muted">
-                Please fill the following details to create a new account.
-              </p>
+              <p class="text-muted">Veuillez remplir les champs suivants</p>
 
               <!-- Sign Up Form -->
               <b-form @submit.stop.prevent="onSubmit">
                 <div class="py-3">
+                  <div><h5>Informations de compte</h5></div>
                   <div class="form-group">
                     <b-form-input
                       size="lg"
                       class="form-control-alt"
                       id="username"
                       name="username"
-                      placeholder="Username"
+                      placeholder="Nom d'utilisateur"
                       v-model="$v.form.username.$model"
                       :state="!$v.form.username.$error && null"
                       aria-describedby="username-feedback"
                     ></b-form-input>
                     <b-form-invalid-feedback id="username-feedback">
-                      Please enter a username
+                      Veuillez entrer votre nom d'utilisateur
                     </b-form-invalid-feedback>
                   </div>
                   <div class="form-group">
@@ -149,7 +112,7 @@
                       aria-describedby="email-feedback"
                     ></b-form-input>
                     <b-form-invalid-feedback id="email-feedback">
-                      Please enter your email
+                      Veuillez entrer votre email
                     </b-form-invalid-feedback>
                   </div>
                   <div class="form-group">
@@ -159,13 +122,13 @@
                       class="form-control-alt"
                       id="password"
                       name="password"
-                      placeholder="Password"
+                      placeholder="Mot de passe"
                       v-model="$v.form.password.$model"
                       :state="!$v.form.password.$error && null"
                       aria-describedby="password-feedback"
                     ></b-form-input>
                     <b-form-invalid-feedback id="password-feedback">
-                      Please provide a secure password
+                      Veuillez fournir un mot de passe
                     </b-form-invalid-feedback>
                   </div>
                   <div class="form-group">
@@ -173,17 +136,51 @@
                       type="password"
                       size="lg"
                       class="form-control-alt"
-                      id="password2"
-                      name="password2"
-                      placeholder="Confirm Password"
-                      v-model="$v.form.password2.$model"
-                      :state="!$v.form.password2.$error && null"
-                      aria-describedby="password2-feedback"
+                      id="password_confirmation"
+                      name="password_confirmation"
+                      placeholder="Confirmation du mot de passe"
+                      v-model="$v.form.password_confirmation.$model"
+                      :state="!$v.form.password_confirmation.$error && null"
+                      aria-describedby="password_confirmation-feedback"
                     ></b-form-input>
-                    <b-form-invalid-feedback id="password2-feedback">
-                      Please confirm your password
+                    <b-form-invalid-feedback
+                      id="password_confirmation-feedback"
+                    >
+                      Veuillez confirmer votre mot de passe
                     </b-form-invalid-feedback>
                   </div>
+                  <div><h5>Informations personnelles</h5></div>
+                  <div class="form-group">
+                    <b-form-input
+                      size="lg"
+                      class="form-control-alt"
+                      id="firstname"
+                      name="firstname"
+                      placeholder="Prénom"
+                      v-model="$v.form.firstname.$model"
+                      :state="!$v.form.firstname.$error && null"
+                      aria-describedby="firstname-feedback"
+                    ></b-form-input>
+                    <b-form-invalid-feedback id="firstname-feedback">
+                      Veuillez entrer votre prénom
+                    </b-form-invalid-feedback>
+                  </div>
+                  <div class="form-group">
+                    <b-form-input
+                      size="lg"
+                      class="form-control-alt"
+                      id="lastname"
+                      name="lastname"
+                      placeholder="Nom de famille"
+                      v-model="$v.form.lastname.$model"
+                      :state="!$v.form.lastname.$error && null"
+                      aria-describedby="lastname-feedback"
+                    ></b-form-input>
+                    <b-form-invalid-feedback id="lastname-feedback">
+                      Veuillez entrer votre nom de famille
+                    </b-form-invalid-feedback>
+                  </div>
+
                   <div class="form-group">
                     <b-form-checkbox
                       id="terms"
@@ -191,7 +188,7 @@
                       v-model="$v.form.terms.$model"
                       :state="!$v.form.terms.$error && null"
                       aria-describedby="terms-feedback"
-                      >I agree to Terms &amp; Conditions</b-form-checkbox
+                      >J'accepte les Termes &amp; Conditions</b-form-checkbox
                     >
                     <b-form-invalid-feedback
                       id="terms-feedback"
@@ -199,14 +196,14 @@
                         $v.form.terms.$dirty ? !$v.form.terms.$error : null
                       "
                     >
-                      You must agree to the service terms!
+                      Vous devez accepter les termes et conditions
                     </b-form-invalid-feedback>
                   </div>
                 </div>
                 <b-row class="form-group">
                   <b-col md="6" xl="5">
                     <b-button type="submit" variant="alt-success" block>
-                      <i class="fa fa-fw fa-plus mr-1"></i> Sign Up
+                      <i class="fa fa-fw fa-plus mr-1"></i> S'inscrire
                     </b-button>
                   </b-col>
                 </b-row>
@@ -232,18 +229,20 @@
 // Vuelidate, for more info and examples you can check out https://github.com/vuelidate/vuelidate
 import { validationMixin } from 'vuelidate'
 import { required, minLength, email, sameAs } from 'vuelidate/lib/validators'
+import { RegisterAccountDTO } from '../../api/dto/registerAccountDTO'
+import { userService } from '../../api/service/userService'
 
 export default {
-  name: 'SignUpView',
   mixins: [validationMixin],
   data() {
     return {
       form: {
         username: null,
+        firstname: null,
+        lastname: null,
         email: null,
         password: null,
-        password2: null,
-        terms: null,
+        password_confirmation: null,
       },
     }
   },
@@ -253,6 +252,12 @@ export default {
         required,
         minLength: minLength(3),
       },
+      firstname: {
+        required,
+      },
+      lastname: {
+        required,
+      },
       email: {
         required,
         email,
@@ -261,7 +266,7 @@ export default {
         required,
         minLength: minLength(5),
       },
-      password2: {
+      password_confirmation: {
         required,
         sameAsPassword: sameAs('password'),
       },
@@ -274,12 +279,19 @@ export default {
     onSubmit() {
       this.$v.form.$touch()
 
+      let account = new RegisterAccountDTO(this.form)
       if (this.$v.form.$anyError) {
         return
       }
 
       // Form submit logic
-      this.$router.push('/backend/pages/auth/all')
+
+      // TODO threat case when not connected
+      userService.register(account).then((session) => {
+        this.$store.commit('session', session)
+        console.log(this.$store.getters.authToken)
+        this.$router.push('/')
+      })
     },
   },
 }

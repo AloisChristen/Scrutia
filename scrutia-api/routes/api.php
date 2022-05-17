@@ -1,14 +1,14 @@
 <?php
 
 use App\Http\Controllers\API\AnswerController;
+use App\Http\Controllers\API\FavoriteController;
 use App\Http\Controllers\API\ProjectController;
-use App\Http\Controllers\API\TagController;
 use App\Http\Controllers\API\QuestionController;
+use App\Http\Controllers\API\TagController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\VersionController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegistrationController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -40,6 +40,14 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         }
     );
 
+    Route::controller(FavoriteController::class)->prefix("/favorites")->group(
+        function () {
+            Route::get('/', 'index')->name('favorite.index');
+            Route::post('/', 'store')->name('favorite.store');
+            Route::delete('/{id}', 'destroy')->name('favorite.destroy');
+        }
+    );
+
     Route::controller(ProjectController::class)->prefix('/projects')->group(
         function () {
             Route::get('/', 'index')->name('project.index');
@@ -68,11 +76,10 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         }
     );
 
-    Route::controller(UserController::class)->prefix('/users')->group(
+    Route::controller(UserController::class)->prefix('/user')->group(
         function () {
             Route::get('/', 'index')->name('user.index');
-            Route::get('/{id}', 'show')->name('user.show');
-            Route::delete('/{id}', 'destroy')->name('user.delete');
+            Route::put('/', 'update')->name('user.update');
         }
     );
 
