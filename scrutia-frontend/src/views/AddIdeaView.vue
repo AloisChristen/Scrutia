@@ -102,8 +102,8 @@
 import { validationMixin } from 'vuelidate'
 import { required, minLength } from 'vuelidate/lib/validators'
 import VueSelect from 'vue-select'
-import { Project } from '../../typings/scrutia-types'
-import { addProject } from '../../api/services/ProjectsService'
+import { Project } from '@/typings/scrutia-types'
+import { addProject } from '@//api/services/ProjectsService'
 
 export default {
   name: 'AddIdeaView',
