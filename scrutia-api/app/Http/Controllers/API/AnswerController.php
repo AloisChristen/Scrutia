@@ -9,6 +9,7 @@ use App\Http\Requests\UpdateAnswerRequest;
 use App\Http\Service\LikeService;
 use App\Models\Answer;
 use App\Models\Like;
+use App\Models\Likeable;
 use App\Models\Question;
 use Illuminate\Http\JsonResponse;
 
@@ -36,6 +37,9 @@ class AnswerController extends Controller
         $answer->user()->associate(auth()->user()->id);
         $answer->question()->associate($question);
         $answer->save();
+
+        LikeService::addNewAnswerReputation($question->user);
+
         return response()->json("Created", 201);
     }
 
@@ -115,7 +119,7 @@ class AnswerController extends Controller
          * As upvoting gain more reputation than downvoting remove reputation
          * (addAnswerVoteReputation implementing a third parameter for that with a default value to false meaning that he's not been modified)
          **/
-        LikeService::addVoteReputation($answer->user, $like->value, auth()->id);
+        LikeService::addVoteReputation($answer->user, $like->value, auth()->id, Likeable::ANSWER);
 
         return response()->json("Liked");
     }

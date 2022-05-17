@@ -9,6 +9,7 @@ use App\Http\Requests\StoreQuestionRequest;
 use App\Http\Requests\UpdateQuestionRequest;
 use App\Http\Service\LikeService;
 use App\Models\Like;
+use App\Models\Likeable;
 use App\Models\Question;
 use App\Models\Version;
 use Illuminate\Http\JsonResponse;
@@ -39,13 +40,16 @@ class QuestionController extends Controller
         $question->version()->associate($project_version);
         $question->save();
 
+        LikeService::addNewQuestionReputation($project_version->user);
+
         return response()->json("Created", 201);
     }
-   /**
+
+    /**
      * Update the specified resource in storage.
      *
+     * @param int $id
      * @param UpdateQuestionRequest $request
-     * @param int $question
      * @return JsonResponse
      */
     public function update(int $id, UpdateQuestionRequest $request): JsonResponse
@@ -62,10 +66,10 @@ class QuestionController extends Controller
         return response()->json($question);
     }
 
-   /**
+    /**
      * Remove the specified resource from storage.
      *
-     * @param $id
+     * @param int $id
      * @return JsonResponse
      */
     public function destroy(int $id): JsonResponse
@@ -117,7 +121,7 @@ class QuestionController extends Controller
          * As upvoting gain more reputation than downvoting remove reputation
          * (addAnswerVoteReputation implementing a third parameter for that with a default value to false meaning that he's not been modified)
          **/
-        LikeService::addVoteReputation($question->user, $like->value, auth()->id);
+        LikeService::addVoteReputation($question->user, $like->value, auth()->id, Likeable::QUESTION);
 
         return response()->json("Liked");
     }

@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\LikeRequest;
 use App\Http\Requests\StoreVersionRequest;
 use App\Http\Requests\UpdateVersionRequest;
+use App\Http\Service\LikeService;
 use App\Models\Like;
 use App\Models\Project;
+use App\Models\Likeable;
 use App\Models\Status;
 use App\Models\Version;
 use Illuminate\Http\JsonResponse;
@@ -126,6 +128,15 @@ class VersionController extends Controller
 
         $like->value = $request->value;
         $like->save();
+
+        /**
+         * TODO Discuss if we let this "bug" with the group
+         * Check if it's the first like or not, if it's not, we have to remove old reputation and add the new (positiv or negativ)
+         * Otherwise, you can put upvote, then downvote and then upvote again and you can gain reputation infinitely
+         * As upvoting gain more reputation than downvoting remove reputation
+         * (addAnswerVoteReputation implementing a third parameter for that with a default value to false meaning that he's not been modified)
+         **/
+        LikeService::addVoteReputation($version->user, $like->value, auth()->id, Likeable::VERSION);
 
         return response()->json("Liked");
     }
