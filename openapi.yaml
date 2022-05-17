@@ -194,6 +194,36 @@ paths:
           schema:
             type: integer
             description: page number
+        - in: query
+          name: startDate
+          schema:
+            type: string
+            format: date
+            description: start date
+        - in: query
+          name: endDate
+          schema:
+            type: string
+            format: date
+            description: end date
+        - in: query
+          name: title
+          schema:
+            type: string
+            description: title of project
+        - in: query
+          name: tags
+          schema:
+            type: array
+            items:
+              type: string
+            description: tags affiliated to project
+        - in: query
+          name: content
+          schema:
+            type: string
+            description: content of project
+
       responses:
         200:
           description: OK
@@ -285,6 +315,52 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/ProjectDetailsDTO'
+    put:
+      tags:
+        - Projects
+      summary: Update project details
+      parameters:
+        - in: path
+          name: projectId
+          schema:
+            type: integer
+          required: true
+          description: Numeric ID of the project to update
+      requestBody:
+        required: true
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/Project'
+      responses:
+        200:
+          description: Updated
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/NotEnoughReputation'
+    delete:
+      tags:
+        - Projects
+      summary: Delete project
+      parameters:
+        - in: path
+          name: projectId
+          schema:
+            type: integer
+          required: true
+          description: Numeric ID of the project to delete
+      responses:
+        200:
+          description: Deleted
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/NotEnoughReputation'
   /projects/{projectId}/promote:
     put:
       tags:
