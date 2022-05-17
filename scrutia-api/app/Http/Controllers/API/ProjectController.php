@@ -13,6 +13,7 @@ use App\Models\Version;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
+use JetBrains\PhpStorm\NoReturn;
 use Request;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -23,7 +24,7 @@ class ProjectController extends Controller
      * Display projects based on filters.
      * @return Collection|QueryBuilder[]
      */
-    public function index()
+    public function index(): Collection|array
     {
         return QueryBuilder::for(Project::class)
                 ->allowedFilters([
@@ -41,7 +42,7 @@ class ProjectController extends Controller
      *
      * @return Response
      */
-    public function showIdeas()
+    public function showIdeas(): Response
     {
         // TODO: project qui sont encore des idées:
         // "select project_id, count(*) c from versions group by project_id having c=1" -> comment faire en laravel
@@ -53,7 +54,7 @@ class ProjectController extends Controller
      *
      * @return mixed
      */
-    public function showInitiatives()
+    public function showInitiatives(): mixed
     {
         // TODO: showInitiatives
         // "select project_id, count(*) c from versions group by project_id having c=1"
@@ -65,7 +66,7 @@ class ProjectController extends Controller
      * @param $id
      * @return JsonResponse
      */
-    public function promoteToInitiative($id)
+    public function promoteToInitiative($id): JsonResponse
     {
         $projectToPromote = Project::where('id', $id);
         dd($projectToPromote);
@@ -92,7 +93,7 @@ class ProjectController extends Controller
      * @param int $id
      * @return JsonResponse
      */
-    public function show($id): JsonResponse
+    public function show(int $id): JsonResponse
     {
         $result = Project::with('versions', 'tags')->find($id);
 
