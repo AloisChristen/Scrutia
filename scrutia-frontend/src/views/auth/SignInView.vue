@@ -95,10 +95,12 @@
   <!-- END Page Content -->
 </template>
 
-<script>
+<script lang="ts">
+import { LoginDTO } from '@/typings/scrutia-types'
 // Vuelidate, for more info and examples you can check out https://github.com/vuelidate/vuelidate
 import { validationMixin } from 'vuelidate'
 import { required, minLength } from 'vuelidate/lib/validators'
+import { login } from '@/api/services/AuthService'
 
 export default {
   name: 'SignInView',
@@ -127,12 +129,18 @@ export default {
     onSubmit() {
       this.$v.form.$touch()
 
+      const account = this.form as LoginDTO
+
       if (this.$v.form.$anyError) {
         return
       }
 
-      // Form submit logic
-      this.$router.push('/backend')
+      // TODO threat case when not connected
+      login(account).then((session) => {
+        this.$store.commit('session', session)
+        console.log(this.$store.getters.authToken)
+        this.$router.push('/')
+      })
     },
   },
 }

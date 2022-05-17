@@ -1,0 +1,509 @@
+{
+	"info": {
+		"_postman_id": "f2be689a-7d3f-4bfe-9a28-efba5eaa2a71",
+		"name": "PDG",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "authenticated",
+			"item": [
+				{
+					"name": "projects",
+					"item": [
+						{
+							"name": "filter",
+							"item": [
+								{
+									"name": "startDate",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{localhost}}:80/api/projects?filter[startDate]=2022-05-04",
+											"host": [
+												"{{localhost}}"
+											],
+											"port": "80",
+											"path": [
+												"api",
+												"projects"
+											],
+											"query": [
+												{
+													"key": "filter[startDate]",
+													"value": "2022-05-04"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "endDate",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{localhost}}:80/api/projects?filter[startDate]=2022-05-04",
+											"host": [
+												"{{localhost}}"
+											],
+											"port": "80",
+											"path": [
+												"api",
+												"projects"
+											],
+											"query": [
+												{
+													"key": "filter[startDate]",
+													"value": "2022-05-04"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "title",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{localhost}}:80/api/projects?filter[startDate]=2022-05-04",
+											"host": [
+												"{{localhost}}"
+											],
+											"port": "80",
+											"path": [
+												"api",
+												"projects"
+											],
+											"query": [
+												{
+													"key": "filter[startDate]",
+													"value": "2022-05-04"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "tags",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{localhost}}:80/api/projects?filter[startDate]=2022-05-04",
+											"host": [
+												"{{localhost}}"
+											],
+											"port": "80",
+											"path": [
+												"api",
+												"projects"
+											],
+											"query": [
+												{
+													"key": "filter[startDate]",
+													"value": "2022-05-04"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "content",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{localhost}}:80/api/projects?filter[startDate]=2022-05-04",
+											"host": [
+												"{{localhost}}"
+											],
+											"port": "80",
+											"path": [
+												"api",
+												"projects"
+											],
+											"query": [
+												{
+													"key": "filter[startDate]",
+													"value": "2022-05-04"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "get all projects",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{localhost}}:80/api/projects",
+									"host": [
+										"{{localhost}}"
+									],
+									"port": "80",
+									"path": [
+										"api",
+										"projects"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create a new project",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"set created project id in environment\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.collectionVariables.set(\"project_id\", jsonData.id);\r",
+											"});\r",
+											"\r",
+											"1"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"title\": \"Y-Parc construction\",\r\n  \"description\": \"very important thing to do\",\r\n  \"tags\": [ \r\n    {\r\n      \"title\": \"Batiment\"\r\n    },\r\n    {\r\n        \"title\": \"Ecole\"\r\n    }\r\n  ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{localhost}}:80/api/projects",
+									"host": [
+										"{{localhost}}"
+									],
+									"port": "80",
+									"path": [
+										"api",
+										"projects"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "promote project",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "{{localhost}}:80/api/projects/{{project_id}}/promote",
+									"host": [
+										"{{localhost}}"
+									],
+									"port": "80",
+									"path": [
+										"api",
+										"projects",
+										"{{project_id}}",
+										"promote"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get single project",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{localhost}}:80/api/projects/{{project_id}}",
+									"host": [
+										"{{localhost}}"
+									],
+									"port": "80",
+									"path": [
+										"api",
+										"projects",
+										"{{project_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get project from tag",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "tags",
+					"item": [
+						{
+							"name": "get all tags",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{localhost}}:80/api/tags",
+									"host": [
+										"{{localhost}}"
+									],
+									"port": "80",
+									"path": [
+										"api",
+										"tags"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "ideas",
+					"item": [
+						{
+							"name": "get ideas",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{localhost}}:80/api/ideas",
+									"host": [
+										"{{localhost}}"
+									],
+									"port": "80",
+									"path": [
+										"api",
+										"ideas"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "projectd",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{localhost}}:80/api/projects",
+					"host": [
+						"{{localhost}}"
+					],
+					"port": "80",
+					"path": [
+						"api",
+						"projects"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "register",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"set auth token in environment\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.collectionVariables.set(\"token\", jsonData.token);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "username",
+							"value": "test",
+							"type": "text"
+						},
+						{
+							"key": "firstname",
+							"value": "admin",
+							"type": "text"
+						},
+						{
+							"key": "lastname",
+							"value": "Test",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "test@example.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "password",
+							"type": "text"
+						},
+						{
+							"key": "password_confirmation",
+							"value": "password",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{localhost}}:80/api/register",
+					"host": [
+						"{{localhost}}"
+					],
+					"port": "80",
+					"path": [
+						"api",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"set auth token in environment\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.collectionVariables.set(\"token\", jsonData.token);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{localhost}}:80/api/login?username=test&password=password",
+					"host": [
+						"{{localhost}}"
+					],
+					"port": "80",
+					"path": [
+						"api",
+						"login"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "test"
+						},
+						{
+							"key": "password",
+							"value": "password"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "localhost",
+			"value": "http://localhost",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "1|AW83f5dJ7kIKqMkXgHKiFkdWO77PrvIsz8nmU1h3",
+			"type": "string"
+		},
+		{
+			"key": "authToken",
+			"value": ""
+		},
+		{
+			"key": "project_id",
+			"value": ""
+		}
+	]
+}

@@ -22,14 +22,14 @@ class VersionTest extends TestCase
     {
         $project = Project::factory()->create();
         $version_request = [
-            "project_id" => $project->id,
-            "description" => $this->faker->text()
+            'project_id' => $project->id,
+            'description' => $this->faker->text(),
         ];
 
         $response =
             $this->post('/api/versions', $version_request);
 
-        $response->assertRedirect("api/login");
+        $response->assertRedirect('api/login');
         $this->assertDatabaseMissing('versions', $version_request);
     }
 
@@ -42,8 +42,8 @@ class VersionTest extends TestCase
     {
         $project = Project::factory()->create();
         $version_request = [
-            "project_id" => $project->id,
-            "description" => $this->faker->text()
+            'project_id' => $project->id,
+            'description' => $this->faker->text(),
         ];
 
         $response =
@@ -63,8 +63,8 @@ class VersionTest extends TestCase
         $project = Project::factory()->create();
         $user = User::factory()->create();
         $version_request = [
-            "project_id" => $project->id,
-            "description" => $this->faker->text()
+            'project_id' => $project->id,
+            'description' => $this->faker->text(),
         ];
 
         $response =
@@ -83,8 +83,8 @@ class VersionTest extends TestCase
     {
         $project = Project::factory()->create();
         $version_request = [
-            "project_id" => $project->id,
-            "description" => $this->faker->text()
+            'project_id' => $project->id,
+            'description' => $this->faker->text(),
         ];
         $response =
             $this->actingAs($project->user)
@@ -92,8 +92,8 @@ class VersionTest extends TestCase
 
         $response->assertCreated();
         $this->assertDatabaseHas('users', [
-            "id" => $project->user->id,
-            "reputation" => 115
+            'id' => $project->user->id,
+            'reputation' => 115,
         ]);
     }
 
@@ -106,25 +106,25 @@ class VersionTest extends TestCase
     {
         $project = Project::factory()->create();
         $version_request = [
-            "project_id" => $project->id,
-            "description" => $this->faker->text()
+            'project_id' => $project->id,
+            'description' => $this->faker->text(),
         ];
 
         $this->actingAs($project->user)
                 ->post('/api/versions', $version_request);
 
-        $this->assertDatabaseHas("versions", [
-           "project_id" => $project->id,
-           "number" => 1
+        $this->assertDatabaseHas('versions', [
+            'project_id' => $project->id,
+            'number' => 1,
         ]);
 
         $response = $this->actingAs($project->user)
                 ->post('/api/versions', $version_request);
 
         $response->assertCreated();
-        $this->assertDatabaseHas("versions", [
-            "project_id" => $project->id,
-            "number" => 2
+        $this->assertDatabaseHas('versions', [
+            'project_id' => $project->id,
+            'number' => 2,
         ]);
     }
 
@@ -140,13 +140,13 @@ class VersionTest extends TestCase
         $description = $this->faker->text();
         $response =
             $this->put('/api/versions/'.$version->id, [
-                "description" => $description
+                'description' => $description,
             ]);
 
-        $response->assertRedirect("api/login");
+        $response->assertRedirect('api/login');
         $this->assertDatabaseMissing('versions', [
-            "id" => $version->id,
-            "description" => $description
+            'id' => $version->id,
+            'description' => $description,
         ]);
     }
 
@@ -163,13 +163,13 @@ class VersionTest extends TestCase
         $response =
             $this->actingAs($version->user)
                 ->put('/api/versions/'.$version->id, [
-                    "description" => $description
+                    'description' => $description,
                 ]);
 
         $response->assertSuccessful();
         $this->assertDatabaseHas('versions', [
-            "id" => $version->id,
-            "description" => $description
+            'id' => $version->id,
+            'description' => $description,
         ]);
     }
 
@@ -187,12 +187,12 @@ class VersionTest extends TestCase
         $response =
             $this->actingAs($user)
                 ->put('/api/versions/'.$version->id, [
-                    "description" => $description
+                    'description' => $description,
                 ]);
         $response->assertStatus(403);
         $this->assertDatabaseMissing('versions', [
-            "id" => $version->id,
-            "description" => $description
+            'id' => $version->id,
+            'description' => $description,
         ]);
     }
 
@@ -208,9 +208,9 @@ class VersionTest extends TestCase
         $response =
             $this->put('/api/versions/'.$version->id);
 
-        $response->assertRedirect("api/login");
+        $response->assertRedirect('api/login');
         $this->assertDatabaseHas('versions', [
-            "id" => $version->id
+            'id' => $version->id,
         ]);
     }
 
@@ -228,7 +228,7 @@ class VersionTest extends TestCase
                 ->delete('/api/versions/'.$version->id);
         $response->assertSuccessful();
         $this->assertDatabaseMissing('versions', [
-            "id" => $version->id
+            'id' => $version->id,
         ]);
     }
 
@@ -247,7 +247,7 @@ class VersionTest extends TestCase
                 ->delete('/api/versions/'.$version->id);
         $response->assertStatus(403);
         $this->assertDatabaseHas('versions', [
-            "id" => $version->id
+            'id' => $version->id,
         ]);
     }
 }
