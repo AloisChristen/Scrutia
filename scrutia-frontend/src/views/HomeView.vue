@@ -52,10 +52,15 @@
 <script lang="ts">
 import ProjectComponent from '../components/ProjectComponent.vue'
 import { Component, Vue } from 'vue-property-decorator'
+import { getIdeas } from '@/api/services/ProjectsService'
+
 @Component({
   name: 'HomeView',
   components: {
     ProjectComponent,
+  },
+  async created() {
+    getIdeas()
   },
 })
 export default class HomeView extends Vue {}
