@@ -38,4 +38,9 @@ class Project extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function favorites(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class)->withTimestamps();
+    }
 }
