@@ -2,7 +2,7 @@ import {
   LikeDTO,
   VersionStore,
   VersionUpdateDTO,
-} from '../../typings/scrutia-types'
+} from '@/typings/scrutia-types'
 import { api, header } from '../api'
 
 export async function addVersion(version: VersionStore) {

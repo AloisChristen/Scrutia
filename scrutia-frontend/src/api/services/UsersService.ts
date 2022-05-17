@@ -1,4 +1,4 @@
-import { UserUdpateDTO } from '../../typings/scrutia-types'
+import { UserUdpateDTO } from '@/typings/scrutia-types'
 import { api, header } from '../api'
 
 export async function getUser() {

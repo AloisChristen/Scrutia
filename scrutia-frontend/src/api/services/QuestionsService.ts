@@ -2,7 +2,7 @@ import {
   LikeDTO,
   QuestionStoreDTO,
   QuestionUpdateDTO,
-} from '../../typings/scrutia-types'
+} from '@/typings/scrutia-types'
 import { api, header } from '../api'
 
 export async function addQuestion(question: QuestionStoreDTO) {

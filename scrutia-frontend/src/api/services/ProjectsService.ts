@@ -1,4 +1,4 @@
-import { Project } from '../../typings/scrutia-types'
+import { Project } from '@/typings/scrutia-types'
 import { api, header } from '../api'
 
 export async function getProjects() {
