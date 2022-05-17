@@ -229,7 +229,7 @@
 // Vuelidate, for more info and examples you can check out https://github.com/vuelidate/vuelidate
 import { validationMixin } from 'vuelidate'
 import { required, minLength, email, sameAs } from 'vuelidate/lib/validators'
-import { RegisterAccountDTO } from '@/typings/scrutia-types'
+import { RegisterUser } from '@/typings/scrutia-types'
 import { register } from '@/api/services/AuthService'
 
 export default {
@@ -279,7 +279,7 @@ export default {
     onSubmit() {
       this.$v.form.$touch()
 
-      const account = this.form as RegisterAccountDTO
+      const account = this.form as RegisterUser
       if (this.$v.form.$anyError) {
         return
       }
