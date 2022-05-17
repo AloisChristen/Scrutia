@@ -2,11 +2,14 @@ import { api } from "../api";
 import { LoginDTO } from "../dto/loginDTO";
 import { RegisterAccountDTO } from "../dto/registerAccountDTO";
 import { SessionDTO, UserDTO } from "../dto/userDTO";
+import {BaseService} from "./baseService"
+import store from "../../store"
 
-class UserService {
+class UserService extends BaseService {
   api: any;
 
   constructor(api:any){
+    super()
     this.api = api
   }
 
@@ -16,9 +19,7 @@ class UserService {
       endpoint.url,
       {
         method: endpoint.method,
-        headers: {
-          'Content-Type': 'application/json;charset=utf-8'
-        },
+        headers: this.makeHeader({}),
         body: JSON.stringify({loginDTO})
       }
     ).then(async (resp:any) => {
@@ -38,9 +39,7 @@ class UserService {
       endpoint.url,
       {
         method: endpoint.method,
-        headers: {
-          'Content-Type': 'application/json;charset=utf-8'
-        },
+        headers: this.makeHeader({}),
       }
     )
   }
@@ -52,9 +51,7 @@ class UserService {
       endpoint.url,
       {
         method: endpoint.method,
-        headers: {
-          'Content-Type': 'application/json;charset=utf-8'
-        },
+        headers: this.makeHeader({}),
         body: JSON.stringify(registerAccountDTO)
       }
     ).then(async (resp:any) => {

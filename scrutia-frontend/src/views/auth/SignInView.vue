@@ -96,9 +96,11 @@
 </template>
 
 <script>
+import { LoginDTO } from '@/api/dto/loginDTO'
 // Vuelidate, for more info and examples you can check out https://github.com/vuelidate/vuelidate
 import { validationMixin } from 'vuelidate'
 import { required, minLength } from 'vuelidate/lib/validators'
+import { userService } from '@/api/service/userService'
 
 export default {
   name: 'SignInView',
@@ -127,12 +129,17 @@ export default {
     onSubmit() {
       this.$v.form.$touch()
 
+      let account = new LoginDTO(this.form)
       if (this.$v.form.$anyError) {
         return
       }
 
-      // Form submit logic
-      this.$router.push('/backend')
+      // TODO threat case when not connected
+      userService.login(account).then((session) => {
+        this.$store.commit('session', session)
+        console.log(this.$store.getters.authToken)
+        this.$router.push('/')
+      })
     },
   },
 }

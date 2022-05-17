@@ -285,6 +285,8 @@ export default {
       }
 
       // Form submit logic
+
+      // TODO threat case when not connected
       userService.register(account).then((session) => {
         this.$store.commit('session', session)
         console.log(this.$store.getters.authToken)
