@@ -108,7 +108,7 @@ class Project extends Model
     public function scopeStatus(Builder $query, $status = null): Builder
     {
         return $query->whereHas('tags', function (Builder $query) use ($status) {
-            $query->whereIn('status', $status);
+            $query->where('status', $status);
         });
     }
 }

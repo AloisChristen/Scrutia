@@ -9,7 +9,6 @@ use App\Models\Project;
 use App\Models\Status;
 use App\Models\User;
 use App\Models\Version;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -18,20 +17,23 @@ class ProjectController extends Controller
 {
     /**
      * Display projects based on filters.
-     * @return Collection|QueryBuilder[]
+     * @return JsonResponse
      */
-    public function index(): Collection|array
+    public function index(): JsonResponse
     {
-        return QueryBuilder::for(Project::class)
-                ->allowedFilters([
-                    AllowedFilter::scope('startDate'),
-                    AllowedFilter::scope('endDate'),
-                    AllowedFilter::scope('title'),
-                    AllowedFilter::scope('tags'),
-                    AllowedFilter::scope('content'),
-                    AllowedFilter::scope('status'),
-                ])
-                ->get();
+        $projects = QueryBuilder::for(Project::class)
+            ->allowedFilters([
+                AllowedFilter::scope('startDate'),
+                AllowedFilter::scope('endDate'),
+                AllowedFilter::scope('title'),
+                AllowedFilter::scope('tags'),
+                AllowedFilter::scope('content'),
+                AllowedFilter::scope('status'),
+            ])
+            ->with("versions.questions.answers")
+            ->paginate();
+
+        return response()->json($projects);
     }
 
     /**
