@@ -29,15 +29,21 @@ class VersionController extends Controller
             return response()->json(["message" => "Not Found", "errors" => [
                 "project_id" => "Project does not exist"
             ]], 404);
+
         if($project->user->id != auth()->user()->id)
             return response()->json(["message" => "Not Allowed", "errors" => [
-                "author" => "User is not allowed to perform this action"
+                "author" => "User is not allowed to perform this action."
             ]], 403);
+
+        if($project->status != Status::INITIATIVE){
+            return response()->json(["message" => "Not Allowed", "errors" => [
+                "project" => "Project has not been promoted."
+            ]], 403);
+        }
 
         $version = Version::create([
             "number" => Version::where("project_id", $project->id)->count() + 1,
             "description" => $request->description,
-            "status" => Status::INITIATIVE
         ]);
 
         $version->project()->associate($project);

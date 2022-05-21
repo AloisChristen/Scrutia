@@ -37,35 +37,10 @@ class ProjectController extends Controller
     }
 
     /**
-     * Display a listing of the resource (only ideas).
-     *
-     * @return Response
-     */
-    public function showIdeas(): Response
-    {
-        // TODO: project qui sont encore des idées:
-        // "select project_id, count(*) c from versions group by project_id having c=1" -> comment faire en laravel
-        return Project::paginate();
-    }
-
-    /**
-     * Display initiatives
-     *
-     * @return mixed
-     */
-    public function showInitiatives(): mixed
-    {
-        // TODO: showInitiatives
-        // "select project_id, count(*) c from versions group by project_id having c=1"
-        // enlever ces projet de tout les projets
-        return Project::paginate();
-    }
-
-    /**
      * @param $id
      * @return JsonResponse
      */
-    public function promoteToInitiative($id): JsonResponse
+    public function promote($id): JsonResponse
     {
         $projectToPromote = Project::where('id', $id);
         dd($projectToPromote);
@@ -109,11 +84,11 @@ class ProjectController extends Controller
         $author = User::find(auth()->user()->id);
         $project = Project::create([
             'title' => $request->title,
+            'status' => Status::IDEE,
         ]);
 
         $v0 = Version::create([
             'number' => 1,
-            'status' => Status::IDEE,
             'description' => $request->description,
             'author' => $author->id,
         ]);
