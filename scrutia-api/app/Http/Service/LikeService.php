@@ -4,14 +4,12 @@ namespace App\Http\Service;
 
 use App\Models\Likeable;
 use App\Models\User;
+use App\Models\Vote;
 
 class LikeService
 {
-    public static function addVoteReputation(User $owner, int $vote, User $liker = null, Likeable $model = null, bool $modified = false): void
+    public static function addVoteReputation(User $owner, Vote $vote, User $liker = null, Likeable $model = null, bool $modified = false): void
     {
-        $UPVOTE_VALUE = 0;
-        $DOWNVOTE_VALUE = 0;
-
         switch($model){
             case Likeable::ANSWER:
             case Likeable::QUESTION:
@@ -22,22 +20,24 @@ class LikeService
                 $UPVOTE_VALUE = 5;
                 $DOWNVOTE_VALUE = -2;
                 break;
+            default:
+                return;
         }
 
         // If it's a modification, we have to remove old gains
         if($modified){
-            if($vote == -1){
+            if($vote == Vote::DOWNVOTE){
                 $owner->reputation -= $UPVOTE_VALUE;
             }
-            else if ($vote == 1){
+            else if ($vote == Vote::UPVOTE){
                 $owner->reputation -= $DOWNVOTE_VALUE;
             }
         }
 
-        if($vote == 1){
+        if($vote == Vote::UPVOTE){
             $owner->reputation += $UPVOTE_VALUE;
         }
-        else if ($vote == -1){
+        else if ($vote == Vote::DOWNVOTE){
             $owner->reputation += $DOWNVOTE_VALUE;
             $liker->reputation += $DOWNVOTE_VALUE;
         }
