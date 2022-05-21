@@ -33,6 +33,7 @@ class LikeService
             else if ($vote == Vote::UPVOTE){
                 $owner->reputation -= $DOWNVOTE_VALUE;
             }
+            $owner->save();
         }
 
         if($vote == Vote::UPVOTE){
@@ -40,8 +41,10 @@ class LikeService
         }
         else if ($vote == Vote::DOWNVOTE){
             $owner->reputation += $DOWNVOTE_VALUE;
-            $liker->reputation += $DOWNVOTE_VALUE;
+            $liker->reputation -= 1;
+            $liker->save();
         }
+        $owner->save();
     }
 
     public static function addNewQuestionReputation(User $project_owner): void
