@@ -15,12 +15,7 @@ class Version extends Model
 
     protected $fillable = [
         'number',
-        'status',
         'description',
-    ];
-
-    protected $casts = [
-        'status' => Status::class
     ];
 
     public function questions(): HasMany

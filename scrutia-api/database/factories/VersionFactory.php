@@ -21,7 +21,6 @@ class VersionFactory extends Factory
     {
         return [
             'number' => $this->faker->numberBetween(2,9),
-            'status' => Status::INITIATIVE,
             'description' => $this->faker->text(),
             'project_id' => Project::factory()->create(),
             'user_id' => User::factory()->create(),

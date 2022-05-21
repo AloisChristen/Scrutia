@@ -16,6 +16,11 @@ class Project extends Model
 
     protected $fillable = [
         'title',
+        'status'
+    ];
+
+    protected $casts = [
+        'status' => Status::class
     ];
 
     /**
@@ -96,7 +101,7 @@ class Project extends Model
             $query->whereIn('title', [$tags]);
         });
     }
-  
+
       public function favorites(): BelongsToMany
     {
         return $this->belongsToMany(User::class)->withTimestamps();

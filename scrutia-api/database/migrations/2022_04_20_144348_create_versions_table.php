@@ -20,7 +20,6 @@ return new class extends Migration
             $table->integer('number');
             $table->foreignIdFor(Project::class)->onDelete("cascade")->nullable();
             $table->foreignIdFor(User::class)->nullable();
-            $table->string('status');
             $table->longText('description');
             $table->timestamps();
         });
