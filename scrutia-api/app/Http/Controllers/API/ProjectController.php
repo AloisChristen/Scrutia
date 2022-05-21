@@ -9,6 +9,7 @@ use App\Models\Project;
 use App\Models\Status;
 use App\Models\User;
 use App\Models\Version;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -72,6 +73,13 @@ class ProjectController extends Controller
     public function store(StoreProjectRequest $request): JsonResponse
     {
         $author = User::find(auth()->user()->id);
+        $project_count = Project::where('user_id', $author->id)->count();
+        
+        if($author->reputation < 50 && $project_count >= 1){
+            return response()->json(["message" => "Bad Request", "errors" => [
+                "reputation" => "You can create only one project with your reputation."
+            ]], 403);
+        }
         $project = Project::create([
             'title' => $request->title,
             'status' => Status::IDEE,
