@@ -28,6 +28,12 @@ export default new Vuex.Store({
       copyright: helpers.getCurrentYear(),
     },
 
+    // User session
+    session: {
+      currentUser: null,
+      authToken: null,
+    },
+
     // Default layout options
     layout: {
       header: true,
@@ -65,8 +71,24 @@ export default new Vuex.Store({
     appColorTheme: (state) => {
       return state.settings.colorTheme
     },
+    isConnected: (state) => {
+      return state.session.currentUser != null && state.session.authToken != null;
+    },
+    // Get current connected User
+    currentUser: (state) => {
+      return state.session.currentUser
+    },
+    // GET authToken
+    authToken: (state) => {
+      return state.session.authToken
+    },
   },
   mutations: {
+    // Set currentUser and authToken
+    session(state, payload){
+      state.session.currentUser = payload.user;
+      state.session.authToken = payload.token;
+    },
     // Sets the layout, useful for setting different layouts (under layouts/variations/)
     setLayout(state, payload) {
       state.layout.header = payload.header

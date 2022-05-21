@@ -1,54 +1,60 @@
 <?php
-//
-//namespace Tests\Feature;
-//
-//use Illuminate\Foundation\Testing\RefreshDatabase;
-//use Illuminate\Foundation\Testing\WithFaker;
-//use Tests\TestCase;
-//
-//class ProjectTest extends TestCase
-//{
-//    /**
-//     * A basic feature test example.
-//     *
-//     * @return void
-//     */
-//    public function test_example()
-//    {
-//        $response = $this->get('/');
-//
-//        $response->assertStatus(200);
-//    }
-//
-//    public function test_can_create_a_project()
-//    {
-//        $this->withoutExceptionHandling();
-//        $attributes = [
-//            'title' => $this->faker->sentence,
-//            'description' => $this->faker->paragraph,
-//        ];
-//        $this->post('/projects', $attributes)->assertRedirect('/projects');
-//        $this->assertDatabaseHas('projects', $attributes);
-//        $this->get('/projects')->assertSee($attributes['title']);
-//    }
-//
-//    public function test_can_update_a_project()
-//    {
-//        $this->withoutExceptionHandling();
-//        $project = factory('App\Project')->create();
-//        $attributes = [
-//            'title' => 'Changed',
-//            'description' => 'Changed',
-//        ];
-//        $this->patch($project->path(), $attributes)->assertRedirect($project->path());
-//        $this->assertDatabaseHas('projects', $attributes);
-//    }
-//
-//    public function test_can_delete_a_project()
-//    {
-//        $this->withoutExceptionHandling();
-//        $project = factory('App\Project')->create();
-//        $this->delete($project->path())->assertRedirect('/projects');
-//        $this->assertDatabaseMissing('projects', $project->only('id'));
-//    }
-//}
+
+namespace Tests\Feature;
+
+use App\Models\Project;
+use App\Models\User;
+use App\Models\Version;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
+use Tests\TestCase;
+use Illuminate\Support\Carbon;
+
+class ProjectTest extends TestCase
+{
+    /**
+     * A basic feature test example.
+     *
+     * @return void
+     */
+    use RefreshDatabase, WithFaker;
+
+    public function test_example()
+    {
+        $response = $this->get('/');
+
+        $response->assertStatus(200);
+    }
+
+    /**
+     * @return void
+     * Test if we can create a project
+     */
+    public function test_can_create_a_project()
+    {
+        $this->withoutExceptionHandling();
+        $attributes = [
+            'title' => $this->faker->text(),
+            'description' => $this->faker->text(),
+            'author' => $this->faker->name(),
+        ];
+        $user = User::factory()->create();
+        $this->actingAs($user)->post('/api/projects', $attributes);
+        $project = Project::first();
+        $this->assertEquals($attributes['title'], $project->title);
+    }
+
+    /**
+     * Get project by created_at filtered by startDate and endDate
+     * @return void
+     */
+    public function test_can_get_project_by_created_at_filtered_by_startDate_and_endDate(): void
+    {
+        $project = Project::factory()->create(['created_at' => '2020-01-02']);
+        $this->assertEquals('2020-01-02', Carbon::parse($project->created_at)
+            ->format('Y-m-d'));
+
+        $response = $this->get('/api/projects?filter[startDate]=2020-01-01&filter[endDate]=2020-01-31');
+        $response->assertStatus(200);
+    }
+}

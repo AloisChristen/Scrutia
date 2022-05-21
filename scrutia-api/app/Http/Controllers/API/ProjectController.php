@@ -3,28 +3,37 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Http\Service\ProjectService;
 use App\Models\Project;
 use App\Models\Status;
+use App\Models\User;
 use App\Models\Version;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Validation\ValidationException;
-use Illuminate\Pagination\Paginator;
+use Request;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class ProjectController extends Controller
 {
-
     /**
-     * Display a listing of the resource.
-     *
-     * @return Response
+     * Display projects based on filters.
+     * @return Collection|QueryBuilder[]
      */
-    public function index()
+    public function index(): Collection|array
     {
-        return Project::paginate();
+        return QueryBuilder::for(Project::class)
+                ->allowedFilters([
+                    AllowedFilter::scope('startDate'),
+                    AllowedFilter::scope('endDate'),
+                    AllowedFilter::scope('title'),
+                    AllowedFilter::scope('tags'),
+                    AllowedFilter::scope('content'),
+                ])
+                ->get();
     }
 
     /**
@@ -32,30 +41,42 @@ class ProjectController extends Controller
      *
      * @return Response
      */
-    public function showIdeas() {
+    public function showIdeas(): Response
+    {
         // TODO: project qui sont encore des idées:
         // "select project_id, count(*) c from versions group by project_id having c=1" -> comment faire en laravel
         return Project::paginate();
     }
 
-    public function showInitiatives() {
+    /**
+     * Display initiatives
+     *
+     * @return mixed
+     */
+    public function showInitiatives(): mixed
+    {
         // TODO: showInitiatives
         // "select project_id, count(*) c from versions group by project_id having c=1"
         // enlever ces projet de tout les projets
         return Project::paginate();
     }
 
-    public function promoteToInitiative($id) {
+    /**
+     * @param $id
+     * @return JsonResponse
+     */
+    public function promoteToInitiative($id): JsonResponse
+    {
         $projectToPromote = Project::where('id', $id);
         dd($projectToPromote);
-        $ideaVersion = Version::where('project_id',$id);
-        return response()->json($project);
+        $ideaVersion = Version::where('project_id', $id);
+
 
         $v2 = Version::create([
             'number' => 2,
             'author' => $ideaVersion->author,
             'status' => Status::INITIATIVE,
-            'description' => $ideaVersion->description
+            'description' => $ideaVersion->description,
         ]);
         $v2->project()->associate($project);
         $v2->save();
@@ -70,9 +91,10 @@ class ProjectController extends Controller
      * @param int $id
      * @return JsonResponse
      */
-    public function show($id): JsonResponse
+    public function show(int $id): JsonResponse
     {
         $result = Project::with('versions', 'tags')->find($id);
+
         return response()->json($result);
     }
 
@@ -82,10 +104,9 @@ class ProjectController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function store(Request $request): JsonResponse
+    public function store(StoreProjectRequest $request): JsonResponse
     {
-        $author = auth()->user();
-
+        $author = User::find(auth()->user()->id);
         $project = Project::create([
             'title' => $request->title,
         ]);
@@ -94,11 +115,10 @@ class ProjectController extends Controller
             'number' => 1,
             'status' => Status::IDEE,
             'description' => $request->description,
-            'author' => $author->id
+            'author' => $author->id,
         ]);
         $v0->project()->associate($project);
         $v0->save();
-
 
         $project->user()->associate($author->id);
         auth()->user()->projects()->save($project);
@@ -118,7 +138,6 @@ class ProjectController extends Controller
     public function update(UpdateProjectRequest $request, int $id): JsonResponse
     {
         $project = Project::with('tags')->find($id);
-
         $project->title = $request->title;
         $project->description = $request->description;
         $project->save();
@@ -138,6 +157,7 @@ class ProjectController extends Controller
         $project = Project::find($id);
         $project->tags()->detach();
         $project->delete();
+
         return response()->json($project);
     }
 }

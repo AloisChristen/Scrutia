@@ -28,14 +28,26 @@ Route::post('/register', [RegistrationController::class, 'register'])
 Route::post('/login', [LoginController::class, 'login'])
     ->name('login');
 
-Route::group(['middleware' => 'auth:sanctum'], function () {
+Route::controller(ProjectController::class)->prefix('/projects')->group(
+    function () {
+        Route::get('/', 'index')->name('project.index');
+        Route::post('/', 'store')->name('project.store');
+        Route::get('/{id}', 'show')->name('project.show');
+        Route::get('/ideas', 'showIdeas')->name('project.show.ideas');
+        Route::get('/initiatives', 'showInitiatives')->name('project.show.initiatives');
+        Route::put('/{id}/promote', 'promoteToInitiative')->name('project.promote');
+    }
+);
 
+
+
+
+Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::controller(AnswerController::class)->prefix('/answers')->group(
         function () {
             Route::post('/', 'store')->name('answer.store');
             Route::put('/{id}', 'update')->name('answer.update');
             Route::delete('/{id}', 'destroy')->name('answer.delete');
-
             Route::post('/{id}/like','like')->name('answer.like');
         }
     );
@@ -48,25 +60,13 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         }
     );
 
-    Route::controller(ProjectController::class)->prefix('/projects')->group(
-        function () {
-            Route::get('/', 'index')->name('project.index');
-            Route::get('/{id}', 'show')->name('project.show');
-            Route::post('/', 'store')->name('project.store');
-            Route::delete('/{id}', 'destroy')->name('project.delete');
-            Route::get('/ideas', 'showIdeas')->name('project.show.ideas');
-            Route::get('/initiatives', 'showInitiatives')->name('project.show.initiatives');
-            Route::put('/{id}/promote', 'promoteToInitiative')->name('project.promote');
-        }
-    );
-
     Route::controller(QuestionController::class)->prefix('/questions')->group(
         function () {
             Route::post('/', 'store')->name('question.store');
             Route::put('/{id}', 'update')->name('question.update');
             Route::delete('/{id}', 'destroy')->name('question.delete');
 
-            Route::post('/{id}/like','like')->name('question.like');
+            Route::post('/{id}/like', 'like')->name('question.like');
         }
     );
 
@@ -89,7 +89,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
             Route::put('/{id}', 'update')->name('version.update');
             Route::delete('/{id}', 'destroy')->name('version.delete');
 
-            Route::post('/{id}/like','like')->name('version.like');
+            Route::post('/{id}/like', 'like')->name('version.like');
         }
     );
 
