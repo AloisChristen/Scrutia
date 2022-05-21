@@ -33,7 +33,7 @@ class QuestionController extends Controller
             ]], 404);
 
 
-        $questions_count = Question::where('user_id', auth()->id)->whereDate('created_at', Carbon::today())->count();
+        $questions_count = Question::where('user_id', auth()->user()->id)->whereDate('created_at', Carbon::today())->count();
         if(auth()->user()->reputation <= 0 && $questions_count >= 1){
             return response()->json(["message" => "Not Allowed", "errors" => [
                 "reputation" => "The user already posted today with less or equals than 0 reputation"
@@ -97,7 +97,7 @@ class QuestionController extends Controller
     public function destroy(int $id): JsonResponse
     {
         $question = Question::find($id);
-        if(auth()->user()->id != $question->user->id && auth()->user()->reputation < 300)
+        if(auth()->user()->id != $question->user->id)
                 return response()->json(["message" => "Not Allowed", "errors" => [
                     "reputation" => "User is not allowed to perform this action"
                 ]], 403);
@@ -121,7 +121,7 @@ class QuestionController extends Controller
                 "id" => "Question does not exist"
             ]], 404);
 
-        if(auth()->user()->reputation <= 50){
+        if(auth()->user()->reputation < 50){
             return response()->json(["message" => "Not Allowed", "errors" => [
                 "reputation" => "The user cannot vote with less than or equals 50"
             ]], 403);
@@ -145,8 +145,8 @@ class QuestionController extends Controller
             $modified = true;
         }
         $like->save();
-        
-        LikeService::addVoteReputation($question->user, $like->value, auth()->id, Likeable::QUESTION, $modified);
+
+        LikeService::addVoteReputation($question->user, $like->value, auth()->user()->id, Likeable::QUESTION, $modified);
 
         return response()->json("Liked");
     }

@@ -21,11 +21,9 @@ class LogoutTest extends TestCase
         $this->assertDatabaseHas('users', $user->toArray());
 
         $token = $user->createToken('test')->plainTextToken;
-
         $response = $this->actingAs($user)->post('/api/logout', [
             'Authorization' => 'Bearer ' . $token
         ]);
-
         $response->assertSuccessful();
         $this->assertDatabaseMissing('personal_access_tokens',[
             'name' => 'test'

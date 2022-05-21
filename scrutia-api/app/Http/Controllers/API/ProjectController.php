@@ -113,7 +113,7 @@ class ProjectController extends Controller
             ]], 400);
         }
 
-        if($project->user->id != auth()->id){
+        if($project->user->id != auth()->user()->id){
             return response()->json(["message" => "Not Allowed", "errors" => [
                 "author" => "It is not allowed to promote a project from someone else."
             ]], 404);

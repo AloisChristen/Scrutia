@@ -42,7 +42,7 @@ class QuestionTest extends TestCase
         ]);
     }
 
-    public function test_user_receive_10_reputation_after_creating_a_question(): void
+    public function test_owner_receive_5_reputation_after_user_creates_a_question(): void
     {
         // As the database is refreshing, we're creating the ressources that we need to ask a question
         $user = User::factory()->create();
@@ -60,8 +60,8 @@ class QuestionTest extends TestCase
 
         $response->assertCreated();
         $this->assertDatabaseHas("users", [
-            "id" => $user->id,
-            "reputation" => 110
+            "id" => $version->user->id,
+            "reputation" => 105
         ]);
     }
 
@@ -133,10 +133,10 @@ class QuestionTest extends TestCase
         ]);
     }
 
-    public function test_user_with_250_or_more_reputation_can_update_question(){
+    public function test_user_with_200_or_more_reputation_can_update_question(){
         $question = Question::factory()->create();
         $user = User::factory()->create([
-            "reputation" => 250
+            "reputation" => 200
         ]);
         // Making the request to the endpoint
         $response =
@@ -154,12 +154,12 @@ class QuestionTest extends TestCase
         ]);
     }
 
-    public function test_user_with_less_than_250_reputation_cannot_update_question(): void
+    public function test_user_with_less_than_200_reputation_cannot_update_question(): void
     {
         // As the database is refreshing, we're creating the ressources that we need to ask a question
         $question = Question::factory()->create();
         $user = User::factory()->create([
-            "reputation" => 150
+            "reputation" => 199
         ]);
         // Making the request to the endpoint
         $response =
@@ -191,44 +191,6 @@ class QuestionTest extends TestCase
         $response->assertSuccessful();
         $this->assertEquals('"Deleted"', $response->getContent());
         $this->assertDatabaseMissing("questions", [
-            "id" => $question->id
-        ]);
-    }
-
-    public function test_user_with_300_or_more_reputation_can_delete_question(){
-        // As the database is refreshing, we're creating the ressources that we need to ask a question
-        $question = Question::factory()->create();
-        $user = User::factory()->create([
-            "reputation" => 300
-        ]);
-
-        // Making the request to the endpoint
-        $response =
-            $this->actingAs($user)
-                ->delete('/api/questions/'. $question->id);
-
-        $response->assertSuccessful();
-        $this->assertEquals('"Deleted"', $response->getContent());
-        $this->assertDatabaseMissing("questions", [
-            "id" => $question->id
-        ]);
-    }
-
-    public function test_user_with_less_than_300_reputation_cannot_delete_question(): void
-    {
-        // As the database is refreshing, we're creating the ressources that we need to ask a question
-        $question = Question::factory()->create();
-        $user = User::factory()->create([
-            "reputation" => 250
-        ]);
-
-        // Making the request to the endpoint
-        $response =
-            $this->actingAs($user)
-                ->delete('/api/questions/'. $question->id);
-
-        $response->assertStatus(403);
-        $this->assertDatabaseHas("questions", [
             "id" => $question->id
         ]);
     }

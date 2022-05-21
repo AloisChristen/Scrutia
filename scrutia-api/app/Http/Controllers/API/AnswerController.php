@@ -30,7 +30,7 @@ class AnswerController extends Controller
                 "question_id" => "Question does not exist"
             ]], 404);
 
-        $answers_count = Answer::where('user_id', auth()->id)->whereDate('created_at', Carbon::today())->count();
+        $answers_count = Answer::where('user_id', auth()->user()->id)->whereDate('created_at', Carbon::today())->count();
         if(auth()->user()->reputation <= 0 && $answers_count >= 10){
             return response()->json(["message" => "Not Allowed", "errors" => [
                 "reputation" => "The user already posted 10 answers today with less or equals than 0 reputation"
@@ -137,7 +137,7 @@ class AnswerController extends Controller
 
         $like->save();
 
-        LikeService::addVoteReputation($answer->user, $like->value, auth()->id, Likeable::ANSWER, $modified);
+        LikeService::addVoteReputation($answer->user, $like->value, auth()->user()->id, Likeable::ANSWER, $modified);
 
         return response()->json("Liked");
     }

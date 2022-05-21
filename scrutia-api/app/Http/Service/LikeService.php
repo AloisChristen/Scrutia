@@ -8,8 +8,9 @@ use App\Models\Vote;
 
 class LikeService
 {
-    public static function addVoteReputation(User $owner, Vote $vote, User $liker = null, Likeable $model = null, bool $modified = false): void
+    public static function addVoteReputation(User $owner, Vote $vote, int $liker_id = null, Likeable $model = null, bool $modified = false): void
     {
+        $liker = User::find($liker_id);
         switch($model){
             case Likeable::ANSWER:
             case Likeable::QUESTION:

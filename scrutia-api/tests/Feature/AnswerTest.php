@@ -34,7 +34,7 @@ class AnswerTest extends TestCase
         ]);
     }
 
-    public function test_user_receive_5_reputation_after_answering_a_question(): void
+    public function test_owner_receive_2_reputation_after_user_answers_a_question(): void
     {
         $question = Question::factory()->create();
 
@@ -50,7 +50,7 @@ class AnswerTest extends TestCase
         $response->assertCreated();
         $this->assertDatabaseHas("users", [
             "id" => $question->user->id,
-            "reputation" => 105
+            "reputation" => 102
         ]);
     }
 
@@ -89,11 +89,11 @@ class AnswerTest extends TestCase
         ]);
     }
 
-    public function test_user_with_150_or_more_reputation_can_update_answer(): void
+    public function test_user_with_200_or_more_reputation_can_update_answer(): void
     {
         $answer = Answer::factory()->create();
         $user = User::factory()->create([
-           "reputation" => 150
+           "reputation" => 200
         ]);
         $response =
             $this->actingAs($user)
@@ -110,11 +110,11 @@ class AnswerTest extends TestCase
         ]);
     }
 
-    public function test_user_with_less_than_150_reputation_cannot_update_answer(): void
+    public function test_user_with_less_than_200_reputation_cannot_update_answer(): void
     {
         $answer = Answer::factory()->create();
         $user = User::factory()->create([
-            "reputation" => 100
+            "reputation" => 199
         ]);
         $response =
             $this->actingAs($user)

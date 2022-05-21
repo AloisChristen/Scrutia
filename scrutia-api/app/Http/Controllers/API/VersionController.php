@@ -63,7 +63,7 @@ class VersionController extends Controller
     public function update(int $id, UpdateVersionRequest $request): JsonResponse
     {
         $version = Version::find($id);
-        if($version->user->id != auth()->id && auth()->user()->reputation < 500)
+        if($version->user->id != auth()->user()->id && auth()->user()->reputation < 500)
             return response()->json(["message" => "Not Allowed", "errors" => [
                 "reputation" => "User is not allowed to perform this action"
             ]], 403);
@@ -147,7 +147,7 @@ class VersionController extends Controller
 
         $like->save();
 
-        LikeService::addVoteReputation($version->user, $like->value, auth()->id, Likeable::VERSION, $modified);
+        LikeService::addVoteReputation($version->user, $like->value, auth()->user()->id, Likeable::VERSION, $modified);
 
         return response()->json("Liked");
     }
