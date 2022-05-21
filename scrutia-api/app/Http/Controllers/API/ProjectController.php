@@ -12,7 +12,6 @@ use App\Models\User;
 use App\Models\Version;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
 use Request;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -32,32 +31,9 @@ class ProjectController extends Controller
                     AllowedFilter::scope('title'),
                     AllowedFilter::scope('tags'),
                     AllowedFilter::scope('content'),
+                    AllowedFilter::scope('status'),
                 ])
                 ->get();
-    }
-
-    /**
-     * @param $id
-     * @return JsonResponse
-     */
-    public function promote($id): JsonResponse
-    {
-        $projectToPromote = Project::where('id', $id);
-        dd($projectToPromote);
-        $ideaVersion = Version::where('project_id', $id);
-
-
-        $v2 = Version::create([
-            'number' => 2,
-            'author' => $ideaVersion->author,
-            'status' => Status::INITIATIVE,
-            'description' => $ideaVersion->description,
-        ]);
-        $v2->project()->associate($project);
-        $v2->save();
-        $project->versions->save($v2);
-
-        return $project;
     }
 
     /**
@@ -76,7 +52,7 @@ class ProjectController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request
+     * @param StoreProjectRequest $request
      * @return JsonResponse
      */
     public function store(StoreProjectRequest $request): JsonResponse
@@ -104,35 +80,26 @@ class ProjectController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param UpdateProjectRequest $request
-     * @param int $id
+     * @param $id
      * @return JsonResponse
      */
-    public function update(UpdateProjectRequest $request, int $id): JsonResponse
+    public function promote($id): JsonResponse
     {
-        $project = Project::with('tags')->find($id);
-        $project->title = $request->title;
-        $project->description = $request->description;
-        $project->save();
-        ProjectService::createAndAttachTags($project, $request->tags);
+        $projectToPromote = Project::where('id', $id);
+        dd($projectToPromote);
+        $ideaVersion = Version::where('project_id', $id);
 
-        return response()->json($project);
-    }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param int $id
-     * @return JsonResponse
-     */
-    public function destroy(int $id): JsonResponse
-    {
-        $project = Project::find($id);
-        $project->tags()->detach();
-        $project->delete();
+        $v2 = Version::create([
+            'number' => 2,
+            'author' => $ideaVersion->author,
+            'status' => Status::INITIATIVE,
+            'description' => $ideaVersion->description,
+        ]);
+        $v2->project()->associate($project);
+        $v2->save();
+        $project->versions->save($v2);
 
-        return response()->json($project);
+        return $project;
     }
 }

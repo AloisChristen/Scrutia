@@ -24,14 +24,6 @@ class Project extends Model
     ];
 
     /**
-     * Get the project's newest version.
-     */
-    public function newestVersion()
-    {
-        return $this->hasOne(Version::class)->ofMany('number', 'max');
-    }
-
-    /**
      * @return BelongsToMany
      */
     public function tags(): BelongsToMany
@@ -53,6 +45,11 @@ class Project extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function favorites(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class)->withTimestamps();
     }
 
     /**
@@ -102,8 +99,16 @@ class Project extends Model
         });
     }
 
-      public function favorites(): BelongsToMany
+    /**
+     * Filter projects search by tags.
+     * @param Builder $query
+     * @param array $tags
+     * @return Builder
+     */
+    public function scopeStatus(Builder $query, $status = null): Builder
     {
-        return $this->belongsToMany(User::class)->withTimestamps();
+        return $query->whereHas('tags', function (Builder $query) use ($status) {
+            $query->whereIn('status', $status);
+        });
     }
 }
