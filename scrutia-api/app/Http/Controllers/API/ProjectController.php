@@ -9,6 +9,7 @@ use App\Models\Project;
 use App\Models\Status;
 use App\Models\User;
 use App\Models\Version;
+use App\Models\Vote;
 use Illuminate\Http\JsonResponse;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -73,9 +74,8 @@ class ProjectController extends Controller
     {
         $author = User::find(auth()->user()->id);
         $project_count = Project::where('user_id', $author->id)->count();
-
-        if($author->reputation < 50 && $project_count >= 1){
-            return response()->json(["message" => "Bad Request", "errors" => [
+        if($author->reputation < 50 && $project_count > 0){
+            return response()->json(["message" => "Not Allowed", "errors" => [
                 "reputation" => "You can create only one project with your reputation."
             ]], 403);
         }
@@ -94,6 +94,7 @@ class ProjectController extends Controller
         $version->save();
 
         $project->user()->associate($author);
+        $project->save();
 
         ProjectService::createAndAttachTags($project, $request->tags);
 
@@ -124,6 +125,21 @@ class ProjectController extends Controller
             return response()->json(["message" => "Not Allowed", "errors" => [
                 "author" => "It is not allowed to promote a project from someone else."
             ]], 404);
+        }
+
+        $sum_upvote = 0;
+        $version = $project->versions()->with('likes')->first();
+
+        foreach($version->likes as $like){
+            if($like->value == Vote::UPVOTE){
+                $sum_upvote += 1;
+            }
+        }
+
+        if($sum_upvote < 50){
+            return response()->json(["message" => "Not Allowed", "errors" => [
+                "votes" => "There is not enough votes to get promoted."
+            ]], 403);
         }
 
         $project->status = Status::INITIATIVE;

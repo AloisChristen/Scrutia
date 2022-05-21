@@ -25,7 +25,8 @@ class StoreProjectRequest extends FormRequest
     {
         return [
             "title" => "string|required|max:50",
-            "description" => "string|required"
+            "description" => "string|required",
+            "tags" => "array"
         ];
     }
 }

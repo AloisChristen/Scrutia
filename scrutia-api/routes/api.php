@@ -64,6 +64,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 
     Route::controller(ProjectController::class)->prefix('/projects')->group(
         function () {
+            Route::post('/', 'store')->name('project.store');
             Route::put('/{id}/promote', 'promote')->name('project.promote');
         }
     );
