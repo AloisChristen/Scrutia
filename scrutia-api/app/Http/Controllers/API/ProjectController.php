@@ -50,11 +50,17 @@ class ProjectController extends Controller
      */
     public function show(int $id): JsonResponse
     {
-        $result = Project::with("versions.questions.answers")
+        $project = Project::with("versions.questions.answers")
             ->with("tags")
             ->find($id);
 
-        return response()->json($result);
+        if($project == null){
+            return response()->json(["message" => "Not Found", "errors" => [
+                "id" => "Project does not exist."
+            ]], 404);
+        }
+
+        return response()->json($project);
     }
 
     /**
