@@ -810,7 +810,9 @@ components:
           type: string
           format: date-time
         questions:
-          $ref: '#/components/schemas/QuestionDetailsDTO'
+          type: array
+          items:
+            $ref: '#/components/schemas/QuestionDetailsDTO'
     VersionStoreDTO:
       type: object
       properties:
