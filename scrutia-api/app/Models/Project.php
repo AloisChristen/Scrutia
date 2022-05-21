@@ -102,7 +102,7 @@ class Project extends Model
     /**
      * Filter projects search by tags.
      * @param Builder $query
-     * @param array $tags
+     * @param null $status
      * @return Builder
      */
     public function scopeStatus(Builder $query, $status = null): Builder
