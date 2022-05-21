@@ -30,7 +30,13 @@ class ProjectController extends Controller
                 AllowedFilter::scope('content'),
                 AllowedFilter::scope('status'),
             ])
-            ->with("versions.questions.answers")
+            ->with(["versions.questions" => function($query){
+                $query->limit(3);
+                $query->with(["answers" => function($query){
+                    $query->limit(3);
+                }]);
+            }])
+            ->with("tags")
             ->paginate();
 
         return response()->json($projects);
@@ -44,7 +50,9 @@ class ProjectController extends Controller
      */
     public function show(int $id): JsonResponse
     {
-        $result = Project::with('versions', 'tags')->find($id);
+        $result = Project::with("versions.questions.answers")
+            ->with("tags")
+            ->find($id);
 
         return response()->json($result);
     }
