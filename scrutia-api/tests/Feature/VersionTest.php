@@ -179,14 +179,16 @@ class VersionTest extends TestCase
     }
 
     /**
-     * Test that random users cannot add a version to a project.
+     * Test user with less than 500 reputation cannot update a version
      *
      * @return void
      */
-    public function test_random_user_cannot_update_a_version(): void
+    public function test_user_with_less_than_500_reputation_cannot_update_a_version(): void
     {
         $version = Version::factory()->create();
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            "reputation" => 499
+        ]);
         $description = $this->faker->text();
 
         $response =
@@ -196,6 +198,31 @@ class VersionTest extends TestCase
                 ]);
         $response->assertStatus(403);
         $this->assertDatabaseMissing('versions', [
+            'id' => $version->id,
+            'description' => $description,
+        ]);
+    }
+
+    /**
+     * Test user with more than 500 reputation can update a version
+     *
+     * @return void
+     */
+    public function test_user_with_more_than_500_reputation_can_update_a_version(): void
+    {
+        $version = Version::factory()->create();
+        $user = User::factory()->create([
+            "reputation" => 500
+        ]);
+        $description = $this->faker->text();
+
+        $response =
+            $this->actingAs($user)
+                ->put('/api/versions/'.$version->id, [
+                    'description' => $description,
+                ]);
+        $response->assertSuccessful();
+        $this->assertDatabaseHas('versions', [
             'id' => $version->id,
             'description' => $description,
         ]);

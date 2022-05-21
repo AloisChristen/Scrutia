@@ -42,6 +42,76 @@ class QuestionTest extends TestCase
         ]);
     }
 
+    /**
+     * A basic feature test example.
+     *
+     * @return void
+     */
+    public function test_user_with_less_than_0_reputation_can_create_only_one_question_per_day(): void
+    {
+        $user = User::factory()->create([
+            "reputation" => -100
+        ]);
+        $version = Version::factory()->create();
+
+        $question_attributes = [
+            "title" => "test",
+            "description" => "Lorem Ipsum",
+            "project_id" => $version->project->id,
+            "version_number" => $version->number,
+        ];
+
+        // Making the request to the endpoint
+        $response = $this->actingAs($user)->post('/api/questions', $question_attributes);
+        $response->assertCreated();
+        $response = $this->actingAs($user)->post('/api/questions', $question_attributes);
+        $response->assertStatus(403);
+    }
+
+    /**
+     * A basic feature test example.
+     *
+     * @return void
+     */
+    public function test_user_with_less_than_100_reputation_can_create_only_10_questions_per_day(): void
+    {
+        $user = User::factory()->create([
+            "reputation" => 99
+        ]);
+        $version = Version::factory()->create();
+
+        $question_attributes = [
+            "title" => "test",
+            "description" => "Lorem Ipsum",
+            "project_id" => $version->project->id,
+            "version_number" => $version->number,
+        ];
+
+        // Making the request to the endpoint
+        $response = $this->actingAs($user)->post('/api/questions', $question_attributes);
+        $response->assertCreated();
+        $response = $this->actingAs($user)->post('/api/questions', $question_attributes);
+        $response->assertCreated();
+        $response = $this->actingAs($user)->post('/api/questions', $question_attributes);
+        $response->assertCreated();
+        $response = $this->actingAs($user)->post('/api/questions', $question_attributes);
+        $response->assertCreated();
+        $response = $this->actingAs($user)->post('/api/questions', $question_attributes);
+        $response->assertCreated();
+        $response = $this->actingAs($user)->post('/api/questions', $question_attributes);
+        $response->assertCreated();
+        $response = $this->actingAs($user)->post('/api/questions', $question_attributes);
+        $response->assertCreated();
+        $response = $this->actingAs($user)->post('/api/questions', $question_attributes);
+        $response->assertCreated();
+        $response = $this->actingAs($user)->post('/api/questions', $question_attributes);
+        $response->assertCreated();
+        $response = $this->actingAs($user)->post('/api/questions', $question_attributes);
+        $response->assertCreated();
+        $response = $this->actingAs($user)->post('/api/questions', $question_attributes);
+        $response->assertStatus(403);
+    }
+
     public function test_owner_receive_5_reputation_after_user_creates_a_question(): void
     {
         // As the database is refreshing, we're creating the ressources that we need to ask a question
