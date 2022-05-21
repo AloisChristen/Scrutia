@@ -124,26 +124,24 @@ class VersionController extends Controller
         $like = Like::where("user_id", $version->user->id)
             ->where("likeable_id",$version->id)
             ->where("likeable_type", "App\Models\Version")
-            ->firstOr(function() use($version, $request) {
-                $like = Like::create([
-                    "value" => $request->value
-                ]);
-                $like->user()->associate(auth()->user());
-                $version->likes()->save($like);
-                return $like;
-            });
+            ->first();
 
-        $like->value = $request->value;
+        $modified = false;
+        if($like == null){
+            $like = Like::create([
+                "value" => $request->value
+            ]);
+            $like->user()->associate(auth()->user());
+            $version->likes()->save($like);
+        }
+        else {
+            $like->value = $request->value;
+            $modified = true;
+        }
+
         $like->save();
 
-        /**
-         * TODO Discuss if we let this "bug" with the group
-         * Check if it's the first like or not, if it's not, we have to remove old reputation and add the new (positiv or negativ)
-         * Otherwise, you can put upvote, then downvote and then upvote again and you can gain reputation infinitely
-         * As upvoting gain more reputation than downvoting remove reputation
-         * (addAnswerVoteReputation implementing a third parameter for that with a default value to false meaning that he's not been modified)
-         **/
-        LikeService::addVoteReputation($version->user, $like->value, auth()->id, Likeable::VERSION);
+        LikeService::addVoteReputation($version->user, $like->value, auth()->id, Likeable::VERSION, $modified);
 
         return response()->json("Liked");
     }
