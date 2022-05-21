@@ -31,17 +31,19 @@ Route::post('/login', [LoginController::class, 'login'])
 Route::controller(ProjectController::class)->prefix('/projects')->group(
     function () {
         Route::get('/', 'index')->name('project.index');
-        Route::post('/', 'store')->name('project.store');
         Route::get('/{id}', 'show')->name('project.show');
-        Route::get('/ideas', 'showIdeas')->name('project.show.ideas');
-        Route::get('/initiatives', 'showInitiatives')->name('project.show.initiatives');
-        Route::put('/{id}/promote', 'promoteToInitiative')->name('project.promote');
     }
 );
 
+Route::controller(TagController::class)->prefix('tags')->group(
+    function () {
+        Route::get('/', 'index')->name('tag.index');
+    }
+);
 
-
-
+/**
+ * Routes that need authentication
+ */
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::controller(AnswerController::class)->prefix('/answers')->group(
         function () {
@@ -60,6 +62,12 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         }
     );
 
+    Route::controller(ProjectController::class)->prefix('/projects')->group(
+        function () {
+            Route::put('/{id}/promote', 'promote')->name('project.promote');
+        }
+    );
+
     Route::controller(QuestionController::class)->prefix('/questions')->group(
         function () {
             Route::post('/', 'store')->name('question.store');
@@ -67,12 +75,6 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
             Route::delete('/{id}', 'destroy')->name('question.delete');
 
             Route::post('/{id}/like', 'like')->name('question.like');
-        }
-    );
-
-    Route::controller(TagController::class)->prefix('tags')->group(
-        function () {
-            Route::get('/', 'index')->name('tag.index');
         }
     );
 
