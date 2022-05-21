@@ -4,7 +4,6 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProjectRequest;
-use App\Http\Requests\UpdateProjectRequest;
 use App\Http\Service\ProjectService;
 use App\Models\Project;
 use App\Models\Status;
@@ -12,7 +11,6 @@ use App\Models\User;
 use App\Models\Version;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
-use Request;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -63,20 +61,20 @@ class ProjectController extends Controller
             'status' => Status::IDEE,
         ]);
 
-        $v0 = Version::create([
+        $version = Version::create([
             'number' => 1,
-            'description' => $request->description,
-            'author' => $author->id,
+            'description' => $request->description
         ]);
-        $v0->project()->associate($project);
-        $v0->save();
 
-        $project->user()->associate($author->id);
-        auth()->user()->projects()->save($project);
+        $version->project()->associate($project);
+        $version->user()->associate($author);
+        $version->save();
+
+        $project->user()->associate($author);
 
         ProjectService::createAndAttachTags($project, $request->tags);
 
-        return response()->json($project);
+        return response()->json("Created", 201);
     }
 
     /**
@@ -85,21 +83,29 @@ class ProjectController extends Controller
      */
     public function promote($id): JsonResponse
     {
-        $projectToPromote = Project::where('id', $id);
-        dd($projectToPromote);
-        $ideaVersion = Version::where('project_id', $id);
+        $project = Project::find($id);
 
+        if($project == null){
+            return response()->json(["message" => "Not Found", "errors" => [
+                "id" => "Project does not exists"
+            ]], 404);
+        }
 
-        $v2 = Version::create([
-            'number' => 2,
-            'author' => $ideaVersion->author,
-            'status' => Status::INITIATIVE,
-            'description' => $ideaVersion->description,
-        ]);
-        $v2->project()->associate($project);
-        $v2->save();
-        $project->versions->save($v2);
+        if($project->status == Status::INITIATIVE){
+            return response()->json(["message" => "Bad Request", "errors" => [
+                "status" => "Project has already been promoted."
+            ]], 400);
+        }
 
-        return $project;
+        if($project->user->id != auth()->id){
+            return response()->json(["message" => "Not Allowed", "errors" => [
+                "author" => "It is not allowed to promote a project from someone else."
+            ]], 404);
+        }
+
+        $project->status = Status::INITIATIVE;
+        $project->save();
+
+        return response()->json("Promoted");
     }
 }
