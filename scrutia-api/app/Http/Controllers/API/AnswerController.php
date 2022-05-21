@@ -27,7 +27,7 @@ class AnswerController extends Controller
         $question = Question::find($request->question_id);
         if($question == null)
             return response()->json(["message" => "Not Found", "errors" => [
-                "Question does not exist"
+                "question_id" => "Question does not exist"
             ]], 404);
 
         $answers_count = Answer::where('user_id', auth()->id)->whereDate('created_at', Carbon::today())->count();
@@ -63,7 +63,7 @@ class AnswerController extends Controller
         $answer = Answer::find($id);
         if($answer == null){
             return response()->json(["message" => "Not Found", "errors" => [
-                "Question id does not exist"
+                "id" => "Question id does not exist"
             ]], 404);
         }
 
@@ -90,13 +90,13 @@ class AnswerController extends Controller
         $answer= Answer::find($id);
         if(auth()->user()->id != $answer->user->id && auth()->user()->reputation < 200)
             return response()->json(["message" => "Not Allowed", "errors" => [
-                "User is not allowed to perform this action"
+                "reputation" => "User is not allowed to perform this action"
             ]], 403);
 
 
         if($answer == null)
             return response()->json(["message" => "Not Found", "errors" => [
-                "Answer does not exist"
+                "id" => "Answer does not exist"
             ]], 404);
 
         $answer->likes()->delete();
@@ -109,7 +109,7 @@ class AnswerController extends Controller
         $answer = Answer::find($id);
         if($answer == null)
             return response()->json(["message" => "Not Found", "errors" => [
-                "Answer does not exist"
+                "id" => "Answer does not exist"
             ]], 404);
 
         if(auth()->user()->reputation <= 50){

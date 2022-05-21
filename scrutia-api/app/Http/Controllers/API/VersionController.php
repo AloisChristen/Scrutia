@@ -27,11 +27,11 @@ class VersionController extends Controller
         $project = Project::find($request->project_id);
         if($project == null)
             return response()->json(["message" => "Not Found", "errors" => [
-                "Project does not exist"
+                "project_id" => "Project does not exist"
             ]], 404);
         if($project->user->id != auth()->user()->id)
             return response()->json(["message" => "Not Allowed", "errors" => [
-                "User is not allowed to perform this action"
+                "author" => "User is not allowed to perform this action"
             ]], 403);
 
         $version = Version::create([
@@ -57,14 +57,14 @@ class VersionController extends Controller
     public function update(int $id, UpdateVersionRequest $request): JsonResponse
     {
         $version = Version::find($id);
-        if($version->user->id != auth()->user()->id)
+        if($version->user->id != auth()->id && auth()->user()->reputation < 500)
             return response()->json(["message" => "Not Allowed", "errors" => [
-                "User is not allowed to perform this action"
+                "reputation" => "User is not allowed to perform this action"
             ]], 403);
 
         if($version == null)
             return response()->json(["message" => "Not Found", "errors" => [
-                "Version does not exists"
+                "id" => "Version does not exists"
             ]], 404);
 
         $version->description = $request->description;
@@ -84,7 +84,7 @@ class VersionController extends Controller
         $version = Version::find($id);
         if(auth()->user()->id != $version->user->id)
             return response()->json(["message" => "Not Allowed", "errors" => [
-                "User is not allowed to perform this action"
+                "author" => "User is not allowed to perform this action"
             ]], 403);
 
 
@@ -111,7 +111,7 @@ class VersionController extends Controller
         $version = Version::find($id);
         if($version == null)
             return response()->json(["message" => "Not Found", "errors" => [
-                "Version does not exist"
+                "id" => "Version does not exist"
             ]], 404);
 
         if(auth()->user()->reputation <= 50){

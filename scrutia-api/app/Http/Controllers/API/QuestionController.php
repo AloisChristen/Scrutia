@@ -72,7 +72,7 @@ class QuestionController extends Controller
         $question = Question::find($id);
         if($question == null){
             return response()->json(["message" => "Not Found", "errors" => [
-                "Question id does not exist"
+                "id" => "Question id does not exist"
             ]], 404);
         }
 
@@ -99,13 +99,13 @@ class QuestionController extends Controller
         $question = Question::find($id);
         if(auth()->user()->id != $question->user->id && auth()->user()->reputation < 300)
                 return response()->json(["message" => "Not Allowed", "errors" => [
-                    "User is not allowed to perform this action"
+                    "reputation" => "User is not allowed to perform this action"
                 ]], 403);
 
 
         if($question == null)
             return response()->json(["message" => "Not Found", "errors" => [
-                "Question id does not exist"
+                "id" => "Question id does not exist"
             ]], 404);
 
         $question->likes()->delete();
@@ -118,7 +118,7 @@ class QuestionController extends Controller
         $question = Question::find($id);
         if($question == null)
             return response()->json(["message" => "Not Found", "errors" => [
-                "Question does not exist"
+                "id" => "Question does not exist"
             ]], 404);
 
         if(auth()->user()->reputation <= 50){
