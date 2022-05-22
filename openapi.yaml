@@ -532,18 +532,18 @@ components:
         user_id:
           type: string
           maxLength: 30
+        nb_upvotes:
+          type: integer
+        nb_downvotes:
+          type: integer
+        user_vote:
+          $ref: '#/components/schemas/VoteDTO'
         created_at:
           type: string
           format: date-time
         updated_at:
           type: string
           format: date-time
-        nbLikes:
-          type: integer
-        nbDislikes:
-          type: integer
-        userVote:
-          $ref: '#/components/schemas/VoteDTO'
     AnswerStoreDTO:
       type: object
       properties:
@@ -618,6 +618,13 @@ components:
         title:
           type: string
           maxLength: 255
+        nb_total_upvotes:
+          type: integer
+        nb_total_downvotes:
+          type: integer
+        status:
+          type: string
+          enum: [idea, initiative]
         versions:
           type: array
           items:
@@ -626,15 +633,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/TagDTO'
-        nbLikes:
-          type: integer
-        nbDislikes:
-          type: integer
-        userVote:
-          $ref: '#/components/schemas/VoteDTO'
-        status:
-          type: string
-          enum: [idea, initiative]
         created_at:
           type: string
           format: date-time
@@ -693,11 +691,11 @@ components:
         updated_at:
           type: string
           format: date-time
-        nbLikes:
+        nb_upvotes:
           type: integer
-        nbDislikes:
+        nb_downvotes:
           type: integer
-        userVote:
+        user_vote:
           $ref: '#/components/schemas/VoteDTO'
         answers:
           type: array
@@ -803,6 +801,12 @@ components:
           type: integer
         user_id:
           type: integer
+        nb_upvotes:
+          type: integer
+        nb_downvotes:
+          type: integer
+        user_vote:
+          $ref: '#/components/schemas/VoteDTO'
         created_at:
           type: string
           format: date-time

@@ -34,8 +34,8 @@ class LikeFactory extends Factory
         return [
             'value' => $this->faker->randomElement([Vote::UPVOTE, Vote::DOWNVOTE]),
             'user_id' => User::factory(),
-            'likeable_id' => 1,
-            'likeable_type' => $likeable,
+            'likeable_id' => $likeable,
+            'likeable_type' => $likeable->getMorphClass(),
         ];
     }
 }
