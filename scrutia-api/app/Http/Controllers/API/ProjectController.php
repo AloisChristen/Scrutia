@@ -38,9 +38,15 @@ class ProjectController extends Controller
                 }]);
             }])
             ->with("tags")
-            ->paginate();
+            ->get();
 
-        return response()->json($projects);
+        foreach ($projects as $project){
+            ProjectService::addLikesAttributes($project);
+        }
+
+
+
+        return response()->json($projects->paginate());
     }
 
     /**
@@ -60,6 +66,7 @@ class ProjectController extends Controller
                 "id" => "Project does not exist."
             ]], 404);
         }
+        ProjectService::addLikesAttributes($project);
 
         return response()->json($project);
     }
