@@ -6,10 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\LikeRequest;
 use App\Http\Requests\StoreAnswerRequest;
 use App\Http\Requests\UpdateAnswerRequest;
-use App\Http\Service\UserService;
+use App\Http\Service\LikeService;
 use App\Models\Answer;
 use App\Models\Like;
+use App\Models\Likeable;
 use App\Models\Question;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 
 class AnswerController extends Controller
@@ -25,8 +27,15 @@ class AnswerController extends Controller
         $question = Question::find($request->question_id);
         if($question == null)
             return response()->json(["message" => "Not Found", "errors" => [
-                "Question does not exist"
+                "question_id" => "Question does not exist"
             ]], 404);
+
+        $answers_count = Answer::where('user_id', auth()->id)->whereDate('created_at', Carbon::today())->count();
+        if(auth()->user()->reputation <= 0 && $answers_count >= 10){
+            return response()->json(["message" => "Not Allowed", "errors" => [
+                "reputation" => "The user already posted 10 answers today with less or equals than 0 reputation"
+            ]], 403);
+        }
 
         $answer = Answer::create([
             'title' =>  $request->title,
@@ -37,7 +46,7 @@ class AnswerController extends Controller
         $answer->question()->associate($question);
         $answer->save();
 
-        UserService::addAnswerReputation($answer->user);
+        LikeService::addNewAnswerReputation($question->user);
 
         return response()->json("Created", 201);
     }
@@ -54,9 +63,16 @@ class AnswerController extends Controller
         $answer = Answer::find($id);
         if($answer == null){
             return response()->json(["message" => "Not Found", "errors" => [
-                "Question id does not exist"
+                "id" => "Question id does not exist"
             ]], 404);
         }
+
+        if(auth()->user()->id != $answer->user->id && auth()->user()->reputation < 200){
+            return response()->json(["message" => "Not Allowed", "errors" => [
+                "reputation" => "User is not the author and do not have more than 200 reputation"
+            ]], 403);
+        }
+
         $answer->title = $request->title;
         $answer->description = $request->description;
         $answer->save();
@@ -74,13 +90,13 @@ class AnswerController extends Controller
         $answer= Answer::find($id);
         if(auth()->user()->id != $answer->user->id && auth()->user()->reputation < 200)
             return response()->json(["message" => "Not Allowed", "errors" => [
-                "User is not allowed to perform this action"
+                "reputation" => "User is not allowed to perform this action"
             ]], 403);
 
 
         if($answer == null)
             return response()->json(["message" => "Not Found", "errors" => [
-                "Answer does not exist"
+                "id" => "Answer does not exist"
             ]], 404);
 
         $answer->likes()->delete();
@@ -93,23 +109,35 @@ class AnswerController extends Controller
         $answer = Answer::find($id);
         if($answer == null)
             return response()->json(["message" => "Not Found", "errors" => [
-                "Answer does not exist"
+                "id" => "Answer does not exist"
             ]], 404);
+
+        if(auth()->user()->reputation <= 50){
+            return response()->json(["message" => "Not Allowed", "errors" => [
+                "reputation" => "The user cannot vote with less than or equals 50"
+            ]], 403);
+        }
 
         $like = Like::where("user_id", $answer->user->id)
             ->where("likeable_id",$answer->id)
             ->where("likeable_type", "App\Models\Answer")
-            ->firstOr(function() use($answer, $request) {
-                $like = Like::create([
-                    "value" => $request->value
-                ]);
-                $like->user()->associate(auth()->user());
-                $answer->likes()->save($like);
-                return $like;
-            });
+            ->first();
 
-        $like->value = $request->value;
+        $modified = false;
+        if($like == null){
+            $like = Like::create([
+                "value" => $request->value
+            ]);
+            $like->user()->associate(auth()->user());
+            $answer->likes()->save($like);
+        } else {
+            $like->value = $request->value;
+            $modified = true;
+        }
+
         $like->save();
+
+        LikeService::addVoteReputation($answer->user, $like->value, auth()->id, Likeable::ANSWER, $modified);
 
         return response()->json("Liked");
     }
