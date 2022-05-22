@@ -31,6 +31,7 @@ class AnswerController extends Controller
             ]], 404);
 
         $answers_count = Answer::where('user_id', auth()->user()->id)->whereDate('created_at', Carbon::today())->count();
+
         if(auth()->user()->reputation <= 0 && $answers_count >= 10){
             return response()->json(["message" => "Not Allowed", "errors" => [
                 "reputation" => "The user already posted 10 answers today with less or equals than 0 reputation"
