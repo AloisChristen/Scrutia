@@ -8,8 +8,8 @@ info:
     email: scrutia.team@gmail.com
 servers:
   - url: http://localhost/api
-  - url: https://scrutia-api-dev.herokuapp.com/api:80
-  - url: https://scrutia-api.herokuapp.com/api:80
+  - url: https://scrutia-api-dev.herokuapp.com/api
+  - url: https://scrutia-api.herokuapp.com/api
 tags:
   - name: Auths
     description: Eveything about authentication
@@ -187,43 +187,13 @@ paths:
     get:
       tags:
         - Projects
-      summary: Get projects
+      summary: Get ideas or initiatives
       parameters:
         - in: query
           name: page
           schema:
             type: integer
             description: page number
-        - in: query
-          name: startDate
-          schema:
-            type: string
-            format: date
-            description: start date
-        - in: query
-          name: endDate
-          schema:
-            type: string
-            format: date
-            description: end date
-        - in: query
-          name: title
-          schema:
-            type: string
-            description: title of project
-        - in: query
-          name: tags
-          schema:
-            type: array
-            items:
-              type: string
-            description: tags affiliated to project
-        - in: query
-          name: content
-          schema:
-            type: string
-            description: content of project
-
       responses:
         200:
           description: OK
@@ -232,7 +202,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ProjectPagination'
+                  $ref: '#/components/schemas/ProjectPaginationDTO'
     post:
       tags:
         - Projects
@@ -244,7 +214,7 @@ paths:
         content:
           'application/json':
             schema:
-              $ref: '#/components/schemas/Project'
+              $ref: '#/components/schemas/ProjectStoreDTO'
       responses:
         201:
           description: Created
@@ -254,46 +224,6 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         403:
           $ref: '#/components/responses/NotEnoughReputation'
-  /projects/ideas:
-    get:
-      tags:
-        - Projects
-      summary: Get ideas
-      parameters:
-        - in: query
-          name: page
-          schema:
-            type: integer
-          description: page number
-      responses:
-        200:
-          description: OK
-          content:
-            'application/json':
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ProjectPagination'
-  /projects/initiatives:
-    get:
-      tags:
-        - Projects
-      summary: Get initiatives
-      parameters:
-        - in: query
-          name: page
-          schema:
-            type: integer
-          description: page number
-      responses:
-        200:
-          description: OK
-          content:
-            'application/json':
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ProjectPagination'
   /projects/{projectId}:
     get:
       tags:
@@ -315,52 +245,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/ProjectDetailsDTO'
-    put:
-      tags:
-        - Projects
-      summary: Update project details
-      parameters:
-        - in: path
-          name: projectId
-          schema:
-            type: integer
-          required: true
-          description: Numeric ID of the project to update
-      requestBody:
-        required: true
-        content:
-          'application/json':
-            schema:
-              $ref: '#/components/schemas/Project'
-      responses:
-        200:
-          description: Updated
-        400:
-          $ref: '#/components/responses/BadRequest'
-        401:
-          $ref: '#/components/responses/Unauthorized'
-        403:
-          $ref: '#/components/responses/NotEnoughReputation'
-    delete:
-      tags:
-        - Projects
-      summary: Delete project
-      parameters:
-        - in: path
-          name: projectId
-          schema:
-            type: integer
-          required: true
-          description: Numeric ID of the project to delete
-      responses:
-        200:
-          description: Deleted
-        400:
-          $ref: '#/components/responses/BadRequest'
-        401:
-          $ref: '#/components/responses/Unauthorized'
-        403:
-          $ref: '#/components/responses/NotEnoughReputation'
   /projects/{projectId}/promote:
     put:
       tags:
@@ -645,10 +529,13 @@ components:
           type: integer
         description:
           type: string
-        author:
+        user_id:
           type: string
           maxLength: 30
-        date:
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
           type: string
           format: date-time
         nbLikes:
@@ -686,7 +573,18 @@ components:
         message:
           type: string
         errors:
-          type: object
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorDescription'
+    ErrorDescription:
+      type: object
+      properties:
+        key: 
+          type: string
+        value:
+          type: array
+          items: 
+            type: string
     LikeDTO:
       type: object
       properties:
@@ -700,7 +598,7 @@ components:
         password:
           type: string
           format: password
-    Project:
+    ProjectStoreDTO:
       type: object
       properties:
         title:
@@ -720,14 +618,10 @@ components:
         title:
           type: string
           maxLength: 255
-        description:
-          type: string
-        author:
-          type: string
-          maxLength: 30
-        date:
-          type: string
-          format: date-time
+        versions:
+          type: array
+          items:
+            $ref: '#/components/schemas/VersionDetailsDTO'
         tags:
           type: array
           items:
@@ -739,40 +633,16 @@ components:
         userVote:
           $ref: '#/components/schemas/VoteDTO'
         status:
-          $ref: '#/components/schemas/ProjectStatus'
-        questions:
-          type: array
-          items:
-            $ref: '#/components/schemas/QuestionDetailsDTO'
-    ProjectDTO:
-      type: object
-      properties:
-        id:
-          type: integer
-        title:
           type: string
-          maxLength: 255
-        description:
-          type: string
-        author:
-          type: string
-          maxLength: 30
-        date:
+          enum: [idea, initiative]
+        created_at:
           type: string
           format: date-time
-        tags:
-          type: array
-          items:
-            $ref: '#/components/schemas/TagDTO'
-        nbLikes:
-          type: integer
-        nbDislikes:
-          type: integer
-        userVote:
-          $ref: '#/components/schemas/VoteDTO'
-        status:
-          $ref: '#/components/schemas/ProjectStatus'
-    ProjectPagination:
+        updated_at:
+          type: string
+          format: date-time
+
+    ProjectPaginationDTO:
       type: object
       properties:
         total:
@@ -805,10 +675,7 @@ components:
         data:
           type: array
           items:
-            $ref: '#/components/schemas/ProjectDTO'
-    ProjectStatus:
-      type: string
-      enum: [idea, initiative]
+            $ref: '#/components/schemas/ProjectDetailsDTO'
     QuestionDetailsDTO:
       type: object
       properties:
@@ -817,10 +684,13 @@ components:
         title:
           type: string
           maxLength: 255
-        author:
+        user_id:
           type: string
           maxLength: 30
-        date:
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
           type: string
           format: date-time
         nbLikes:
@@ -877,8 +747,6 @@ components:
     TagDTO:
       type: object
       properties:
-        id:
-          type: integer
         title:
           type: string
           maxLength: 30
@@ -924,6 +792,27 @@ components:
           type: string
           minLength: 6
           format: password
+    VersionDetailsDTO:
+      type: object
+      properties:
+        number:
+          type: integer
+        description:
+          type: string
+        project_id:
+          type: integer
+        user_id:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        questions:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuestionDetailsDTO'
     VersionStoreDTO:
       type: object
       properties:

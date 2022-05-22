@@ -16,15 +16,12 @@ class Project extends Model
 
     protected $fillable = [
         'title',
+        'status'
     ];
 
-    /**
-     * Get the project's newest version.
-     */
-    public function newestVersion()
-    {
-        return $this->hasOne(Version::class)->ofMany('number', 'max');
-    }
+    protected $casts = [
+        'status' => Status::class
+    ];
 
     /**
      * @return BelongsToMany
@@ -48,6 +45,11 @@ class Project extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function favorites(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class)->withTimestamps();
     }
 
     /**
@@ -96,9 +98,17 @@ class Project extends Model
             $query->whereIn('title', [$tags]);
         });
     }
-  
-      public function favorites(): BelongsToMany
+
+    /**
+     * Filter projects search by tags.
+     * @param Builder $query
+     * @param null $status
+     * @return Builder
+     */
+    public function scopeStatus(Builder $query, $status = null): Builder
     {
-        return $this->belongsToMany(User::class)->withTimestamps();
+        return $query->whereHas('tags', function (Builder $query) use ($status) {
+            $query->where('status', $status);
+        });
     }
 }

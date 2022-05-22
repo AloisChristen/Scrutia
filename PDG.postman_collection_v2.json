@@ -40,12 +40,12 @@
 									"response": []
 								},
 								{
-									"name": "endDate",
+									"name": "multiple",
 									"request": {
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "{{localhost}}:80/api/projects?filter[startDate]=2022-05-04",
+											"raw": "{{localhost}}:80/api/projects?filter[startDate]=2022-05-04&filter[endDate]=2022-05-18",
 											"host": [
 												"{{localhost}}"
 											],
@@ -58,6 +58,35 @@
 												{
 													"key": "filter[startDate]",
 													"value": "2022-05-04"
+												},
+												{
+													"key": "filter[endDate]",
+													"value": "2022-05-18"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "endDate",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{localhost}}:80/api/projects?filter[endDate]=2022-05-18",
+											"host": [
+												"{{localhost}}"
+											],
+											"port": "80",
+											"path": [
+												"api",
+												"projects"
+											],
+											"query": [
+												{
+													"key": "filter[endDate]",
+													"value": "2022-05-18"
 												}
 											]
 										}
@@ -70,7 +99,7 @@
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "{{localhost}}:80/api/projects?filter[startDate]=2022-05-04",
+											"raw": "{{localhost}}:80/api/projects?filter[title]=construction",
 											"host": [
 												"{{localhost}}"
 											],
@@ -81,8 +110,8 @@
 											],
 											"query": [
 												{
-													"key": "filter[startDate]",
-													"value": "2022-05-04"
+													"key": "filter[title]",
+													"value": "construction"
 												}
 											]
 										}
@@ -95,7 +124,7 @@
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "{{localhost}}:80/api/projects?filter[startDate]=2022-05-04",
+											"raw": "{{localhost}}:80/api/projects?filter[tags]=batiment",
 											"host": [
 												"{{localhost}}"
 											],
@@ -106,34 +135,50 @@
 											],
 											"query": [
 												{
-													"key": "filter[startDate]",
-													"value": "2022-05-04"
+													"key": "filter[tags]",
+													"value": "batiment"
 												}
 											]
 										}
 									},
 									"response": []
-								},
+								}
+							]
+						},
+						{
+							"name": "version",
+							"item": [
 								{
-									"name": "content",
+									"name": "version",
 									"request": {
 										"method": "GET",
+										"header": []
+									},
+									"response": []
+								},
+								{
+									"name": "version",
+									"request": {
+										"method": "POST",
 										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"project_id\" : 2,\n  \"description\": \"versionDeTest\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
 										"url": {
-											"raw": "{{localhost}}:80/api/projects?filter[startDate]=2022-05-04",
+											"raw": "{{localhost}}:80/api/versions",
 											"host": [
 												"{{localhost}}"
 											],
 											"port": "80",
 											"path": [
 												"api",
-												"projects"
-											],
-											"query": [
-												{
-													"key": "filter[startDate]",
-													"value": "2022-05-04"
-												}
+												"versions"
 											]
 										}
 									},
@@ -504,6 +549,10 @@
 		{
 			"key": "project_id",
 			"value": ""
+		},
+		{
+			"key": "version_id",
+			"value": "1"
 		}
 	]
 }

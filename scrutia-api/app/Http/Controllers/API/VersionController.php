@@ -29,15 +29,21 @@ class VersionController extends Controller
             return response()->json(["message" => "Not Found", "errors" => [
                 "project_id" => "Project does not exist"
             ]], 404);
+
         if($project->user->id != auth()->user()->id)
             return response()->json(["message" => "Not Allowed", "errors" => [
-                "author" => "User is not allowed to perform this action"
+                "author" => "User is not allowed to perform this action."
             ]], 403);
+
+        if($project->status != Status::INITIATIVE){
+            return response()->json(["message" => "Not Allowed", "errors" => [
+                "project" => "Project has not been promoted."
+            ]], 403);
+        }
 
         $version = Version::create([
             "number" => Version::where("project_id", $project->id)->count() + 1,
             "description" => $request->description,
-            "status" => Status::INITIATIVE
         ]);
 
         $version->project()->associate($project);
@@ -57,7 +63,7 @@ class VersionController extends Controller
     public function update(int $id, UpdateVersionRequest $request): JsonResponse
     {
         $version = Version::find($id);
-        if($version->user->id != auth()->id && auth()->user()->reputation < 500)
+        if($version->user->id != auth()->user()->id && auth()->user()->reputation < 500)
             return response()->json(["message" => "Not Allowed", "errors" => [
                 "reputation" => "User is not allowed to perform this action"
             ]], 403);
@@ -141,7 +147,7 @@ class VersionController extends Controller
 
         $like->save();
 
-        LikeService::addVoteReputation($version->user, $like->value, auth()->id, Likeable::VERSION, $modified);
+        LikeService::addVoteReputation($version->user, $like->value, auth()->user()->id, Likeable::VERSION, $modified);
 
         return response()->json("Liked");
     }

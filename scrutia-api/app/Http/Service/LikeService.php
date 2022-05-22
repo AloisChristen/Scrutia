@@ -8,8 +8,9 @@ use App\Models\Vote;
 
 class LikeService
 {
-    public static function addVoteReputation(User $owner, Vote $vote, User $liker = null, Likeable $model = null, bool $modified = false): void
+    public static function addVoteReputation(User $owner, Vote $vote, int $liker_id = null, Likeable $model = null, bool $modified = false): void
     {
+        $liker = User::find($liker_id);
         switch($model){
             case Likeable::ANSWER:
             case Likeable::QUESTION:
@@ -32,6 +33,7 @@ class LikeService
             else if ($vote == Vote::UPVOTE){
                 $owner->reputation -= $DOWNVOTE_VALUE;
             }
+            $owner->save();
         }
 
         if($vote == Vote::UPVOTE){
@@ -39,8 +41,10 @@ class LikeService
         }
         else if ($vote == Vote::DOWNVOTE){
             $owner->reputation += $DOWNVOTE_VALUE;
-            $liker->reputation += $DOWNVOTE_VALUE;
+            $liker->reputation -= 1;
+            $liker->save();
         }
+        $owner->save();
     }
 
     public static function addNewQuestionReputation(User $project_owner): void

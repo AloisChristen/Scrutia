@@ -13,7 +13,7 @@ class LikeRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth()->user()->reputation >= 100;
+        return true;
     }
 
     /**
