@@ -28,16 +28,17 @@ Route::post('/register', [RegistrationController::class, 'register'])
 Route::post('/login', [LoginController::class, 'login'])
     ->name('login');
 
-Route::controller(ProjectController::class)->prefix('/projects')->group(
-    function () {
-        Route::get('/', 'index')->name('project.index');
-        Route::get('/{id}', 'show')->name('project.show');
-    }
-);
 
 Route::controller(TagController::class)->prefix('tags')->group(
     function () {
         Route::get('/', 'index')->name('tag.index');
+    }
+);
+
+Route::controller(ProjectController::class)->middleware("auth.optional")->prefix('/projects')->group(
+    function () {
+        Route::get('/', 'index')->name('project.index');
+        Route::get('/{id}', 'show')->name('project.show');
     }
 );
 
@@ -62,7 +63,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         }
     );
 
-    Route::controller(ProjectController::class)->prefix('/projects')->group(
+    Route::controller(ProjectController::class)->middleware("guest")->prefix('/projects')->group(
         function () {
             Route::post('/', 'store')->name('project.store');
             Route::put('/{id}/promote', 'promote')->name('project.promote');
