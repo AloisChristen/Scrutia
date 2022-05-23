@@ -63,9 +63,6 @@
                     placeholder="Définissez des tags..."
                   >
                   </v-select>
-                  <b-form-invalid-feedback id="tags-feedback">
-                    Vous devez au moins définir un tag
-                  </b-form-invalid-feedback>
                 </div>
               </div>
               <b-row class="form-group">
@@ -75,12 +72,18 @@
                     type="submit"
                     variant="alt-success"
                     block
+                    :disabled="
+                      this.form.title === '' ||
+                      this.form.description === '' ||
+                      this.form.tags.length === 0 ||
+                      $v.form.$anyError
+                    "
                   >
                     <i class="fa fa-lightbulb mr-1"></i> Publier votre idée
                   </b-button>
                 </b-col>
                 <b-col md="6" xl="6">
-                  <b-button variant="alt-warning" block>
+                  <b-button variant="alt-warning" block @click="onClear">
                     <i class="fa fa-trash mr-1"></i> Réinitialiser
                   </b-button>
                 </b-col>
@@ -103,7 +106,10 @@ import { validationMixin } from 'vuelidate'
 import { required, minLength } from 'vuelidate/lib/validators'
 import VueSelect from 'vue-select'
 import { Project } from '@/typings/scrutia-types'
-import { addProject } from '@//api/services/ProjectsService'
+// import { addProject } from '@/api/services/ProjectsService'
+// import { getTags } from '@/api/services/TagsService'
+// import { TagDTO } from '@/typings/scrutia-types'
+// import { TagDTO } from '@/typings/scrutia-types'
 
 export default {
   name: 'AddIdeaView',
@@ -118,18 +124,19 @@ export default {
         description: null,
         tags: [],
       },
-      options: [
-        'HTML',
-        'CSS',
-        'JavaScript',
-        'PHP',
-        'MySQL',
-        'Ruby',
-        'Angular',
-        'React',
-        'Vue.js',
-      ],
+      options: [],
     }
+  },
+  async created() {
+    // const response: Response = await getTags()
+    // if (response.ok) {
+    //   const tags = await response.json()
+    //   this.$data.options = tags.map((tag: TagDTO) => tag.title)
+    // } else {
+    //   // TODO : Notify with popup
+    //   console.log(response.status)
+    // }
+    this.$data.options = ['tag1', 'tag2']
   },
   validations: {
     form: {
@@ -145,14 +152,15 @@ export default {
     },
   },
   methods: {
+    onClear() {
+      this.form.title = ''
+      this.form.description = ''
+      this.form.tags = []
+      this.$v.$reset()
+    },
     async onSubmit() {
       this.$v.form.$touch()
-
-      console.log('Submit')
-
       if (this.$v.form.$anyError) {
-        console.log('Error')
-
         return
       }
 
@@ -169,7 +177,9 @@ export default {
         tags: [],
       }
 
-      await addProject(ideaToAdd)
+      console.log(ideaToAdd)
+
+      // await addProject(ideaToAdd)
 
       // Form submit logic
       // this.$router.push('/todo')
