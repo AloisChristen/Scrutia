@@ -145,8 +145,6 @@ class QuestionController extends Controller
             $modified = true;
         }
         $like->save();
-        
-        LikeService::addVoteReputation($question->user, $like->value, auth()->id, Likeable::QUESTION, $modified);
 
         LikeService::addVoteReputation($question->user, $like->value, auth()->user()->id, Likeable::QUESTION, $modified);
 

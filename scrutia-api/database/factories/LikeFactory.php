@@ -24,17 +24,16 @@ class LikeFactory extends Factory
     public function definition()
     {
         $likeables = [
-            Answer::class,
-            Question::class,
-            Version::class,
+            Answer::factory()->create(),
+            Question::factory()->create(),
+            Version::factory()->create(),
         ];
 
         $likeable = Arr::random( $likeables )::inRandomOrder()->first();
-
         return [
             'value' => $this->faker->randomElement([Vote::UPVOTE, Vote::DOWNVOTE]),
             'user_id' => User::factory(),
-            'likeable_id' => $likeable,
+            'likeable_id' => $likeable->id,
             'likeable_type' => $likeable->getMorphClass(),
         ];
     }
