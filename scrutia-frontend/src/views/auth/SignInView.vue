@@ -10,7 +10,7 @@
             themed
             header-class="bg-primary-dark"
             class="mb-0"
-            title="Sign In"
+            title="Connexion"
           >
             <template #options>
               <router-link
@@ -27,7 +27,7 @@
               </router-link>
             </template>
             <div class="p-sm-3 px-lg-4 py-lg-5">
-              <h1 class="h2 mb-1">OneUI</h1>
+              <h1 class="h2 mb-1">{{ $store.getters.appName }}</h1>
               <p class="text-muted">Bienvenue, veuillez vous connecter.</p>
 
               <!-- Sign In Form -->

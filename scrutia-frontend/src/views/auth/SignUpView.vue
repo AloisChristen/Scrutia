@@ -10,7 +10,7 @@
             themed
             class="mb-0"
             header-class="bg-primary-dark"
-            title="Create Account"
+            title="Création de compte"
           >
             <template #options>
               <!-- Terms Modal -->
@@ -77,7 +77,7 @@
               </router-link>
             </template>
             <div class="p-sm-3 px-lg-4 py-lg-5">
-              <h1 class="h2 mb-1">OneUI</h1>
+              <h1 class="h2 mb-1">{{ $store.getters.appName }}</h1>
               <p class="text-muted">Veuillez remplir les champs suivants</p>
 
               <!-- Sign Up Form -->
