@@ -47,7 +47,8 @@
                     id="contains-text"
                     placeholder="Votre recherche..."
                     @keydown.enter="filterByText"
-                    @blur="(e) => filterByText(e.target.value())"
+                    @blur="filterByText"
+                    v-model="searchText"
                   ></b-form-input>
                 </b-form-group>
                 <b-form-group label="Tags" label-for="tags" class="text-center">
@@ -112,6 +113,7 @@ export default {
   name: 'BrowseIdeaView',
   data() {
     return {
+      searchText: '',
       isLoading: true,
       isLoadingTags: true,
       datesRanges: ['Tout', '-24h', '-48h', '-1 semaine'],
@@ -153,8 +155,8 @@ export default {
       }
       this.isLoading = false
     },
-    filterByText(text: string) {
-      console.log(text)
+    filterByText() {
+      console.log(this.searchText)
       console.log('Filter by text')
     },
     filterByTags() {
