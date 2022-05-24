@@ -14,7 +14,7 @@ class ProjectDTO
     private $nb_downvotes = 0;
     private $user_vote = 0;
     private $is_favorite = false;
-    private $augmentation;
+    private $increase;
     private $tags;
     private $author;
     private $created_at;
@@ -64,7 +64,93 @@ class ProjectDTO
         $this->created_at = $project->created_at;
     }
 
-    public function __toArray(){
-        return call_user_func('get_object_vars', $this);
+    /**
+     * @return mixed
+     */
+    public function getId(): mixed
+    {
+        return $this->id;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getTitle(): mixed
+    {
+        return $this->title;
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\HigherOrderBuilderProxy|mixed
+     */
+    public function getDescription(): mixed
+    {
+        return $this->description;
+    }
+
+    /**
+     * @return int
+     */
+    public function getNbUpvotes(): int
+    {
+        return $this->nb_upvotes;
+    }
+
+    /**
+     * @return int
+     */
+    public function getNbDownvotes(): int
+    {
+        return $this->nb_downvotes;
+    }
+
+    /**
+     * @return Vote|int
+     */
+    public function getUserVote(): int|Vote
+    {
+        return $this->user_vote;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isFavorite(): bool
+    {
+        return $this->is_favorite;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIncrease()
+    {
+        return $this->increase;
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Support\Collection
+     */
+    public function getTags(): \Illuminate\Database\Eloquent\Collection|\Illuminate\Support\Collection
+    {
+        return $this->tags;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAuthor()
+    {
+        return $this->author;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCreatedAt(): mixed
+    {
+        return $this->created_at;
+    }
+
+
 }
