@@ -1,6 +1,6 @@
 <template>
   <div>
-    <!-- <div v-if="isConnected">
+    <template v-if="isConnected()">
       <b-dropdown
         size="sm"
         variant="dual"
@@ -19,7 +19,7 @@
               style="width: 21px"
             />
             <span class="d-none d-sm-inline-block ml-2">
-              {{ $store.getters.currentUser.username }}
+              {{ getUsername() }}
             </span>
             <i
               class="fa fa-fw fa-angle-down d-none d-sm-inline-block ml-1 mt-1"
@@ -34,7 +34,7 @@
               alt="Avatar"
             />
             <p class="mt-2 mb-0 text-white font-w500">
-              {{ $store.getters.currentUser }}
+              {{ getUsername() }}
             </p>
           </div>
           <div class="p-2">
@@ -68,19 +68,19 @@
           </div>
         </li>
       </b-dropdown>
-    </div>
-    <div v-else> -->
-    <b-button
-      size="sm"
-      variant="dual"
-      class="d-inline-block ml-2"
-      menu-class="p-0 border-0 font-size-sm"
-      @click="toSignIn()"
-      block
-    >
-      <i class="fa fa-sign-in-alt mr-1"></i> Connexion
-    </b-button>
-    <!-- </div> -->
+    </template>
+    <template v-else>
+      <b-button
+        size="sm"
+        variant="dual"
+        class="d-inline-block ml-2"
+        menu-class="p-0 border-0 font-size-sm"
+        @click="toSignIn()"
+        block
+      >
+        <i class="fa fa-sign-in-alt mr-1"></i> Connexion
+      </b-button>
+    </template>
   </div>
 </template>
 <script lang="ts">
@@ -90,15 +90,20 @@ export default {
   data() {
     return {}
   },
-  mounted() {
-    console.log('Profil user mounted')
-  },
   methods: {
     isConnected: function () {
       return this.$store.getters.isConnected
     },
     toSignIn: function () {
       this.$router.push('/auth/signin')
+    },
+    getUsername: function () {
+      let user = this.$store.getters.currentUser
+      if (user == undefined) {
+        return 'No user'
+      } else {
+        return user.username
+      }
     },
   },
 }

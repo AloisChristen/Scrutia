@@ -229,7 +229,7 @@
 // Vuelidate, for more info and examples you can check out https://github.com/vuelidate/vuelidate
 import { validationMixin } from 'vuelidate'
 import { required, minLength, email, sameAs } from 'vuelidate/lib/validators'
-import { RegisterUser } from '@/typings/scrutia-types'
+import { RegisterUser, LoginDTO } from '@/typings/scrutia-types'
 import { register } from '@/api/services/AuthService'
 
 export default {
@@ -287,7 +287,8 @@ export default {
       // Form submit logic
 
       // TODO threat case when not connected
-      register(account).then((session) => {
+      register(account).then(async (resp) => {
+        let session: LoginDTO = (await resp.json()) as LoginDTO
         this.$store.commit('session', session)
         console.log(this.$store.getters.authToken)
         this.$router.push('/')
