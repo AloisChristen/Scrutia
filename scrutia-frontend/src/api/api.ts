@@ -28,7 +28,7 @@ function makeBaseHeader() {
     baseHeader['Authorization'] = 'Bearer' + store.getters.token
   }
   baseHeader['Authorization'] =
-    'Bearer 1|78HoHPv3SYOwktBueliKjI739baZH2wxS90WhO0S'
+    'Bearer 2|kYp6J6pvjPYuvc6mPbEvc8vG6HEN33j5nTZnUyG6'
   return baseHeader
 }
 

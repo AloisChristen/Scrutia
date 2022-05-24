@@ -1,4 +1,4 @@
-import { Project } from '@/typings/scrutia-types'
+import { ProjectStore } from '@/typings/scrutia-types'
 import { api, makeHeader } from '../api'
 
 export async function getProjects() {
@@ -8,7 +8,7 @@ export async function getProjects() {
   })
 }
 
-export async function addProject(idea: Project) {
+export async function addProject(idea: ProjectStore) {
   return await fetch(api.projects, {
     method: 'POST',
     headers: makeHeader({}),
