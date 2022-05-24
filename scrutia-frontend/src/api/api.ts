@@ -27,6 +27,8 @@ function makeBaseHeader() {
   if (store.getters.isConnected) {
     baseHeader['Authorization'] = 'Bearer' + store.getters.token
   }
+  baseHeader['Authorization'] =
+    'Bearer 2|kYp6J6pvjPYuvc6mPbEvc8vG6HEN33j5nTZnUyG6'
   return baseHeader
 }
 

@@ -10,9 +10,12 @@ import BasePageHeading from '@/components/BasePageHeading.vue'
 import BaseNavigation from '@/components/BaseNavigation.vue'
 import clickRipple from '@/directives/clickRipple'
 import toggleClass from '@/directives/toggleClass'
+import VueSweetalert2 from 'vue-sweetalert2'
+import 'sweetalert2/dist/sweetalert2.min.css'
 
 // Register global plugins
 Vue.use(BootstrapVue)
+Vue.use(VueSweetalert2)
 
 // Register global components
 Vue.component(BaseLayoutModifier.name, BaseLayoutModifier)

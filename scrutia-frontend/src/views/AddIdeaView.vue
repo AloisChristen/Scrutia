@@ -1,7 +1,12 @@
 <template>
   <div class="content" style="margin-bottom: 30px">
     <b-row class="justify-content-center">
-      <b-col md="8" lg="8" xl="8">
+      <b-spinner
+        variant="primary"
+        label="Loading..."
+        v-show="isLoading"
+      ></b-spinner>
+      <b-col md="8" lg="8" xl="8" v-show="!isLoading">
         <base-block
           rounded
           themed
@@ -63,9 +68,6 @@
                     placeholder="Définissez des tags..."
                   >
                   </v-select>
-                  <b-form-invalid-feedback id="tags-feedback">
-                    Vous devez au moins définir un tag
-                  </b-form-invalid-feedback>
                 </div>
               </div>
               <b-row class="form-group">
@@ -75,12 +77,18 @@
                     type="submit"
                     variant="alt-success"
                     block
+                    :disabled="
+                      this.form.title === '' ||
+                      this.form.description === '' ||
+                      this.form.tags.length === 0 ||
+                      $v.form.$anyError
+                    "
                   >
                     <i class="fa fa-lightbulb mr-1"></i> Publier votre idée
                   </b-button>
                 </b-col>
                 <b-col md="6" xl="6">
-                  <b-button variant="alt-warning" block>
+                  <b-button variant="alt-warning" block @click="onClear">
                     <i class="fa fa-trash mr-1"></i> Réinitialiser
                   </b-button>
                 </b-col>
@@ -102,8 +110,10 @@
 import { validationMixin } from 'vuelidate'
 import { required, minLength } from 'vuelidate/lib/validators'
 import VueSelect from 'vue-select'
-import { Project } from '@/typings/scrutia-types'
-import { addProject } from '@//api/services/ProjectsService'
+import { ProjectStore } from '@/typings/scrutia-types'
+import { addProject } from '@/api/services/ProjectsService'
+import { getTags } from '@/api/services/TagsService'
+import { TagDTO } from '@/typings/scrutia-types'
 
 export default {
   name: 'AddIdeaView',
@@ -118,18 +128,23 @@ export default {
         description: null,
         tags: [],
       },
-      options: [
-        'HTML',
-        'CSS',
-        'JavaScript',
-        'PHP',
-        'MySQL',
-        'Ruby',
-        'Angular',
-        'React',
-        'Vue.js',
-      ],
+      options: [],
+      isLoading: true,
     }
+  },
+  async created() {
+    const response: Response = await getTags()
+    if (response.ok) {
+      const tags = await response.json()
+      this.$data.options = tags.map((tag: TagDTO) => tag.title)
+    } else {
+      this.$swal({
+        icon: 'error',
+        title: "Une erreur s'est produite lors du chargement des tags",
+        showConfirmButton: true,
+      })
+    }
+    this.isLoading = false
   },
   validations: {
     form: {
@@ -145,34 +160,48 @@ export default {
     },
   },
   methods: {
+    onClear() {
+      this.form.title = ''
+      this.form.description = ''
+      this.form.tags = []
+      this.$v.$reset()
+    },
     async onSubmit() {
       this.$v.form.$touch()
-
-      console.log('Submit')
-
       if (this.$v.form.$anyError) {
-        console.log('Error')
-
         return
       }
 
-      // const tags =
-      //   this.form.tags.length === 0
-      //     ? []
-      //     : this.form.tags.foreach((tag: string) => {
-      //         return { id: 0, title: tag }
-      //       })
+      this.isLoading = true
 
-      const ideaToAdd: Project = {
+      const tags = this.form.tags.map((tag: string) => {
+        return { title: tag }
+      })
+
+      const ideaToAdd: ProjectStore = {
         title: this.form.title,
         description: this.form.description,
-        tags: [],
+        tags: tags,
       }
 
-      await addProject(ideaToAdd)
-
-      // Form submit logic
-      // this.$router.push('/todo')
+      const response: Response = await addProject(ideaToAdd)
+      if (response.ok) {
+        this.$swal({
+          icon: 'success',
+          title: 'Votre idée a été enregistrée',
+          showConfirmButton: false,
+          timer: 1500,
+        })
+        console.log(response)
+        this.$router.push('/')
+      } else {
+        this.$swal({
+          icon: 'error',
+          title: "Une erreur s'est produite lors de l'enregistrement",
+          showConfirmButton: true,
+        })
+      }
+      this.isLoading = false
     },
   },
 }
