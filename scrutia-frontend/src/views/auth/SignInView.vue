@@ -16,7 +16,7 @@
               <router-link
                 to="/auth/reminder"
                 class="btn-block-option font-size-sm"
-                >Forgot Password?</router-link
+                >Mot de passe oublié?</router-link
               >
               <router-link
                 to="/auth/signup"
@@ -28,7 +28,7 @@
             </template>
             <div class="p-sm-3 px-lg-4 py-lg-5">
               <h1 class="h2 mb-1">OneUI</h1>
-              <p class="text-muted">Welcome, please login.</p>
+              <p class="text-muted">Bienvenue, veuillez vous connecter.</p>
 
               <!-- Sign In Form -->
               <b-form @submit.stop.prevent="onSubmit">
@@ -45,7 +45,7 @@
                       aria-describedby="username-feedback"
                     ></b-form-input>
                     <b-form-invalid-feedback id="username-feedback">
-                      Please enter your username
+                      Nom d'utilisateur
                     </b-form-invalid-feedback>
                   </div>
                   <div class="form-group">
@@ -61,19 +61,19 @@
                       aria-describedby="password-feedback"
                     ></b-form-input>
                     <b-form-invalid-feedback id="password-feedback">
-                      Please enter your password
+                      Mot de passe
                     </b-form-invalid-feedback>
                   </div>
                   <div class="form-group">
                     <b-form-checkbox id="remember" name="remember"
-                      >Remember Me</b-form-checkbox
+                      >Se souvenir de moi</b-form-checkbox
                     >
                   </div>
                 </div>
                 <b-row class="form-group">
                   <b-col md="6" xl="5">
                     <b-button type="submit" variant="alt-primary" block>
-                      <i class="fa fa-fw fa-sign-in-alt mr-1"></i> Sign In
+                      <i class="fa fa-fw fa-sign-in-alt mr-1"></i> Se connecter
                     </b-button>
                   </b-col>
                 </b-row>

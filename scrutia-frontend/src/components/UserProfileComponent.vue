@@ -1,0 +1,105 @@
+<template>
+  <div>
+    <!-- <div v-if="isConnected">
+      <b-dropdown
+        size="sm"
+        variant="dual"
+        class="d-inline-block ml-2"
+        menu-class="p-0 border-0 font-size-sm"
+        right
+        no-caret
+        ref="oneDropdownBoxedUser"
+      >
+        <template #button-content>
+          <div class="d-flex align-items-center" id="userProfile">
+            <img
+              class="rounded-circle"
+              src="img/avatars/avatar10.jpg"
+              alt="Header Avatar"
+              style="width: 21px"
+            />
+            <span class="d-none d-sm-inline-block ml-2">
+              {{ $store.getters.currentUser.username }}
+            </span>
+            <i
+              class="fa fa-fw fa-angle-down d-none d-sm-inline-block ml-1 mt-1"
+            ></i>
+          </div>
+        </template>
+        <li @click="$refs.oneDropdownBoxedUser.hide(true)">
+          <div class="p-3 text-center bg-primary-dark rounded-top">
+            <img
+              class="img-avatar img-avatar48 img-avatar-thumb"
+              src="img/avatars/avatar10.jpg"
+              alt="Avatar"
+            />
+            <p class="mt-2 mb-0 text-white font-w500">
+              {{ $store.getters.currentUser }}
+            </p>
+          </div>
+          <div class="p-2">
+            <router-link
+              class="dropdown-item d-flex align-items-center justify-content-between"
+              to="/favorites"
+            >
+              <span class="font-size-sm font-w500">Favoris</span>
+              <span class="badge badge-pill badge-primary ml-2">3</span>
+            </router-link>
+            <router-link
+              class="dropdown-item d-flex align-items-center justify-content-between"
+              to="/userIdeasAndInitiatives"
+            >
+              <span class="font-size-sm font-w500">Idées et initiatives</span>
+              <span class="badge badge-pill badge-primary ml-2">1</span>
+            </router-link>
+            <div role="separator" class="dropdown-divider"></div>
+            <router-link
+              class="dropdown-item d-flex align-items-center justify-content-between"
+              to="/userProfile"
+            >
+              <span class="font-size-sm font-w500">Profil</span>
+            </router-link>
+            <router-link
+              class="dropdown-item d-flex align-items-center justify-content-between"
+              to="/auth/signin"
+            >
+              <span class="font-size-sm font-w500">Se déconnecter</span>
+            </router-link>
+          </div>
+        </li>
+      </b-dropdown>
+    </div>
+    <div v-else> -->
+    <b-button
+      size="sm"
+      variant="dual"
+      class="d-inline-block ml-2"
+      menu-class="p-0 border-0 font-size-sm"
+      @click="toSignIn()"
+      block
+    >
+      <i class="fa fa-sign-in-alt mr-1"></i> Connexion
+    </b-button>
+    <!-- </div> -->
+  </div>
+</template>
+<script lang="ts">
+export default {
+  name: 'UserProfileComponent',
+
+  data() {
+    return {}
+  },
+  mounted() {
+    console.log('Profil user mounted')
+  },
+  methods: {
+    isConnected: function () {
+      return this.$store.getters.isConnected
+    },
+    toSignIn: function () {
+      this.$router.push('/auth/signin')
+    },
+  },
+}
+</script>
