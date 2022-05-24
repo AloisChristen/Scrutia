@@ -110,7 +110,7 @@
 import { validationMixin } from 'vuelidate'
 import { required, minLength } from 'vuelidate/lib/validators'
 import VueSelect from 'vue-select'
-import { Project } from '@/typings/scrutia-types'
+import { ProjectStore } from '@/typings/scrutia-types'
 import { addProject } from '@/api/services/ProjectsService'
 import { getTags } from '@/api/services/TagsService'
 import { TagDTO } from '@/typings/scrutia-types'
@@ -180,7 +180,7 @@ export default {
 
       console.log(tags)
 
-      const ideaToAdd: Project = {
+      const ideaToAdd: ProjectStore = {
         title: this.form.title,
         description: this.form.description,
         tags: tags,
