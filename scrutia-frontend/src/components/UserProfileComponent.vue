@@ -62,6 +62,7 @@
             <router-link
               class="dropdown-item d-flex align-items-center justify-content-between"
               to="/auth/signin"
+              @click.native="disconnect()"
             >
               <span class="font-size-sm font-w500">Se déconnecter</span>
             </router-link>
@@ -96,6 +97,10 @@ export default {
     },
     toSignIn: function () {
       this.$router.push('/auth/signin')
+    },
+    disconnect: function () {
+      console.log('disconnected')
+      this.$store.commit('disconnect')
     },
     getUsername: function () {
       let user = this.$store.getters.currentUser

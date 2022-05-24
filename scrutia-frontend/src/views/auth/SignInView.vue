@@ -138,9 +138,7 @@ export default {
       // TODO threat case when not connected
       login(account).then(async (resp) => {
         let session: LoginDTO = (await resp.json()) as LoginDTO
-        console.log('Session recue:', session)
-        this.$store.commit('session', session)
-        console.log(this.$store.getters.authToken)
+        this.$store.commit('connect', session)
         this.$router.push('/')
       })
     },
