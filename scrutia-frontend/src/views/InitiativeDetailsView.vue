@@ -76,40 +76,41 @@
           aria-labelledby="btabs-animated-fade-home-tab"
         >
           <div>
-      <div class="block-rounded block">
-        <div class="block-header block-header-default">
-          <h3 class="block-title">
-            Title
-            <small>Subtitle</small>
-          </h3>
-          <div class="block-options space-x-1">
-            <button type="button" class="btn-block-option">
-              <i class="si si-refresh"></i>
-            </button>
-            <button type="button" class="btn-block-option">
-              <i class="si si-size-fullscreen"></i>
-            </button>
-            <button type="button" class="btn-block-option">
-              <i class="si si-pin"></i></button
-            ><button type="button" class="btn-block-option">
-              <i class="si si-arrow-up"></i></button
-            ><button type="button" class="btn-block-option">
-              <i class="si si-close"></i>
-            </button>
+            <div class="block-rounded block">
+              <div class="block-header block-header-default">
+                <h3 class="block-title">
+                  Title
+                  <small>Subtitle</small>
+                </h3>
+                <div class="block-options space-x-1">
+                  <button type="button" class="btn-block-option">
+                    <i class="si si-refresh"></i>
+                  </button>
+                  <button type="button" class="btn-block-option">
+                    <i class="si si-size-fullscreen"></i>
+                  </button>
+                  <button type="button" class="btn-block-option">
+                    <i class="si si-pin"></i></button
+                  ><button type="button" class="btn-block-option">
+                    <i class="si si-arrow-up"></i></button
+                  ><button type="button" class="btn-block-option">
+                    <i class="si si-close"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="block-content">
+                <!---->
+                <p>
+                  Dolor posuere proin blandit accumsan senectus netus nullam
+                  curae, ornare laoreet adipiscing luctus mauris adipiscing
+                  pretium eget fermentum, tristique lobortis est ut metus
+                  lobortis tortor tincidunt himenaeos habitant quis dictumst
+                  proin odio sagittis purus mi, nec taciti vestibulum quis in
+                  sit varius lorem sit metus mi.
+                </p>
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="block-content">
-          <!---->
-          <p>
-            Dolor posuere proin blandit accumsan senectus netus nullam curae,
-            ornare laoreet adipiscing luctus mauris adipiscing pretium eget
-            fermentum, tristique lobortis est ut metus lobortis tortor tincidunt
-            himenaeos habitant quis dictumst proin odio sagittis purus mi, nec
-            taciti vestibulum quis in sit varius lorem sit metus mi.
-          </p>
-        </div>
-      </div>
-    </div>
         </div>
         <div
           class="tab-pane fade"
@@ -118,45 +119,44 @@
           aria-labelledby="btabs-animated-fade-profile-tab"
         >
           <div>
-      <div class="block-rounded block">
-        <div class="block-header block-header-default">
-          <h3 class="block-title">
-            Title
-            <small>Subtitle</small>
-          </h3>
-          <div class="block-options space-x-1">
-            <button type="button" class="btn-block-option">
-              <i class="si si-refresh"></i>
-            </button>
-            <button type="button" class="btn-block-option">
-              <i class="si si-size-fullscreen"></i>
-            </button>
-            <button type="button" class="btn-block-option">
-              <i class="si si-pin"></i></button
-            ><button type="button" class="btn-block-option">
-              <i class="si si-arrow-up"></i></button
-            ><button type="button" class="btn-block-option">
-              <i class="si si-close"></i>
-            </button>
+            <div class="block-rounded block">
+              <div class="block-header block-header-default">
+                <h3 class="block-title">
+                  Title
+                  <small>Subtitle</small>
+                </h3>
+                <div class="block-options space-x-1">
+                  <button type="button" class="btn-block-option">
+                    <i class="si si-refresh"></i>
+                  </button>
+                  <button type="button" class="btn-block-option">
+                    <i class="si si-size-fullscreen"></i>
+                  </button>
+                  <button type="button" class="btn-block-option">
+                    <i class="si si-pin"></i></button
+                  ><button type="button" class="btn-block-option">
+                    <i class="si si-arrow-up"></i></button
+                  ><button type="button" class="btn-block-option">
+                    <i class="si si-close"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="block-content">
+                <!---->
+                <p>
+                  Dolor posuere proin blandit accumsan senectus netus nullam
+                  curae, ornare laoreet adipiscing luctus mauris adipiscing
+                  pretium eget fermentum, tristique lobortis est ut metus
+                  lobortis tortor tincidunt himenaeos habitant quis dictumst
+                  proin odio sagittis purus mi, nec taciti vestibulum quis in
+                  sit varius lorem sit metus mi.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="block-content">
-          <!---->
-          <p>
-            Dolor posuere proin blandit accumsan senectus netus nullam curae,
-            ornare laoreet adipiscing luctus mauris adipiscing pretium eget
-            fermentum, tristique lobortis est ut metus lobortis tortor tincidunt
-            himenaeos habitant quis dictumst proin odio sagittis purus mi, nec
-            taciti vestibulum quis in sit varius lorem sit metus mi.
-          </p>
-        </div>
       </div>
     </div>
-        </div>
-      </div>
-    </div>
-
-    
   </div>
 </template>
 
