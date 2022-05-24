@@ -23,10 +23,10 @@
       <p>
         <b-link
           class="link-fx"
-          href="javascript:void(0)"
+          href="/browseIdeas"
           style="float: right; margin-bottom: 10px; margin-top: -10px"
           v-show="!isLoading"
-          >et 125 autres...</b-link
+          >et de nombreuses autres...</b-link
         >
       </p>
       <h2 class="content-heading">Projets d'initiative les plus actifs...</h2>
@@ -50,10 +50,10 @@
       <p>
         <b-link
           class="link-fx"
-          href="javascript:void(0)"
+          href="browseInitiatives"
           style="float: right; margin-bottom: 10px; margin-top: -10px"
           v-show="!isLoadingProjects"
-          >et 28 autres...</b-link
+          >et de nombreux autres...</b-link
         >
       </p>
     </div>
