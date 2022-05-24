@@ -22,9 +22,11 @@ class ProjectDTO
     public function __construct(Project $project)
     {
         $this->id = $project->id;
-        $last_version = $project->versions()->where("number", $project->versions()->max("number"))->first();
+        $last_version = $project->versions()->orderBy("number",'desc')->first();
         $this->title = $project->title;
-        $this->description = $last_version->description;
+        if($last_version != null){
+            $this->description = $last_version->description;
+        }
 
         foreach($project->versions()->get() as $version) {
             foreach ($version->likes()->get() as $like) {
