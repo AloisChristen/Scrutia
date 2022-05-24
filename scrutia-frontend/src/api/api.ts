@@ -24,11 +24,12 @@ const staticHeader: Dictionary<string> = {
 
 function makeBaseHeader() {
   const baseHeader = staticHeader
+  console.log("connected?", store.getters.isConnected)
+  console.log("token?", store.getters.authToken)
+  console.log("session?", store.getters.currentUser)
   if (store.getters.isConnected) {
-    baseHeader['Authorization'] = 'Bearer' + store.getters.token
+    baseHeader['Authorization'] = 'Bearer ' + store.getters.authToken
   }
-  baseHeader['Authorization'] =
-    'Bearer 2|kYp6J6pvjPYuvc6mPbEvc8vG6HEN33j5nTZnUyG6'
   return baseHeader
 }
 
