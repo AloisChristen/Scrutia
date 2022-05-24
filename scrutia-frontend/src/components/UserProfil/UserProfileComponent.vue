@@ -30,7 +30,7 @@
           <div class="p-3 text-center bg-primary-dark rounded-top">
             <img
               class="img-avatar img-avatar48 img-avatar-thumb"
-              src="img/avatars/avatar10.jpg"
+              :src="getAvatar()"
               alt="Avatar"
             />
             <p class="mt-2 mb-0 text-white font-w500">
@@ -99,7 +99,6 @@ export default {
       this.$router.push('/auth/signin')
     },
     disconnect: function () {
-      console.log('disconnected')
       this.$store.commit('disconnect')
     },
     getUsername: function () {
