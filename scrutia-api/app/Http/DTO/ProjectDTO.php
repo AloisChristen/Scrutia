@@ -7,6 +7,7 @@ use App\Models\Vote;
 
 class ProjectDTO
 {
+    private $id;
     private $title;
     private $description;
     private $nb_upvotes = 0;
@@ -20,18 +21,19 @@ class ProjectDTO
 
     public function __construct(Project $project)
     {
+        $this->id = $project->id;
         $last_version = $project->versions()->where("number", $project->versions()->max("number"))->first();
         $this->title = $project->title;
         $this->description = $last_version->description;
 
-        foreach($project->versions() as $version) {
-            foreach ($version->likes() as $like) {
+        foreach($project->versions()->get() as $version) {
+            foreach ($version->likes()->get() as $like) {
                 if ($like->value == Vote::UPVOTE) {
                     $this->nb_upvotes += 1;
                     if (auth()->user() != null && $like->user->id == auth()->user()->id) {
                         $this->user_vote = Vote::UPVOTE;
                     }
-                } else if ($like->value == V§ote::DOWNVOTE) {
+                } else if ($like->value == Vote::DOWNVOTE) {
                     $this->nb_downvotes += 1;
                     if (auth()->user() != null && $like->user->id == auth()->user()->id) {
                         $version->user_vote = Vote::DOWNVOTE;
