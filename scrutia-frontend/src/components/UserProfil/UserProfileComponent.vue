@@ -14,7 +14,7 @@
           <div class="d-flex align-items-center" id="userProfile">
             <img
               class="rounded-circle"
-              src="img/avatars/avatar10.jpg"
+              :src="getAvatar()"
               alt="Header Avatar"
               style="width: 21px"
             />
@@ -76,7 +76,7 @@
         variant="dual"
         class="d-inline-block ml-2"
         menu-class="p-0 border-0 font-size-sm"
-        @click="toSignIn()"
+        to="auth/signin"
         block
       >
         <i class="fa fa-sign-in-alt mr-1"></i> Connexion
@@ -109,6 +109,12 @@ export default {
       } else {
         return user.username
       }
+    },
+
+    getAvatar: function () {
+      return (
+        'https://ui-avatars.com/api/?name=' + this.getUsername() + '&bold=true'
+      )
     },
   },
 }

@@ -113,7 +113,7 @@
 <script>
 import BaseLayout from '../Base'
 import { Navigation } from '../../router/navigation'
-import UserProfileComponent from '../../components/UserProfileComponent.vue'
+import UserProfileComponent from '../../components/UserProfil/UserProfileComponent.vue'
 
 export default {
   name: 'LayoutBackend',
