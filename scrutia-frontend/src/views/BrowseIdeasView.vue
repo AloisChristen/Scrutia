@@ -68,10 +68,12 @@
                 >
                   <b-button-group>
                     <b-button
-                      v-for="item in datesRanges"
+                      v-for="(item, index) in datesRanges"
                       :key="item"
-                      variant="outline-primary"
-                      @click="filterByDate"
+                      @click="filterByDate(index)"
+                      :variant="
+                        index === currentRange ? 'primary' : 'outline-primary'
+                      "
                       >{{ item }}</b-button
                     >
                   </b-button-group>
@@ -113,6 +115,7 @@ export default {
       isLoading: true,
       isLoadingTags: true,
       datesRanges: ['Tout', '-24h', '-48h', '-1 semaine'],
+      currentRange: 0,
       rows: 30,
       perPage: 3,
       currentPage: 1,
@@ -157,7 +160,8 @@ export default {
     filterByTags() {
       console.log('Filter by tags')
     },
-    filterByDate() {
+    filterByDate(range: number) {
+      this.currentRange = range
       console.log('Filter by date')
     },
   },
