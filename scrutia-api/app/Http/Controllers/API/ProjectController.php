@@ -38,7 +38,19 @@ class ProjectController extends Controller
 
         foreach ($search as $project){
             $dto = new ProjectDTO($project);
-            $projects->push($dto->__toArray());
+            $projects->push([
+                "id" => $dto->getId(),
+                "title" => $dto->getTitle(),
+                "description" => $dto->getDescription(),
+                "author" => $dto->getAuthor(),
+                "upvotes" => $dto->getNbUpvotes(),
+                "downvotes" => $dto->getNbDownvotes(),
+                "user_vote" => $dto->getUserVote(),
+                "is_favorite" => $dto->isFavorite(),
+                "increase" => $dto->getIncrease(),
+                "created_at" => $dto->getCreatedAt(),
+                "tags" => $dto->getTags(),
+            ]);
         }
 
         return response()->json($projects->paginate());
