@@ -105,7 +105,7 @@ class ProjectController extends Controller
 
         ProjectService::createAndAttachTags($project, $request->tags);
 
-        return response()->json("Created", 201);
+        return response()->json(["project_id" => $project->id], 201);
     }
 
     /**
