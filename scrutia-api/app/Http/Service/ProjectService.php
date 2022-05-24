@@ -5,6 +5,7 @@ namespace App\Http\Service;
 use App\Models\Project;
 use App\Models\Tag;
 use App\Models\Vote;
+use Illuminate\Support\Str;
 
 class ProjectService
 {
@@ -18,7 +19,7 @@ class ProjectService
         foreach ($tags as $tag) {
             $current_tag = Tag::where('title', $tag['title'])->firstOr(function () use ($tag) {
                 return Tag::create([
-                    'title' => $tag['title'],
+                    'title' => Str::upper($tag['title']),
                 ]);
             });
 
