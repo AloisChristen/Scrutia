@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\DTO\ProjectDTO;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Service\ProjectService;
 use App\Models\Project;
@@ -10,7 +11,9 @@ use App\Models\Status;
 use App\Models\User;
 use App\Models\Version;
 use App\Models\Vote;
+use App\Utils;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Collection;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -22,7 +25,8 @@ class ProjectController extends Controller
      */
     public function index(): JsonResponse
     {
-        $projects = QueryBuilder::for(Project::class)
+        $projects = new Collection();
+        $search = QueryBuilder::for(Project::class)
             ->allowedFilters([
                 AllowedFilter::scope('startDate'),
                 AllowedFilter::scope('endDate'),
@@ -30,21 +34,12 @@ class ProjectController extends Controller
                 AllowedFilter::scope('tags'),
                 AllowedFilter::scope('content'),
                 AllowedFilter::scope('status'),
-            ])
-            ->with(["versions.questions" => function($query){
-                $query->limit(3);
-                $query->with(["answers" => function($query){
-                    $query->limit(3);
-                }]);
-            }])
-            ->with("tags")
-            ->get();
+            ])->get();
 
-        foreach ($projects as $project){
-            ProjectService::addLikesAttributes($project);
+        foreach ($search as $project){
+            $dto = new ProjectDTO($project);
+            $projects->push($dto->__toArray());
         }
-
-
 
         return response()->json($projects->paginate());
     }
@@ -105,7 +100,7 @@ class ProjectController extends Controller
 
         ProjectService::createAndAttachTags($project, $request->tags);
 
-        return response()->json("Created", 201);
+        return response()->json(["project_id" => $project->id], 201);
     }
 
     /**
