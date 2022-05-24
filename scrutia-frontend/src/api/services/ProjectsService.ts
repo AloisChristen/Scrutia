@@ -16,20 +16,6 @@ export async function addProject(idea: ProjectStore) {
   })
 }
 
-export async function getIdeas() {
-  return await fetch(`${api.projects}/ideas`, {
-    method: 'GET',
-    headers: makeHeader({}),
-  })
-}
-
-export async function getInitiatives() {
-  return await fetch(`${api.projects}/initiatives`, {
-    method: 'GET',
-    headers: makeHeader({}),
-  })
-}
-
 export async function getProjectDetails(projectId: number) {
   return await fetch(`${api.projects}/${projectId}`, {
     method: 'GET',

@@ -178,8 +178,6 @@ export default {
         return { title: tag }
       })
 
-      console.log(tags)
-
       const ideaToAdd: ProjectStore = {
         title: this.form.title,
         description: this.form.description,
