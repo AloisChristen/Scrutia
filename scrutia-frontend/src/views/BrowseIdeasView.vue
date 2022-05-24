@@ -5,10 +5,18 @@
       <p>
         Laissez vous convaincre et apportez votre soutient aux bonnes idées.
       </p>
-      <p></p>
+      <b-spinner
+        variant="primary"
+        label="Loading..."
+        v-show="isLoading || isLoadingTags"
+      ></b-spinner>
       <b-row>
         <b-col cols="7">
-          <div v-for="index in 3" :key="index">
+          <div
+            v-for="index in 3"
+            :key="index"
+            v-show="!isLoading && !isLoadingTags"
+          >
             <project-component
               v-bind:project="{
                 title: 'Sauver les pandas en Asie',
@@ -47,8 +55,8 @@
                     id="tags"
                     size="lg"
                     multiple
-                    v-model="vSelectOptionsMultipleSelected"
-                    :options="vSelectOptionsMultiple"
+                    v-model="tags"
+                    :options="options"
                     placeholder="Définissez des tags..."
                     v-on:input="filterByTags"
                   ></v-select>
@@ -77,6 +85,7 @@
             v-model="currentPage"
             :total-rows="rows"
             :per-page="perPage"
+            v-show="!isLoading && !isLoadingTags"
             align="right"
           ></b-pagination>
         </b-col>
@@ -90,34 +99,58 @@
 @import './src/assets/scss/vendor/vue-select';
 </style>
 
-<script>
+<script lang="ts">
 import ProjectComponent from '../components/ProjectComponent.vue'
 import VueSelect from 'vue-select'
+import { getTags } from '@/api/services/TagsService'
+import { ProjectPaginationDTO, TagDTO } from '@/typings/scrutia-types'
+import { getProjects } from '@/api/services/ProjectsService'
 
 export default {
   name: 'BrowseIdeaView',
   data() {
     return {
+      isLoading: true,
+      isLoadingTags: true,
       datesRanges: ['Tout', '-24h', '-48h', '-1 semaine'],
       rows: 30,
       perPage: 3,
       currentPage: 1,
-      vSelectOptionsMultiple: [
-        'HTML',
-        'CSS',
-        'JavaScript',
-        'PHP',
-        'MySQL',
-        'Ruby',
-        'Angular',
-        'React',
-        'Vue.js',
-      ],
-      vSelectOptionsMultipleSelected: null,
+      options: [],
+      tags: [],
     }
   },
   methods: {
-    filterByText(text) {
+    async loadTags() {
+      const response: Response = await getTags()
+      if (response.ok) {
+        const tags = await response.json()
+        this.$data.options = tags.map((tag: TagDTO) => tag.title)
+      } else {
+        this.$swal({
+          icon: 'error',
+          title: "Une erreur s'est produite lors du chargement des tags",
+          showConfirmButton: true,
+        })
+      }
+      this.isLoadingTags = false
+    },
+    async loadIdeas() {
+      this.isLoading = true
+      const response: Response = await getProjects()
+      if (response.ok) {
+        const projectsPagingation: ProjectPaginationDTO = await response.json()
+        console.log(projectsPagingation)
+      } else {
+        this.$swal({
+          icon: 'error',
+          title: "Une erreur s'est produite lors du chargement des projets",
+          showConfirmButton: true,
+        })
+      }
+      this.isLoading = false
+    },
+    filterByText(text: string) {
       console.log(text)
       console.log('Filter by text')
     },
@@ -131,6 +164,10 @@ export default {
   components: {
     ProjectComponent,
     'v-select': VueSelect,
+  },
+  async created() {
+    this.loadTags()
+    this.loadIdeas()
   },
 }
 </script>

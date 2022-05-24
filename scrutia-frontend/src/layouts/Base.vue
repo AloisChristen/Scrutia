@@ -72,19 +72,5 @@ export default {
       theme: this.$store.getters.appColorTheme,
     })
   },
-  mounted() {
-    let winResize = false
-
-    // Remove side transitions on window resizing
-    window.addEventListener('resize', () => {
-      clearTimeout(winResize)
-
-      this.$store.commit('setSideTransitions', { transitions: false })
-
-      winResize = setTimeout(() => {
-        this.$store.commit('setSideTransitions', { transitions: true })
-      }, 500)
-    })
-  },
 }
 </script>

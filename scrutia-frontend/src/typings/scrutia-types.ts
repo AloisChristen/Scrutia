@@ -19,14 +19,19 @@ export type AnswerUpdateDTO = {
   description: string
 }
 
-export type AuthUser = {
+export type AuthUserDTO = {
   token: string
-  user: User
+  user: UserDTO
 }
 
 export type Error = {
   message: string
-  errors: Object
+  errors: ErrorDescription[]
+}
+
+export type ErrorDescription = {
+  key: string
+  value: string[]
 }
 
 export type LikeDTO = {
@@ -38,7 +43,7 @@ export type LoginDTO = {
   password: string
 }
 
-export type Project = {
+export type ProjectStore = {
   title: string
   description: string
   tags: TagDTO[]
@@ -47,31 +52,16 @@ export type Project = {
 export type ProjectDetailsDTO = {
   id: number
   title: string
-  description: string
-  author: string
-  date: Date
-  tags: TagDTO[]
-  nbLikes: number
-  nbDislikes: number
-  userVote: VoteDTO
+  nb_total_upvotes: number
+  nb_total_downvotes: number
   status: ProjectStatus
-  questions: QuestionDetailsDTO[]
+  versions: VersionDetailsDTO[]
+  tags: TagDTO[]
+  created_at: Date
+  updated_at: Date
 }
 
-export type ProjectDTO = {
-  id: number
-  title: string
-  description: string
-  author: string
-  date: Date
-  tags: TagDTO[]
-  nbLikes: number
-  nbDislikes: number
-  userVote: VoteDTO
-  status: ProjectStatus
-}
-
-export type ProjectPagination = {
+export type ProjectPaginationDTO = {
   total: number
   per_page: number
   current_page: number
@@ -83,7 +73,7 @@ export type ProjectPagination = {
   path: string
   from: number
   to: number
-  data: ProjectDTO[]
+  data: ProjectDetailsDTO[]
 }
 
 export type ProjectStatus = ['idea', 'initiative']
@@ -91,11 +81,12 @@ export type ProjectStatus = ['idea', 'initiative']
 export type QuestionDetailsDTO = {
   id: number
   title: string
-  author: string
-  date: string
-  nbLikes: number
-  nbDislikes: number
-  userVote: VoteDTO
+  user_id: string
+  created_at: Date
+  updated_at: Date
+  nb_upvotes: number
+  nb_downvotes: number
+  user_vote: VoteDTO
   answers: AnswerDetailsDTO[]
 }
 
@@ -120,17 +111,10 @@ export type RegisterUser = {
   password_confirmation: string
 }
 
+type status = ['idea', 'initiative']
+
 export type TagDTO = {
   title: string
-}
-
-export type User = {
-  id: number
-  username: string
-  password: string
-  firstname: string
-  lastname: string
-  email: string
 }
 
 export type UserDTO = {
@@ -149,6 +133,19 @@ export type UserUdpateDTO = {
   email: string
   password: string
   password_confirmation: string
+}
+
+export type VersionDetailsDTO = {
+  number: number
+  description: string
+  project_id: number
+  user_id: number
+  nb_upvotes: number
+  nb_downvotes: number
+  user_vote: VoteDTO
+  created_at: Date
+  updated_at: Date
+  questions: QuestionDetailsDTO[]
 }
 
 export type VersionStore = {
