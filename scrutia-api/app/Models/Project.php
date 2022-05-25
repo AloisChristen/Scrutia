@@ -112,7 +112,7 @@ class Project extends Model
         });
     }
 
-    public function votes(Vote $vote): array
+    public function votes(Vote $vote): int
     {
         $count = 0;
         foreach($this->versions()->get() as $version){
