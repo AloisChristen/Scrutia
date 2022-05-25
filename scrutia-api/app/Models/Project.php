@@ -112,20 +112,17 @@ class Project extends Model
         });
     }
 
-    public function votes(): array
+    public function votes(Vote $vote): array
     {
-        $upvotes = 0;
-        $downvotes = 0;
+        $count = 0;
         foreach($this->versions()->get() as $version){
             foreach ($version->likes()->get() as $like) {
-                if ($like->value == Vote::UPVOTE) {
-                    $upvotes += 1;
-                } else if ($like->value == Vote::DOWNVOTE) {
-                    $downvotes += 1;
+                if ($like->value == $vote) {
+                    $count += 1;
                 }
             }
         }
-        return ["upvotes" => $upvotes, "downvotes" => $downvotes];
+        return $count;
     }
 
     public function lastVersionDescription(): string
