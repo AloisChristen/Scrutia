@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Http\DTO\ProjectDTO;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Service\ProjectService;
 use App\Models\Project;
@@ -11,7 +10,6 @@ use App\Models\Status;
 use App\Models\User;
 use App\Models\Version;
 use App\Models\Vote;
-use App\Utils;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 use Spatie\QueryBuilder\AllowedFilter;
@@ -37,22 +35,21 @@ class ProjectController extends Controller
             ])->get();
 
         foreach ($search as $project){
-            $dto = new ProjectDTO($project);
             $projects->push([
-                "id" => $dto->getId(),
-                "title" => $dto->getTitle(),
-                "description" => $dto->getDescription(),
-                "author" => $dto->getAuthor(),
-                "upvotes" => $dto->getNbUpvotes(),
-                "downvotes" => $dto->getNbDownvotes(),
-                "user_vote" => $dto->getUserVote(),
-                "is_favorite" => $dto->isFavorite(),
-                "increase" => $dto->getIncrease(),
-                "created_at" => $dto->getCreatedAt(),
-                "tags" => $dto->getTags(),
+                "id" => $project->id,
+                "title" => $project->title,
+                "description" => $project->lastVersionDescription(),
+                "author" => $project->user->username,
+                "upvotes" => $project->votes(Vote::UPVOTE),
+                "downvotes" => $project->votes(Vote::DOWNVOTE),
+                "is_favorite" => $project->isFavorite(),
+                "increase" => $project->increase(),
+                "created_at" => $project->created_at,
+                "tags" => $project->tags()->get()->map(function ($tag) {
+                    return $tag->title;
+                }),
             ]);
         }
-
         return response()->json($projects->paginate());
     }
 

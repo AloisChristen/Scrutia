@@ -111,4 +111,45 @@ class Project extends Model
             $query->where('status', $status);
         });
     }
+
+    public function votes(Vote $vote): array
+    {
+        $count = 0;
+        foreach($this->versions()->get() as $version){
+            foreach ($version->likes()->get() as $like) {
+                if ($like->value == $vote) {
+                    $count += 1;
+                }
+            }
+        }
+        return $count;
+    }
+
+    public function lastVersionDescription(): string
+    {
+        $description = null;
+        $version = $this->versions()->orderBy('number','desc')->first();
+        if($version != null){
+            $description = $version->description;
+        }
+        return $description;
+    }
+
+    public function isFavorite(): bool
+    {
+        $is_favorite = false;
+        if(auth()->user() != null){
+            foreach($this->favorites()->get() as $favorite){
+                if($favorite->user->id == auth()->user()->id){
+                    $is_favorite = true;
+                }
+            }
+        }
+        return $is_favorite;
+    }
+
+    public function increase()
+    {
+        return null;
+    }
 }
