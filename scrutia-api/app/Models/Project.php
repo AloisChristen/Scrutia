@@ -24,6 +24,23 @@ class Project extends Model
         'status' => Status::class
     ];
 
+    protected $hidden = [
+        'user_id',
+        'updated_at',
+        'pivot',
+        'user'
+    ];
+
+    protected $appends = [
+        'upvotes',
+        'downvotes',
+        'is_favorite',
+        'user_vote',
+        'last_description',
+        'author'
+    ];
+
+
     /**
      * @return BelongsToMany
      */
@@ -120,18 +137,7 @@ class Project extends Model
 
     }
 
-    public function votes(Vote $vote): int
-    {
-        $count = 0;
-        foreach($this->likes()->get() as $like){
-            if ($like->value == $vote) {
-                $count += 1;
-            }
-        }
-        return $count;
-    }
-
-    public function lastVersionDescription(): string
+    public function getLastDescriptionAttribute(): string
     {
         $description = null;
         $version = $this->versions()->orderBy('number','desc')->first();
@@ -141,12 +147,12 @@ class Project extends Model
         return $description;
     }
 
-    public function isFavorite(): bool
+    public function getIsFavoriteAttribute(): bool
     {
         $is_favorite = false;
         if(auth()->user() != null){
             foreach($this->favorites()->get() as $favorite){
-                if($favorite->user->id == auth()->user()->id){
+                if($favorite->id == auth()->user()->id){
                     $is_favorite = true;
                 }
             }
@@ -157,5 +163,33 @@ class Project extends Model
     public function increase()
     {
         return null;
+    }
+
+    public function getUpvotesAttribute(): int
+    {
+        return $this->likes()->where('value', 1)->count();
+    }
+
+    public function getDownvotesAttribute(): int
+    {
+        return $this->likes()->where('value', -1)->count();
+    }
+
+    public function getUserVoteAttribute(): Vote
+    {
+        $vote = Vote::UNVOTED;
+        if(auth()->user() != null){
+            foreach ($this->likes()->get() as $like){
+                if($like->user->id == auth()->user()->id){
+                    $vote = $like->value;
+                }
+            }
+        }
+        return $vote;
+    }
+
+    public function getAuthorAttribute(): string
+    {
+        return $this->user->username;
     }
 }

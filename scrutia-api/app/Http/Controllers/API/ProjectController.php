@@ -15,7 +15,6 @@ use App\Models\User;
 use App\Models\Version;
 use App\Models\Vote;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Collection;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -27,34 +26,21 @@ class ProjectController extends Controller
      */
     public function index(): JsonResponse
     {
-        $projects = new Collection();
         $search = QueryBuilder::for(Project::class)
             ->allowedFilters([
                 AllowedFilter::scope('startDate'),
                 AllowedFilter::scope('endDate'),
                 AllowedFilter::scope('title'),
                 AllowedFilter::scope('tags'),
-                AllowedFilter::scope('content'),
                 AllowedFilter::scope('status'),
-            ])->withCount('likes')->orderByDesc('likes_count')->get();
+            ])
+            ->with('tags:title')
+            ->withCount('likes')
+            ->orderByDesc('likes_count')
+            ->paginate();
 
-        foreach ($search as $project){
-            $projects->push([
-                "id" => $project->id,
-                "title" => $project->title,
-                "description" => $project->lastVersionDescription(),
-                "author" => $project->user->username,
-                "upvotes" => $project->votes(Vote::UPVOTE),
-                "downvotes" => $project->votes(Vote::DOWNVOTE),
-                "is_favorite" => $project->isFavorite(),
-                "increase" => $project->increase(),
-                "created_at" => $project->created_at,
-                "tags" => $project->tags()->get()->map(function ($tag) {
-                    return $tag->title;
-                }),
-            ]);
-        }
-        return response()->json($projects->paginate());
+
+        return response()->json($search);
     }
 
     /**
@@ -66,8 +52,21 @@ class ProjectController extends Controller
     public function show(int $id): JsonResponse
     {
         $project = Project::with([
+            // Info about versions
+            "versions",
+
+            // Info about questions
+            "versions.questions",
+
+            // Info about answers
             "versions.questions.answers",
-            "tags.title"
+
+            // Info about users
+            "versions.questions.answers.user:id,username",
+            "versions.questions.user:id,username",
+
+            // Info about tags
+            "tags:title",
         ])->find($id);
 
         if($project == null){
@@ -75,7 +74,6 @@ class ProjectController extends Controller
                 "id" => "Project does not exist."
             ]], 404);
         }
-        ProjectService::addLikesAttributes($project);
 
         return response()->json($project);
     }
