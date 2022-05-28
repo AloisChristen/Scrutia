@@ -36,7 +36,7 @@ class ProjectController extends Controller
                 AllowedFilter::scope('tags'),
                 AllowedFilter::scope('content'),
                 AllowedFilter::scope('status'),
-            ])->get();
+            ])->withCount('likes')->orderByDesc('likes_count')->get();
 
         foreach ($search as $project){
             $projects->push([
