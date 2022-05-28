@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Carbon;
 
 class Project extends Model
@@ -37,6 +38,14 @@ class Project extends Model
     public function versions(): HasMany
     {
         return $this->hasMany(Version::class);
+    }
+
+    /**
+     * @return morphMany
+     */
+    public function likes(): MorphMany
+    {
+        return $this->morphMany(Like::class, 'likeable');
     }
 
     /**
@@ -114,11 +123,9 @@ class Project extends Model
     public function votes(Vote $vote): int
     {
         $count = 0;
-        foreach($this->versions()->get() as $version){
-            foreach ($version->likes()->get() as $like) {
-                if ($like->value == $vote) {
-                    $count += 1;
-                }
+        foreach($this->likes()->get() as $like){
+            if ($like->value == $vote) {
+                $count += 1;
             }
         }
         return $count;
