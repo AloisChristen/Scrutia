@@ -166,9 +166,9 @@ class Project extends Model
         $perf = '0%';
         if($this->likes()->count() > 0){
             $perf = ($this->likes()
-                        ->whereDate('created_at', '<=', Carbon::yesterday())->count() /
+                        ->whereDate('created_at', '<=', Carbon::today())->count() /
                     $this->likes()
-                        ->whereDate('created_at', '<=', Carbon::today())->count()) *
+                        ->whereDate('created_at', '<=', Carbon::yesterday())->count()) *
                 100 . '%';
         }
         return $perf;
