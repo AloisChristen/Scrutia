@@ -37,7 +37,8 @@ class Project extends Model
         'is_favorite',
         'user_vote',
         'last_description',
-        'author'
+        'author',
+        'performance'
     ];
 
 
@@ -160,9 +161,17 @@ class Project extends Model
         return $is_favorite;
     }
 
-    public function increase()
+    public function getPerformanceAttribute(): string
     {
-        return null;
+        $perf = '0%';
+        if($this->likes()->count() > 0){
+            $perf = ($this->likes()
+                        ->whereDate('created_at', '<=', Carbon::yesterday())->count() /
+                    $this->likes()
+                        ->whereDate('created_at', '<=', Carbon::today())->count()) *
+                100 . '%';
+        }
+        return $perf;
     }
 
     public function getUpvotesAttribute(): int
