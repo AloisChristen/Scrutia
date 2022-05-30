@@ -52,13 +52,17 @@ export type ProjectStore = {
 export type ProjectDetailsDTO = {
   id: number
   title: string
-  nb_total_upvotes: number
-  nb_total_downvotes: number
+  last_description: string
   status: ProjectStatus
-  versions: VersionDetailsDTO[]
-  tags: TagDTO[]
   created_at: Date
   updated_at: Date
+  likes_count: number
+  upvotes: number
+  downvotes: number
+  is_favorite: boolean
+  author: string
+  performance: string
+  tags: TagDTO[]
 }
 
 export type ProjectPaginationDTO = {
@@ -76,7 +80,7 @@ export type ProjectPaginationDTO = {
   data: ProjectDetailsDTO[]
 }
 
-export type ProjectStatus = ['idea', 'initiative']
+export type ProjectStatus = ['idee', 'Initiative']
 
 export type QuestionDetailsDTO = {
   id: number
