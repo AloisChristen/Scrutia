@@ -1,5 +1,12 @@
 <template>
-  <base-block :title="shortedTitle" header-bg rounded tag="a" link-pop>
+  <base-block
+    :title="shortedTitle"
+    header-bg
+    rounded
+    tag="a"
+    link-pop
+    style="cursor: auto"
+  >
     <template #options>
       <div
         v-show="isNew && isProjectInitiative"
@@ -20,10 +27,13 @@
           ]"
         />
       </button>
+      <button type="button" class="btn-block-option" @click="openProject">
+        <i class="si si-eye" />
+      </button>
     </template>
     <p class="custom-font-size">{{ shortedDescription }}</p>
     <address v-show="isProjectInitiative">
-      <a href="#" class="custom-font-size">{{ project.author }}</a
+      <a class="custom-font-size">{{ project.author }}</a
       ><em class="custom-font-size"
         >, le {{ new Date(project.created_at).toLocaleDateString('fr') }}</em
       ><br />
@@ -79,6 +89,9 @@ export default {
       this.$data.isFavorite = !this.$data.isFavorite
       if (this.$data.isFavorite) addFavorite(this.project.id)
       else deleteFavorite(this.project.id)
+    },
+    openProject() {
+      this.$router.push(`/project/${this.project.id}`)
     },
   },
   created() {
