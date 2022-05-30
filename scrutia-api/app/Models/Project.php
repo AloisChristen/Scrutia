@@ -138,7 +138,7 @@ class Project extends Model
 
     }
 
-    public function getLastDescriptionAttribute(): string
+    public function getLastDescriptionAttribute(): string|null
     {
         $description = null;
         $version = $this->versions()->orderBy('number','desc')->first();
