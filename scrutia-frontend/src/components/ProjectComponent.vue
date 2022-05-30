@@ -9,7 +9,7 @@
   >
     <template #options>
       <div
-        v-show="isNew && project.isProjectInitiative"
+        v-show="isNew && isProjectInitiative"
         class="block-options-item text-primary-light custom-font-size"
       >
         Nouveau !
@@ -17,13 +17,13 @@
       <div class="block-options-item text-success custom-font-size">
         {{ project.performance }}
       </div>
-      <button type="button" class="btn-block-option">
+      <button type="button" class="btn-block-option" @click="addToFavorites">
         <i
           v-bind:class="[
-            { fa: project.is_favorite },
-            { 'fa-star': project.is_favorite },
-            { si: !project.is_favorite },
-            { 'si-star': !project.is_favorite },
+            { fa: isFavorite },
+            { 'fa-star': isFavorite },
+            { si: !isFavorite },
+            { 'si-star': !isFavorite },
           ]"
         />
       </button>
@@ -40,6 +40,7 @@
         :variant="getNextColor()"
         >{{ tag.title }}</b-badge
       >
+      {{ project.tags.length }}
     </address>
     <address v-show="!isProjectInitiative" class="custom-font-size">
       <i class="fa fa-thumbs-up custom-font-size" />
@@ -67,6 +68,11 @@ export default {
       description: 'If the project is in initiative state',
     },
   },
+  data() {
+    return {
+      isFavorite: false,
+    }
+  },
   methods: {
     getNextColor() {
       const color = COLOR_VARIANTS[currentColor]
@@ -74,26 +80,29 @@ export default {
         currentColor >= COLOR_VARIANTS.length ? 0 : currentColor + 1
       return color
     },
+    addToFavorites() {
+      this.$data.isFavorite = !this.$data.isFavorite
+      // TODO : call favorite endpoint here
+    },
+  },
+  created() {
+    this.$data.isFavorite = this.project.is_favorite
   },
   computed: {
     isNew() {
-      console.log(this.project.tags)
-      const today = new Date()
-      if (
-        86400000 <
-        today.getTime() - new Date(this.project.created_at).getTime()
+      return (
+        604800 <
+        new Date().getTime() - new Date(this.project.created_at).getTime()
       )
-        return true
-      return false
     },
     shortedTitle() {
-      if (this.project.title === null) return ''
+      if (this.project.title === null) return 'Aucun titre...'
       if (this.project.title.length > 40)
         return this.project.title.substring(0, 37) + '...'
       else return this.project.title
     },
     shortedDescription() {
-      if (this.project.last_description === null) return ''
+      if (this.project.last_description === null) return 'Aucune description...'
       if (this.project.last_description.length > 200)
         return this.project.last_description.substring(0, 197) + '...'
       else return this.project.last_description
