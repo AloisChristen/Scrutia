@@ -35,12 +35,12 @@
         >, le {{ new Date(project.created_at).toLocaleDateString('fr') }}</em
       ><br />
       <b-badge
+        style="margin-right: 5px"
         v-for="tag in project.tags"
         v-bind:key="tag.title"
         :variant="getNextColor()"
         >{{ tag.title }}</b-badge
       >
-      {{ project.tags.length }}
     </address>
     <address v-show="!isProjectInitiative" class="custom-font-size">
       <i class="fa fa-thumbs-up custom-font-size" />
@@ -49,6 +49,7 @@
   </base-block>
 </template>
 <script lang="ts">
+// import { TagDTO } from '@/typings/scrutia-types'
 const COLOR_VARIANTS = ['primary', 'success', 'info', 'warning', 'danger']
 let currentColor = 0
 
@@ -71,6 +72,7 @@ export default {
   data() {
     return {
       isFavorite: false,
+      tags: [],
     }
   },
   methods: {
@@ -87,6 +89,12 @@ export default {
   },
   created() {
     this.$data.isFavorite = this.project.is_favorite
+    console.log(this.project.tags)
+    // if (this.project.tags.length !== 0) {
+    //   this.project.tags.foreach((tag: TagDTO) =>
+    //     this.$data.tags.append(tag.title)
+    //   )
+    // }
   },
   computed: {
     isNew() {
