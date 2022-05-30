@@ -8,21 +8,11 @@
         v-show="isLoading"
       ></b-spinner>
       <b-row v-show="!isLoading">
-        <b-col
-          sm="12"
-          md="4"
-          xl="4"
-          v-for="project in projects"
-          v-bind:key="project.id"
-        >
+        <b-col sm="12" md="4" xl="4" v-for="idea in ideas" v-bind:key="idea.id">
           <project-component
-            v-bind:project="{
-              title: project.title,
-              description:
-                'Description de mon projet. Ce texte peut parfois être super long. Ce texte peut parfois être super long. Ce texte peut parfois être super long.',
-              isProjectInitiative: false,
-            }"
+            v-bind:project="idea"
             :reducedDisplay="true"
+            :isProjectInitiative="false"
           />
         </b-col>
       </b-row>
@@ -42,14 +32,17 @@
         v-show="isLoadingProjects"
       ></b-spinner>
       <b-row v-show="!isLoadingProjects">
-        <b-col sm="12" md="6" xl="6" v-for="idea in ideas" v-bind:key="idea.id">
+        <b-col
+          sm="12"
+          md="6"
+          xl="6"
+          v-for="project in projects"
+          v-bind:key="project.id"
+        >
           <project-component
-            v-bind:project="{
-              title: idea.title,
-              description:
-                'Description de mon projet. Ce texte peut parfois être super long. Ce texte peut parfois être super long. Ce texte peut parfois être super long.',
-              isProjectInitiative: true,
-            }"
+            v-bind:project="project"
+            :reducedDisplay="true"
+            :isProjectInitiative="true"
           />
         </b-col>
       </b-row>
@@ -93,27 +86,13 @@ import { ProjectPaginationDTO } from '@/typings/scrutia-types'
     this.loadProjects()
   },
   methods: {
-    loadProjects: async function () {
-      this.$data.isLoadingProjects = true
-      const response: Response = await getProjects()
-      if (response.ok) {
-        const projectsPagingation: ProjectPaginationDTO = await response.json()
-        this.$data.projects = projectsPagingation.data
-      } else {
-        this.$swal({
-          icon: 'error',
-          title: "Une erreur s'est produite lors du chargement des projets",
-          showConfirmButton: true,
-        })
-      }
-      this.$data.isLoadingProjects = false
-    },
     loadIdeas: async function () {
       this.$data.isLoading = true
       const response: Response = await getIdeas()
       if (response.ok) {
         const projectsPagingation: ProjectPaginationDTO = await response.json()
-        this.$data.ideas = projectsPagingation.data
+        for (let i = 0; i < projectsPagingation.data.length && i < 6; i++)
+          this.$data.ideas.push(projectsPagingation.data[i])
       } else {
         this.$swal({
           icon: 'error',
@@ -122,6 +101,22 @@ import { ProjectPaginationDTO } from '@/typings/scrutia-types'
         })
       }
       this.$data.isLoading = false
+    },
+    loadProjects: async function () {
+      this.$data.isLoadingProjects = true
+      const response: Response = await getProjects()
+      if (response.ok) {
+        const projectsPagingation: ProjectPaginationDTO = await response.json()
+        for (let i = 0; i < projectsPagingation.data.length && i < 4; i++)
+          this.$data.projects.push(projectsPagingation.data[i])
+      } else {
+        this.$swal({
+          icon: 'error',
+          title: "Une erreur s'est produite lors du chargement des projets",
+          showConfirmButton: true,
+        })
+      }
+      this.$data.isLoadingProjects = false
     },
   },
 })

@@ -72,7 +72,6 @@ export default {
   data() {
     return {
       isFavorite: false,
-      tags: [],
     }
   },
   methods: {
@@ -89,12 +88,6 @@ export default {
   },
   created() {
     this.$data.isFavorite = this.project.is_favorite
-    console.log(this.project.tags)
-    // if (this.project.tags.length !== 0) {
-    //   this.project.tags.foreach((tag: TagDTO) =>
-    //     this.$data.tags.append(tag.title)
-    //   )
-    // }
   },
   computed: {
     isNew() {
