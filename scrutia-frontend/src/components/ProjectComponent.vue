@@ -1,13 +1,5 @@
 <template>
-  <base-block
-    @click="openProject"
-    :title="shortedTitle"
-    header-bg
-    rounded
-    tag="a"
-    :href="`/project/${project.id}`"
-    link-pop
-  >
+  <base-block :title="shortedTitle" header-bg rounded tag="a" link-pop>
     <template #options>
       <div
         v-show="isNew && isProjectInitiative"
@@ -50,7 +42,7 @@
   </base-block>
 </template>
 <script lang="ts">
-// import { TagDTO } from '@/typings/scrutia-types'
+import { addFavorite, deleteFavorite } from '@/api/services/FavoritesService'
 const COLOR_VARIANTS = ['primary', 'success', 'info', 'warning', 'danger']
 let currentColor = 0
 
@@ -83,8 +75,10 @@ export default {
       return color
     },
     addToFavorites() {
+      // TODO : display button only if user authenticated
       this.$data.isFavorite = !this.$data.isFavorite
-      // TODO : call favorite endpoint here
+      if (this.$data.isFavorite) addFavorite(this.project.id)
+      else deleteFavorite(this.project.id)
     },
   },
   created() {

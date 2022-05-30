@@ -14,6 +14,7 @@ export const api = {
   tags: baseUrl + '/tags',
   user: baseUrl + '/user',
   versions: baseUrl + '/versions',
+  favorites: baseUrl + '/favorites',
 }
 
 const staticHeader: Dictionary<string> = {
