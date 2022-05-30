@@ -1,10 +1,11 @@
 <template>
   <base-block
+    @click="openProject"
     :title="shortedTitle"
     header-bg
     rounded
     tag="a"
-    href="javascript:void(0)"
+    :href="`/project/${project.id}`"
     link-pop
   >
     <template #options>
