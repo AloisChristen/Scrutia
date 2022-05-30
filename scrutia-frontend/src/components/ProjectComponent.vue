@@ -15,36 +15,39 @@
         Nouveau !
       </div>
       <div class="block-options-item text-success custom-font-size">
-        {{ augmentation }}
+        {{ project.performance }}
       </div>
       <button type="button" class="btn-block-option">
         <i
           v-bind:class="[
-            { fa: isFavorite },
-            { 'fa-star': isFavorite },
-            { si: !isFavorite },
-            { 'si-star': !isFavorite },
+            { fa: project.is_favorite },
+            { 'fa-star': project.is_favorite },
+            { si: !project.is_favorite },
+            { 'si-star': !project.is_favorite },
           ]"
         />
       </button>
     </template>
     <p class="custom-font-size">{{ shortedDescription }}</p>
-    <address v-show="project.isProjectInitiative">
-      <a href="#" class="custom-font-size">Jose Wagner</a
-      ><em class="custom-font-size">, le 12 avril 2022</em><br />
-      <b-badge :variant="getNextColor()">Pandas</b-badge>
-      <b-badge :variant="getNextColor()">Environnement</b-badge>
-      <b-badge :variant="getNextColor()">Planète</b-badge>
-      <b-badge :variant="getNextColor()">Animaux</b-badge>
-      <b-badge :variant="getNextColor()">Asie</b-badge>
+    <address v-show="isProjectInitiative">
+      <a href="#" class="custom-font-size">{{ project.author }}</a
+      ><em class="custom-font-size"
+        >, le {{ new Date(project.created_at).toLocaleDateString('fr') }}</em
+      ><br />
+      <b-badge
+        v-for="tag in project.tags"
+        v-bind:key="tag.title"
+        :variant="getNextColor()"
+        >{{ tag.title }}</b-badge
+      >
     </address>
-    <address v-show="!project.isProjectInitiative" class="custom-font-size">
-      <i class="fa fa-thumbs-up custom-font-size" /> {{ likes }} personnes
-      soutiennent déjà l'idée
+    <address v-show="!isProjectInitiative" class="custom-font-size">
+      <i class="fa fa-thumbs-up custom-font-size" />
+      {{ project.likes_count }} personnes soutiennent déjà l'idée
     </address>
   </base-block>
 </template>
-<script>
+<script lang="ts">
 const COLOR_VARIANTS = ['primary', 'success', 'info', 'warning', 'danger']
 let currentColor = 0
 
@@ -74,26 +77,26 @@ export default {
   },
   computed: {
     isNew() {
-      return Math.random() < 0.5
-    },
-    augmentation() {
-      return '+' + Math.round(Math.random() * 100) + '%'
-    },
-    likes() {
-      return Math.round(Math.random() * 1000)
-    },
-    isFavorite() {
-      return Math.random() < 0.5
+      console.log(this.project.tags)
+      const today = new Date()
+      if (
+        86400000 <
+        today.getTime() - new Date(this.project.created_at).getTime()
+      )
+        return true
+      return false
     },
     shortedTitle() {
-      const title = this.project.title
-      if (title.length > 40) return title.substring(0, 37) + '...'
-      else return title
+      if (this.project.title === null) return ''
+      if (this.project.title.length > 40)
+        return this.project.title.substring(0, 37) + '...'
+      else return this.project.title
     },
     shortedDescription() {
-      const description = this.project.description
-      if (description.length > 200) return description.substring(0, 197) + '...'
-      else return description
+      if (this.project.last_description === null) return ''
+      if (this.project.last_description.length > 200)
+        return this.project.last_description.substring(0, 197) + '...'
+      else return this.project.last_description
     },
   },
 }
