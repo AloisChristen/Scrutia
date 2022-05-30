@@ -1,8 +1,15 @@
 import { ProjectStore } from '@/typings/scrutia-types'
 import { api, makeHeader } from '../api'
 
+export async function getIdeas() {
+  return await fetch(`${api.projects}?filter[status]=idee`, {
+    method: 'GET',
+    headers: makeHeader({}),
+  })
+}
+
 export async function getProjects() {
-  return await fetch(api.projects, {
+  return await fetch(`${api.projects}?filter[status]=Initiative`, {
     method: 'GET',
     headers: makeHeader({}),
   })

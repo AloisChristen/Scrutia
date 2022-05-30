@@ -8,10 +8,16 @@
         v-show="isLoading"
       ></b-spinner>
       <b-row v-show="!isLoading">
-        <b-col sm="12" md="4" xl="4" v-for="index in 6" :key="index">
+        <b-col
+          sm="12"
+          md="4"
+          xl="4"
+          v-for="project in projects"
+          v-bind:key="project.id"
+        >
           <project-component
             v-bind:project="{
-              title: 'Sauver les pandas en Asie',
+              title: project.title,
               description:
                 'Description de mon projet. Ce texte peut parfois être super long. Ce texte peut parfois être super long. Ce texte peut parfois être super long.',
               isProjectInitiative: false,
@@ -36,10 +42,10 @@
         v-show="isLoadingProjects"
       ></b-spinner>
       <b-row v-show="!isLoadingProjects">
-        <b-col sm="12" md="6" xl="6" v-for="index in 4" :key="index">
+        <b-col sm="12" md="6" xl="6" v-for="idea in ideas" v-bind:key="idea.id">
           <project-component
             v-bind:project="{
-              title: 'Sauver les pandas en Asie',
+              title: idea.title,
               description:
                 'Description de mon projet. Ce texte peut parfois être super long. Ce texte peut parfois être super long. Ce texte peut parfois être super long.',
               isProjectInitiative: true,
@@ -64,6 +70,7 @@
 import ProjectComponent from '../components/ProjectComponent.vue'
 import { Component, Vue } from 'vue-property-decorator'
 import { getProjects } from '@/api/services/ProjectsService'
+import { getIdeas } from '@/api/services/ProjectsService'
 import { ProjectPaginationDTO } from '@/typings/scrutia-types'
 
 @Component({
@@ -82,19 +89,40 @@ import { ProjectPaginationDTO } from '@/typings/scrutia-types'
     }
   },
   async created() {
-    const response: Response = await getProjects()
-    if (response.ok) {
-      const projectsPagingation: ProjectPaginationDTO = await response.json()
-      console.log(projectsPagingation)
-    } else {
-      this.$swal({
-        icon: 'error',
-        title: "Une erreur s'est produite lors du chargement des projets",
-        showConfirmButton: true,
-      })
-    }
-    this.isLoading = false
-    this.isLoadingProjects = false
+    this.loadIdeas()
+    this.loadProjects()
+  },
+  methods: {
+    loadProjects: async function () {
+      this.$data.isLoadingProjects = true
+      const response: Response = await getProjects()
+      if (response.ok) {
+        const projectsPagingation: ProjectPaginationDTO = await response.json()
+        this.$data.projects = projectsPagingation.data
+      } else {
+        this.$swal({
+          icon: 'error',
+          title: "Une erreur s'est produite lors du chargement des projets",
+          showConfirmButton: true,
+        })
+      }
+      this.$data.isLoadingProjects = false
+    },
+    loadIdeas: async function () {
+      this.$data.isLoading = true
+      const response: Response = await getIdeas()
+      if (response.ok) {
+        const projectsPagingation: ProjectPaginationDTO = await response.json()
+        this.$data.ideas = projectsPagingation.data
+      } else {
+        this.$swal({
+          icon: 'error',
+          title: "Une erreur s'est produite lors du chargement des idées",
+          showConfirmButton: true,
+        })
+      }
+      this.$data.isLoading = false
+    },
   },
 })
 export default class HomeView extends Vue {}
