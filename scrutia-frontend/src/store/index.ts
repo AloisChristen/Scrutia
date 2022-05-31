@@ -7,6 +7,8 @@ import { AuthUserDTO } from '@/typings/scrutia-types'
 Vue.use(Vuex)
 Vue.use(VueCookies)
 
+const sessionCookieName = 'ScrutiaSession'
+
 // Helpers
 const helpers = {
   getWindowWidth() {
@@ -20,8 +22,8 @@ const helpers = {
     return new Date().getFullYear()
   },
   loadSession(){
-    if(Vue.prototype.$cookies.isKey('ScrutiaSession')){
-      const session =  Vue.prototype.$cookies.get('ScrutiaSession')
+    if(Vue.prototype.$cookies.isKey(sessionCookieName)){
+      const session =  Vue.prototype.$cookies.get(sessionCookieName)
       return {
         currentUser: session.user,
         authToken: session.token,
@@ -34,11 +36,11 @@ const helpers = {
     }
   },
   saveSession(session:AuthUserDTO|null){
-    if(Vue.prototype.$cookies.isKey('ScrutiaSession')){
-      Vue.prototype.$cookies.remove('ScrutiaSession')
+    if(Vue.prototype.$cookies.isKey(sessionCookieName)){
+      Vue.prototype.$cookies.remove(sessionCookieName)
     }
     if(session != null){
-      Vue.prototype.$cookies.set('ScrutiaSession', session,{'secure': true})
+      Vue.prototype.$cookies.set(sessionCookieName, session,{'secure': true})
     }
   }
 }
