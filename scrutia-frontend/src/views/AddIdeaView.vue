@@ -133,6 +133,7 @@ export default {
     }
   },
   async created() {
+    if (!this.isUserConnected()) this.$router.push('/auth/signin')
     const response: Response = await getTags()
     if (response.ok) {
       const tags = await response.json()
@@ -160,6 +161,9 @@ export default {
     },
   },
   methods: {
+    isUserConnected() {
+      return this.$store.getters.isConnected
+    },
     onClear() {
       this.form.title = ''
       this.form.description = ''
