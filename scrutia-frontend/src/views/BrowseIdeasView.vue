@@ -11,24 +11,25 @@
         v-show="isLoading || isLoadingTags"
       ></b-spinner>
       <b-row>
-        <b-col cols="7">
-          <div
-            v-for="index in 3"
-            :key="index"
-            v-show="!isLoading && !isLoadingTags"
-          >
-            <project-component
-              v-bind:project="{
-                title: 'Sauver les pandas en Asie',
-                description:
-                  'Description de mon projet. Ce texte peut parfois être super long. Ce texte peut parfois être super long. Ce texte peut parfois être super long.',
-                isProjectInitiative: false,
-              }"
-              :reducedDisplay="true"
-            />
-          </div>
+        <b-col cols="8">
+          <b-row>
+            <b-col
+              sm="12"
+              md="6"
+              xl="6"
+              v-for="idea in ideas"
+              v-bind:key="idea.id"
+              v-show="!isLoading && !isLoadingTags"
+            >
+              <project-component
+                v-bind:project="idea"
+                :reducedDisplay="true"
+                :isProjectInitiative="false"
+              />
+            </b-col>
+          </b-row>
         </b-col>
-        <b-col cols="5">
+        <b-col cols="4">
           <base-block
             rounded
             title="Filtres"
@@ -46,8 +47,6 @@
                   <b-form-input
                     id="contains-text"
                     placeholder="Votre recherche..."
-                    @keydown.enter="filterByText"
-                    @blur="filterByText"
                     v-model="searchText"
                   ></b-form-input>
                 </b-form-group>
@@ -59,7 +58,6 @@
                     v-model="tags"
                     :options="options"
                     placeholder="Définissez des tags..."
-                    v-on:input="filterByTags"
                   ></v-select>
                 </b-form-group>
                 <b-form-group
@@ -79,11 +77,23 @@
                     >
                   </b-button-group>
                 </b-form-group>
+                <b-row>
+                  <b-col md="6" xl="6" class="text-center">
+                    <b-button variant="alt-success" @click="search" block>
+                      <i class="fa fa-search mr-1"></i> Rechercher
+                    </b-button>
+                  </b-col>
+                  <b-col md="6" xl="6" class="text-center">
+                    <b-button variant="alt-warning" @click="onClear" block>
+                      <i class="fa fa-trash mr-1"></i> Réinitialiser
+                    </b-button>
+                  </b-col>
+                </b-row>
               </b-form>
             </p>
           </base-block>
         </b-col>
-        <b-col cols="7">
+        <b-col cols="8">
           <b-pagination
             v-model="currentPage"
             :total-rows="rows"
@@ -107,7 +117,7 @@ import ProjectComponent from '../components/ProjectComponent.vue'
 import VueSelect from 'vue-select'
 import { getTags } from '@/api/services/TagsService'
 import { ProjectPaginationDTO, TagDTO } from '@/typings/scrutia-types'
-import { getProjects } from '@/api/services/ProjectsService'
+import { getIdeas } from '@/api/services/ProjectsService'
 
 export default {
   name: 'BrowseIdeaView',
@@ -127,6 +137,7 @@ export default {
   },
   methods: {
     async loadTags() {
+      this.isLoadingTags = true
       const response: Response = await getTags()
       if (response.ok) {
         const tags = await response.json()
@@ -142,10 +153,10 @@ export default {
     },
     async loadIdeas() {
       this.isLoading = true
-      const response: Response = await getProjects()
+      const response: Response = await getIdeas()
       if (response.ok) {
         const projectsPagingation: ProjectPaginationDTO = await response.json()
-        console.log(projectsPagingation)
+        this.ideas = projectsPagingation.data
       } else {
         this.$swal({
           icon: 'error',
@@ -155,12 +166,18 @@ export default {
       }
       this.isLoading = false
     },
-    filterByText() {
-      console.log(this.searchText)
-      console.log('Filter by text')
-    },
-    filterByTags() {
-      console.log('Filter by tags')
+    search() {},
+    onClear() {
+      if (
+        this.$data.searchText !== '' ||
+        this.$data.currentRange !== 0 ||
+        this.$data.tags.length !== 0
+      ) {
+        this.$data.searchText = ''
+        this.$data.currentRange = 0
+        this.$data.tags = []
+        this.loadIdeas()
+      }
     },
     filterByDate(range: number) {
       this.currentRange = range
