@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 /**
  * @extends Factory
@@ -17,7 +18,7 @@ class TagFactory extends Factory
     public function definition()
     {
         return [
-            'title' => $this->faker->unique()->word(),
+            'title' => Str::upper($this->faker->unique()->word()),
         ];
     }
 }

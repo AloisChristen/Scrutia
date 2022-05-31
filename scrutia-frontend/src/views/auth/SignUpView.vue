@@ -10,7 +10,7 @@
             themed
             class="mb-0"
             header-class="bg-primary-dark"
-            title="Create Account"
+            title="Création de compte"
           >
             <template #options>
               <!-- Terms Modal -->
@@ -77,7 +77,7 @@
               </router-link>
             </template>
             <div class="p-sm-3 px-lg-4 py-lg-5">
-              <h1 class="h2 mb-1">OneUI</h1>
+              <h1 class="h2 mb-1">{{ $store.getters.appName }}</h1>
               <p class="text-muted">Veuillez remplir les champs suivants</p>
 
               <!-- Sign Up Form -->
@@ -229,7 +229,7 @@
 // Vuelidate, for more info and examples you can check out https://github.com/vuelidate/vuelidate
 import { validationMixin } from 'vuelidate'
 import { required, minLength, email, sameAs } from 'vuelidate/lib/validators'
-import { RegisterUser } from '@/typings/scrutia-types'
+import { RegisterUser, LoginDTO } from '@/typings/scrutia-types'
 import { register } from '@/api/services/AuthService'
 
 export default {
@@ -287,8 +287,9 @@ export default {
       // Form submit logic
 
       // TODO threat case when not connected
-      register(account).then((session) => {
-        this.$store.commit('session', session)
+      register(account).then(async (resp) => {
+        let session: LoginDTO = (await resp.json()) as LoginDTO
+        this.$store.commit('connect', session)
         console.log(this.$store.getters.authToken)
         this.$router.push('/')
       })

@@ -85,9 +85,14 @@ export default new Vuex.Store({
   },
   mutations: {
     // Set currentUser and authToken
-    session(state, payload){
+    connect(state, payload){
       state.session.currentUser = payload.user;
       state.session.authToken = payload.token;
+    },
+
+    disconnect(state){
+      state.session.authToken = null;
+      state.session.currentUser = null;
     },
     // Sets the layout, useful for setting different layouts (under layouts/variations/)
     setLayout(state, payload) {

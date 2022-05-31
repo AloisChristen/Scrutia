@@ -15,6 +15,10 @@ class Like extends Model
         'value',
     ];
 
+    protected $casts = [
+        'value' => Vote::class
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

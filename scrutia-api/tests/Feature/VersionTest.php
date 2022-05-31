@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Project;
+use App\Models\Status;
 use App\Models\User;
 use App\Models\Version;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -22,28 +23,31 @@ class VersionTest extends TestCase
     {
         $project = Project::factory()->create();
         $version_request = [
-            "project_id" => $project->id,
-            "description" => $this->faker->text()
+            'project_id' => $project->id,
+            'description' => $this->faker->text(),
         ];
 
         $response =
             $this->post('/api/versions', $version_request);
 
-        $response->assertRedirect("api/login");
+        $response->assertRedirect('api/login');
         $this->assertDatabaseMissing('versions', $version_request);
     }
 
     /**
-     * Test that only project owner can add a version to his project.
+     * Test that only project owner can add a version to his project only if his project is promoted.
      *
      * @return void
      */
-    public function test_project_owner_can_add_a_version_to_his_project(): void
+    public function test_project_owner_can_add_a_version_to_his_project_if_promoted(): void
     {
-        $project = Project::factory()->create();
+        $project = Project::factory()->create([
+            "status" => Status::INITIATIVE
+        ]);
+
         $version_request = [
-            "project_id" => $project->id,
-            "description" => $this->faker->text()
+            'project_id' => $project->id,
+            'description' => $this->faker->text(),
         ];
 
         $response =
@@ -51,6 +55,28 @@ class VersionTest extends TestCase
                 ->post('/api/versions', $version_request);
         $response->assertCreated();
         $this->assertDatabaseHas('versions', $version_request);
+    }
+
+    /**
+     * Test that project owner cannot add a version to his project if his project is not promoted.
+     *
+     * @return void
+     */
+    public function test_project_owner_cannot_add_a_version_to_his_project_if_not_promoted(): void
+    {
+        $project = Project::factory()->create();
+
+        $version_request = [
+            'project_id' => $project->id,
+            'description' => $this->faker->text(),
+        ];
+
+        $response =
+            $this->actingAs($project->user)
+                ->post('/api/versions', $version_request);
+
+        $response->assertStatus(403);
+        $this->assertDatabaseMissing('versions', $version_request);
     }
 
     /**
@@ -63,8 +89,8 @@ class VersionTest extends TestCase
         $project = Project::factory()->create();
         $user = User::factory()->create();
         $version_request = [
-            "project_id" => $project->id,
-            "description" => $this->faker->text()
+            'project_id' => $project->id,
+            'description' => $this->faker->text(),
         ];
 
         $response =
@@ -75,56 +101,35 @@ class VersionTest extends TestCase
     }
 
     /**
-     * Test that project owner receive 15 points of reputation after adding a version to his project.
-     *
-     * @return void
-     */
-    public function test_project_owner_receive_15_reputation_after_adding_a_version_to_his_project(): void
-    {
-        $project = Project::factory()->create();
-        $version_request = [
-            "project_id" => $project->id,
-            "description" => $this->faker->text()
-        ];
-        $response =
-            $this->actingAs($project->user)
-                ->post('/api/versions', $version_request);
-
-        $response->assertCreated();
-        $this->assertDatabaseHas('users', [
-            "id" => $project->user->id,
-            "reputation" => 115
-        ]);
-    }
-
-    /**
      * Test version number is incrementing for the same project
      *
      * @return void
      */
     public function test_version_number_is_incrementing_after_creating_in_the_same_project(): void
     {
-        $project = Project::factory()->create();
+        $project = Project::factory()->create([
+            "status" => Status::INITIATIVE
+        ]);
         $version_request = [
-            "project_id" => $project->id,
-            "description" => $this->faker->text()
+            'project_id' => $project->id,
+            'description' => $this->faker->text(),
         ];
 
         $this->actingAs($project->user)
                 ->post('/api/versions', $version_request);
 
-        $this->assertDatabaseHas("versions", [
-           "project_id" => $project->id,
-           "number" => 1
+        $this->assertDatabaseHas('versions', [
+            'project_id' => $project->id,
+            'number' => 1,
         ]);
 
         $response = $this->actingAs($project->user)
                 ->post('/api/versions', $version_request);
 
         $response->assertCreated();
-        $this->assertDatabaseHas("versions", [
-            "project_id" => $project->id,
-            "number" => 2
+        $this->assertDatabaseHas('versions', [
+            'project_id' => $project->id,
+            'number' => 2,
         ]);
     }
 
@@ -140,13 +145,13 @@ class VersionTest extends TestCase
         $description = $this->faker->text();
         $response =
             $this->put('/api/versions/'.$version->id, [
-                "description" => $description
+                'description' => $description,
             ]);
 
-        $response->assertRedirect("api/login");
+        $response->assertRedirect('api/login');
         $this->assertDatabaseMissing('versions', [
-            "id" => $version->id,
-            "description" => $description
+            'id' => $version->id,
+            'description' => $description,
         ]);
     }
 
@@ -163,36 +168,63 @@ class VersionTest extends TestCase
         $response =
             $this->actingAs($version->user)
                 ->put('/api/versions/'.$version->id, [
-                    "description" => $description
+                    'description' => $description,
                 ]);
 
         $response->assertSuccessful();
         $this->assertDatabaseHas('versions', [
-            "id" => $version->id,
-            "description" => $description
+            'id' => $version->id,
+            'description' => $description,
         ]);
     }
 
     /**
-     * Test that random users cannot add a version to a project.
+     * Test user with less than 500 reputation cannot update a version
      *
      * @return void
      */
-    public function test_random_user_cannot_update_a_version(): void
+    public function test_user_with_less_than_500_reputation_cannot_update_a_version(): void
     {
         $version = Version::factory()->create();
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            "reputation" => 499
+        ]);
         $description = $this->faker->text();
 
         $response =
             $this->actingAs($user)
                 ->put('/api/versions/'.$version->id, [
-                    "description" => $description
+                    'description' => $description,
                 ]);
         $response->assertStatus(403);
         $this->assertDatabaseMissing('versions', [
-            "id" => $version->id,
-            "description" => $description
+            'id' => $version->id,
+            'description' => $description,
+        ]);
+    }
+
+    /**
+     * Test user with more than 500 reputation can update a version
+     *
+     * @return void
+     */
+    public function test_user_with_more_than_500_reputation_can_update_a_version(): void
+    {
+        $version = Version::factory()->create();
+        $user = User::factory()->create([
+            "reputation" => 500
+        ]);
+        $description = $this->faker->text();
+
+        $response =
+            $this->actingAs($user)
+                ->put('/api/versions/'.$version->id, [
+                    'description' => $description,
+                ]);
+        $response->assertSuccessful();
+        $this->assertDatabaseHas('versions', [
+            'id' => $version->id,
+            'description' => $description,
         ]);
     }
 
@@ -208,9 +240,9 @@ class VersionTest extends TestCase
         $response =
             $this->put('/api/versions/'.$version->id);
 
-        $response->assertRedirect("api/login");
+        $response->assertRedirect('api/login');
         $this->assertDatabaseHas('versions', [
-            "id" => $version->id
+            'id' => $version->id,
         ]);
     }
 
@@ -228,7 +260,7 @@ class VersionTest extends TestCase
                 ->delete('/api/versions/'.$version->id);
         $response->assertSuccessful();
         $this->assertDatabaseMissing('versions', [
-            "id" => $version->id
+            'id' => $version->id,
         ]);
     }
 
@@ -247,7 +279,7 @@ class VersionTest extends TestCase
                 ->delete('/api/versions/'.$version->id);
         $response->assertStatus(403);
         $this->assertDatabaseHas('versions', [
-            "id" => $version->id
+            'id' => $version->id,
         ]);
     }
 }

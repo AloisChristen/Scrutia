@@ -3,65 +3,44 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\UpdateProjectRequest;
+use App\Http\Requests\LikeRequest;
+use App\Http\Requests\StoreProjectRequest;
+use App\Http\Service\LikeService;
 use App\Http\Service\ProjectService;
+use App\Models\Like;
+use App\Models\Likeable;
 use App\Models\Project;
 use App\Models\Status;
+use App\Models\User;
 use App\Models\Version;
+use App\Models\Vote;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Validation\ValidationException;
-use Illuminate\Pagination\Paginator;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class ProjectController extends Controller
 {
-
     /**
-     * Display a listing of the resource.
-     *
-     * @return Response
+     * Display projects based on filters.
+     * @return JsonResponse
      */
-    public function index()
+    public function index(): JsonResponse
     {
-        return Project::paginate();
-    }
+        $search = QueryBuilder::for(Project::class)
+            ->allowedFilters([
+                AllowedFilter::scope('startDate'),
+                AllowedFilter::scope('endDate'),
+                AllowedFilter::scope('title'),
+                AllowedFilter::scope('tags'),
+                AllowedFilter::scope('status'),
+            ])
+            ->with('tags:title')
+            ->withCount('likes')
+            ->orderByDesc('likes_count')
+            ->paginate();
 
-    /**
-     * Display a listing of the resource (only ideas).
-     *
-     * @return Response
-     */
-    public function showIdeas() {
-        // TODO: project qui sont encore des idées:
-        // "select project_id, count(*) c from versions group by project_id having c=1" -> comment faire en laravel
-        return Project::paginate();
-    }
 
-    public function showInitiatives() {
-        // TODO: showInitiatives
-        // "select project_id, count(*) c from versions group by project_id having c=1"
-        // enlever ces projet de tout les projets
-        return Project::paginate();
-    }
-
-    public function promoteToInitiative($id) {
-        $projectToPromote = Project::where('id', $id);
-        dd($projectToPromote);
-        $ideaVersion = Version::where('project_id',$id);
-        return response()->json($project);
-
-        $v2 = Version::create([
-            'number' => 2,
-            'author' => $ideaVersion->author,
-            'status' => Status::INITIATIVE,
-            'description' => $ideaVersion->description
-        ]);
-        $v2->project()->associate($project);
-        $v2->save();
-        $project->versions->save($v2);
-
-        return $project;
+        return response()->json($search);
     }
 
     /**
@@ -70,74 +49,153 @@ class ProjectController extends Controller
      * @param int $id
      * @return JsonResponse
      */
-    public function show($id): JsonResponse
+    public function show(int $id): JsonResponse
     {
-        $result = Project::with('versions', 'tags')->find($id);
-        return response()->json($result);
+        $project = Project::with([
+            // Info about versions
+            "versions",
+
+            // Info about questions
+            "versions.questions",
+
+            // Info about answers
+            "versions.questions.answers",
+
+            // Info about users
+            "versions.questions.answers.user:id,username",
+            "versions.questions.user:id,username",
+
+            // Info about tags
+            "tags:title",
+        ])->find($id);
+
+        if($project == null){
+            return response()->json(["message" => "Not Found", "errors" => [
+                "id" => "Project does not exist."
+            ]], 404);
+        }
+
+        return response()->json($project);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request
+     * @param StoreProjectRequest $request
      * @return JsonResponse
      */
-    public function store(Request $request): JsonResponse
+    public function store(StoreProjectRequest $request): JsonResponse
     {
-        $author = auth()->user();
-
+        $author = User::find(auth()->user()->id);
+        $project_count = Project::where('user_id', $author->id)->count();
+        if($author->reputation < 50 && $project_count > 0){
+            return response()->json(["message" => "Not Allowed", "errors" => [
+                "reputation" => "You can create only one project with your reputation."
+            ]], 403);
+        }
         $project = Project::create([
             'title' => $request->title,
-        ]);
-
-        $v0 = Version::create([
-            'number' => 1,
             'status' => Status::IDEE,
-            'description' => $request->description,
-            'author' => $author->id
         ]);
-        $v0->project()->associate($project);
-        $v0->save();
 
+        $version = Version::create([
+            'number' => 1,
+            'description' => $request->description
+        ]);
 
-        $project->user()->associate($author->id);
-        auth()->user()->projects()->save($project);
+        $version->project()->associate($project);
+        $version->user()->associate($author);
+        $version->save();
 
-        ProjectService::createAndAttachTags($project, $request->tags);
-
-        return response()->json($project);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param UpdateProjectRequest $request
-     * @param int $id
-     * @return JsonResponse
-     */
-    public function update(UpdateProjectRequest $request, int $id): JsonResponse
-    {
-        $project = Project::with('tags')->find($id);
-
-        $project->title = $request->title;
-        $project->description = $request->description;
+        $project->user()->associate($author);
         $project->save();
+
         ProjectService::createAndAttachTags($project, $request->tags);
 
-        return response()->json($project);
+        return response()->json(["project_id" => $project->id], 201);
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param int $id
+     * @param $id
      * @return JsonResponse
      */
-    public function destroy(int $id): JsonResponse
+    public function promote($id): JsonResponse
     {
         $project = Project::find($id);
-        $project->tags()->detach();
-        $project->delete();
-        return response()->json($project);
+
+        if($project == null){
+            return response()->json(["message" => "Not Found", "errors" => [
+                "id" => "Project does not exists"
+            ]], 404);
+        }
+
+        if($project->status == Status::INITIATIVE){
+            return response()->json(["message" => "Bad Request", "errors" => [
+                "status" => "Project has already been promoted."
+            ]], 400);
+        }
+
+        if($project->user->id != auth()->user()->id){
+            return response()->json(["message" => "Not Allowed", "errors" => [
+                "author" => "It is not allowed to promote a project from someone else."
+            ]], 404);
+        }
+
+        $sum_upvote = 0;
+
+        foreach($project->likes as $like){
+            if($like->value == Vote::UPVOTE){
+                $sum_upvote += 1;
+            }
+        }
+
+        if($sum_upvote < 50){
+            return response()->json(["message" => "Not Allowed", "errors" => [
+                "votes" => "There is not enough votes to get promoted."
+            ]], 403);
+        }
+
+        $project->status = Status::INITIATIVE;
+        $project->save();
+
+        return response()->json("Promoted");
+    }
+
+    public function like(int $id, LikeRequest $request): JsonResponse
+    {
+        $project = Project::find($id);
+        if($project == null)
+            return response()->json(["message" => "Not Found", "errors" => [
+                "id" => "Question does not exist"
+            ]], 404);
+
+        if(auth()->user()->reputation < 50){
+            return response()->json(["message" => "Not Allowed", "errors" => [
+                "reputation" => "The user cannot vote with less than or equals 50"
+            ]], 403);
+        }
+
+        $like = Like::where("user_id", $project->user->id)
+            ->where("likeable_id",$project->id)
+            ->where("likeable_type", $project->getMorphClass())
+            ->first();
+
+
+        $modified = false;
+        if($like == null){
+            $like = Like::create([
+                "value" => $request->value
+            ]);
+            $like->user()->associate(auth()->user());
+            $project->likes()->save($like);
+        }else{
+            $like->value = $request->value;
+            $modified = true;
+        }
+        $like->save();
+
+        LikeService::addVoteReputation($project->user, $like->value, auth()->user()->id, Likeable::PROJECT, $modified);
+
+        return response()->json("Liked");
     }
 }
