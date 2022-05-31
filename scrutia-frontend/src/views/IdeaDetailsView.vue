@@ -18,13 +18,22 @@
   </div>
 </template>
 
-<script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+<script>
 import ProjectHeader from "@/components/ProjectHeader.vue";
 import ProjectDiscussion from "@/components/ProjectDiscussion.vue";
-@Component({
-  name: 'IdeaDetailsView',
-  components: {ProjectHeader, ProjectDiscussion},
-})
-export default class IdeaDetailsView extends Vue {}
+export default {
+  name: "IdeaDetailsView",
+  components: {
+    ProjectHeader,ProjectDiscussion
+  },
+  data() {
+    return {
+      discussions: [
+        {title: 'pourquoi la terre se rechauffe ?', author: 'fred dupont', likesCurrent: 200}
+      ]
+    }
+  },
+
+}
+
 </script>

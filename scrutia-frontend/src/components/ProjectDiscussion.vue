@@ -3,19 +3,18 @@
     <b-col cols="12">
       <base-block
         rounded
-        title="Title"
-        subtitle="Subtitle"
+        :title=projectDiscussion.title
         btn-option-content
       >
 
-        <p>
-          Dolor posuere proin blandit accumsan senectus netus nullam
-          curae, ornare laoreet adipiscing luctus mauris adipiscing
-          pretium eget fermentum, tristique lobortis est ut metus lobortis
-          tortor tincidunt himenaeos habitant quis dictumst proin odio
-          sagittis purus mi, nec taciti vestibulum quis in sit varius
-          lorem sit metus mi.
-        </p>
+        <div>
+          <div class="flex-column">
+            <div>arrow up</div>
+            <div>likecount</div>
+            <div>arrow down</div>
+          </div>
+          <p>{{projectDiscussion.text}}</p>
+        </div>
       </base-block>
     </b-col>
   </b-row>
@@ -23,8 +22,14 @@
 
 <script lang="ts">
 export default {
-  name: "ProjectDiscussion"
+  name: "ProjectDiscussion",
+  props: {
+    projectDiscussion: {
+      type: Object,
+    }
+  }
 }
+
 </script>
 
 <style scoped>
