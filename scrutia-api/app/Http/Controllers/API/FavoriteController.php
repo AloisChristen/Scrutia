@@ -85,7 +85,7 @@ class FavoriteController extends Controller
             ]], 404);
         }
 
-        $user->favorites()->where("project_id",$project->id)->delete();
+        $user->favorites()->where("project_id",$project->id)->detach();
 
 
         return response()->json("Deleted");
