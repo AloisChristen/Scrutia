@@ -18,7 +18,7 @@
             <i
               class="fa fa-question"
               v-b-tooltip.hover.bottom="
-                'Saisissez un titre à votre idée et ajoutez une description complète qui présente l\'ensemble de vos motivations. Choisissez des tags pour permettre à votre idée d\'être facilement recherchée. Une fois celle-ci publiée, vous devrez atteindre un nombre de soutient s\'élevant à 500 pour pouvoir la convertir en projet d\'initiative.'
+                'Saisissez un titre à votre idée et ajoutez une description complète qui présente l\'ensemble de vos motivations. Choisissez des tags pour permettre à votre idée d\'être facilement recherchée. Une fois celle-ci publiée, vous devrez atteindre un nombre de soutient s\'élevant à 50 pour pouvoir la convertir en projet d\'initiative.'
               "
             ></i>
           </template>

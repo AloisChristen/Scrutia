@@ -14,6 +14,7 @@ export const api = {
   tags: baseUrl + '/tags',
   user: baseUrl + '/user',
   versions: baseUrl + '/versions',
+  favorites: baseUrl + '/favorites',
 }
 
 const staticHeader: Dictionary<string> = {
@@ -28,7 +29,7 @@ function makeBaseHeader() {
     baseHeader['Authorization'] = 'Bearer' + store.getters.token
   }
   baseHeader['Authorization'] =
-    'Bearer 2|kYp6J6pvjPYuvc6mPbEvc8vG6HEN33j5nTZnUyG6'
+    'Bearer 1|BOJtOmLjwTlKN724GsrdIMbW2guAOM1Q70ljqXwZ'
   return baseHeader
 }
 

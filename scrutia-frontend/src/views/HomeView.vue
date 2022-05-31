@@ -8,25 +8,21 @@
         v-show="isLoading"
       ></b-spinner>
       <b-row v-show="!isLoading">
-        <b-col sm="12" md="4" xl="4" v-for="index in 6" :key="index">
+        <b-col sm="12" md="4" xl="4" v-for="idea in ideas" v-bind:key="idea.id">
           <project-component
-            v-bind:project="{
-              title: 'Sauver les pandas en Asie',
-              description:
-                'Description de mon projet. Ce texte peut parfois être super long. Ce texte peut parfois être super long. Ce texte peut parfois être super long.',
-              isProjectInitiative: false,
-            }"
+            v-bind:project="idea"
             :reducedDisplay="true"
+            :isProjectInitiative="false"
           />
         </b-col>
       </b-row>
       <p>
         <b-link
           class="link-fx"
-          href="javascript:void(0)"
+          href="/browseIdeas"
           style="float: right; margin-bottom: 10px; margin-top: -10px"
           v-show="!isLoading"
-          >et 125 autres...</b-link
+          >et {{ nbOtherIdeas }} autres...</b-link
         >
       </p>
       <h2 class="content-heading">Projets d'initiative les plus actifs...</h2>
@@ -36,24 +32,27 @@
         v-show="isLoadingProjects"
       ></b-spinner>
       <b-row v-show="!isLoadingProjects">
-        <b-col sm="12" md="6" xl="6" v-for="index in 4" :key="index">
+        <b-col
+          sm="12"
+          md="6"
+          xl="6"
+          v-for="project in projects"
+          v-bind:key="project.id"
+        >
           <project-component
-            v-bind:project="{
-              title: 'Sauver les pandas en Asie',
-              description:
-                'Description de mon projet. Ce texte peut parfois être super long. Ce texte peut parfois être super long. Ce texte peut parfois être super long.',
-              isProjectInitiative: true,
-            }"
+            v-bind:project="project"
+            :reducedDisplay="true"
+            :isProjectInitiative="true"
           />
         </b-col>
       </b-row>
       <p>
         <b-link
           class="link-fx"
-          href="javascript:void(0)"
+          href="browseInitiatives"
           style="float: right; margin-bottom: 10px; margin-top: -10px"
           v-show="!isLoadingProjects"
-          >et 28 autres...</b-link
+          >et {{ nbOtherProjects }} autres...</b-link
         >
       </p>
     </div>
@@ -64,6 +63,7 @@
 import ProjectComponent from '../components/ProjectComponent.vue'
 import { Component, Vue } from 'vue-property-decorator'
 import { getProjects } from '@/api/services/ProjectsService'
+import { getIdeas } from '@/api/services/ProjectsService'
 import { ProjectPaginationDTO } from '@/typings/scrutia-types'
 
 @Component({
@@ -79,22 +79,49 @@ import { ProjectPaginationDTO } from '@/typings/scrutia-types'
       projects: [],
       isLoading: true,
       isLoadingProjects: true,
+      nbOtherIdeas: 0,
+      nbOtherProjects: 0,
     }
   },
   async created() {
-    const response: Response = await getProjects()
-    if (response.ok) {
-      const projectsPagingation: ProjectPaginationDTO = await response.json()
-      console.log(projectsPagingation)
-    } else {
-      this.$swal({
-        icon: 'error',
-        title: "Une erreur s'est produite lors du chargement des projets",
-        showConfirmButton: true,
-      })
-    }
-    this.isLoading = false
-    this.isLoadingProjects = false
+    this.loadIdeas()
+    this.loadProjects()
+  },
+  methods: {
+    loadIdeas: async function () {
+      this.$data.isLoading = true
+      const response: Response = await getIdeas()
+      if (response.ok) {
+        const projectsPagingation: ProjectPaginationDTO = await response.json()
+        this.$data.nbOtherIdeas = projectsPagingation.total
+        for (let i = 0; i < projectsPagingation.data.length && i < 6; i++)
+          this.$data.ideas.push(projectsPagingation.data[i])
+      } else {
+        this.$swal({
+          icon: 'error',
+          title: "Une erreur s'est produite lors du chargement des idées",
+          showConfirmButton: true,
+        })
+      }
+      this.$data.isLoading = false
+    },
+    loadProjects: async function () {
+      this.$data.isLoadingProjects = true
+      const response: Response = await getProjects()
+      if (response.ok) {
+        const projectsPagingation: ProjectPaginationDTO = await response.json()
+        this.$data.nbOtherProjects = projectsPagingation.total
+        for (let i = 0; i < projectsPagingation.data.length && i < 4; i++)
+          this.$data.projects.push(projectsPagingation.data[i])
+      } else {
+        this.$swal({
+          icon: 'error',
+          title: "Une erreur s'est produite lors du chargement des projets",
+          showConfirmButton: true,
+        })
+      }
+      this.$data.isLoadingProjects = false
+    },
   },
 })
 export default class HomeView extends Vue {}
