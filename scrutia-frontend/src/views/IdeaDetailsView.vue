@@ -10,6 +10,9 @@
         ></ProjectHeader>
 
       <ProjectDiscussion/>
+      <ProjectDiscussion/>
+      <ProjectDiscussion/>
+      <ProjectDiscussion/>
 
     </div>
   </div>
@@ -18,9 +21,10 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import ProjectHeader from "@/components/ProjectHeader.vue";
+import ProjectDiscussion from "@/components/ProjectDiscussion.vue";
 @Component({
   name: 'IdeaDetailsView',
-  components: {ProjectHeader},
+  components: {ProjectHeader, ProjectDiscussion},
 })
 export default class IdeaDetailsView extends Vue {}
 </script>
