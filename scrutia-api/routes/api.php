@@ -64,6 +64,9 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         function () {
             Route::post('/', 'store')->name('project.store');
             Route::put('/{id}/promote', 'promote')->name('project.promote');
+
+            Route::post('/{id}/like', 'like')->name('project.like');
+
         }
     );
 
