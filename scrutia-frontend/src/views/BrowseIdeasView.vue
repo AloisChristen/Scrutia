@@ -24,7 +24,7 @@
               <project-component
                 v-bind:project="idea"
                 :reducedDisplay="true"
-                :isProjectInitiative="false"
+                :isProjectInitiative="true"
               />
             </b-col>
           </b-row>
