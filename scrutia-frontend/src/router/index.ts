@@ -10,6 +10,7 @@ Vue.use(Router)
 const AuthSignIn = () => import('@/views/auth/SignInView.vue')
 const AuthSignUp = () => import('@/views/auth/SignUpView.vue')
 const AuthReminder = () => import('@/views/auth/ReminderView.vue')
+const AuthLogOut = () => import('@/views/auth/LogoutView.vue')
 
 // Pages: Boxed Backend
 const Home = () => import('@/views/HomeView.vue')
@@ -120,6 +121,11 @@ export default new Router({
           path: 'reminder',
           name: 'Scrutia | Changer de mot de passe',
           component: AuthReminder,
+        },
+        {
+          path: 'logout',
+          name: 'Scrutia | Logout',
+          component: AuthLogOut,
         },
       ],
     },
