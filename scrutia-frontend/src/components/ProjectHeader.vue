@@ -6,6 +6,27 @@
         <h1 class="font-w400">{{ title }}</h1>
       </base-block>
     </b-col>
+    <b-col cols="4" class="mb-0" v-if="ideaActionActivated">
+      <!-- transparent -->
+      <base-block rounded transparent>
+        <div v-on:click="like_current()">
+          <div v-if="isLiked">
+            <i class="fa fa-fw fa-thumbs-up mr-1"></i>
+            {{  likesCount }}
+          </div>
+          <div v-else>
+            <i
+              class="fa fa-fw fa-thumbs-up mr-1"
+              style="color: lightgray"
+            ></i>
+            {{ likesCount }}
+          </div>
+        </div>
+      </base-block>
+      <b-button v-if="canBePromoted" v-on:click="promote">
+
+      </b-button>
+    </b-col>
   </b-row>
   <div class="block-rounded block-transparent block col-xl-10">
     <div class="block-header">
@@ -21,11 +42,9 @@
               alt="..."
               class="img-fluid"
             />
-            <div>
-              <b-badge :variant="getNextColor()" margin-right-15>Pandas</b-badge>
-              <b-badge :variant="getNextColor()">Pandas</b-badge>
-              <b-badge :variant="getNextColor()">Pandas</b-badge>
-            </div>
+            <b-badge v-for="tag in tagList" :key="tag.id" :variant="getNextColor()" >
+              {{ tag }}
+            </b-badge>
 
           </div>
 
@@ -62,6 +81,22 @@ export default {
     displayPicture: {
       type: Boolean,
       default: false,
+    },
+    ideaActionActivated: {
+      type: Boolean,
+      default: false,
+    },
+    isLiked: {
+      type: Boolean,
+      default: false
+    },
+    likesCount: {
+      type: Number,
+      default: 311,
+    },
+    canBePromoted: {
+      type: Boolean,
+      default: false
     }
 
   },
@@ -80,6 +115,17 @@ export default {
       const index = Math.floor(Math.random() * colors.length)
       return colors[index]
     },
+
+    //- --- -- idea actions -- -- - - -- -
+    like_current(){
+      console.log("liking...-")
+    },
+    promote(){
+      console.log("promoting....")
+    }
+
+
+
   }
 }
 </script>

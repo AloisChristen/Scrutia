@@ -4,7 +4,9 @@
 
       <ProjectHeader
         title="sauver les pandas du feu"
-        tag-list="['d', 'asd', 'env']"
+        :tagList="['d', 'asd', 'env']"
+        ideaActionActivated
+        canBePromoted
         ></ProjectHeader>
 
 
