@@ -3,12 +3,18 @@ import { api, makeHeader } from '../api'
 import { format } from 'date-fns'
 
 function filterBuilder(
+  types: string[] | null,
   text: string | null,
   startDate: Date | null,
   endDate: Date | null,
   tags: string[] | null
 ) {
   let filters = ''
+  if (types !== null && types.length !== 2) {
+    filters += types.includes('Idées')
+      ? 'filter[status]=idee'
+      : 'filter[status]=Initiative'
+  }
   if (text !== null) filters += `&filter[title]=${text}`
   if (startDate !== null)
     filters += `&filter[startDate]=${format(startDate, 'yyyy-MM-dd')}`
@@ -39,36 +45,18 @@ export async function getProjects() {
   )
 }
 
-export async function getIdeasWithFilters(
-  text: string | null,
-  startDate: Date | null,
-  endDate: Date | null,
-  tags: string[] | null
-) {
-  const filters = filterBuilder(text, startDate, endDate, tags)
-  return await fetch(
-    `${api.projects}/nb_per_page/4?filter[status]=idee${filters}`,
-    {
-      method: 'GET',
-      headers: makeHeader({}),
-    }
-  )
-}
-
 export async function getProjectsWithFilters(
+  types: string[] | null,
   text: string | null,
   startDate: Date | null,
   endDate: Date | null,
   tags: string[] | null
 ) {
-  const filters = filterBuilder(text, startDate, endDate, tags)
-  return await fetch(
-    `${api.projects}/nb_per_page/4?filter[status]=Initiative${filters}`,
-    {
-      method: 'GET',
-      headers: makeHeader({}),
-    }
-  )
+  const filters = filterBuilder(types, text, startDate, endDate, tags)
+  return await fetch(`${api.projects}/nb_per_page/4?${filters}`, {
+    method: 'GET',
+    headers: makeHeader({}),
+  })
 }
 
 export async function addProject(idea: ProjectStore) {

@@ -43,6 +43,20 @@
             <p>
               <b-form>
                 <b-form-group
+                  label="Type"
+                  label-for="type-choice"
+                  class="text-center"
+                >
+                  <v-select
+                    id="tags"
+                    size="lg"
+                    multiple
+                    v-model="types"
+                    :options="typesOptions"
+                    placeholder="Choisissez un / des types..."
+                  ></v-select>
+                </b-form-group>
+                <b-form-group
                   label="Contient le texte"
                   label-for="contains-text"
                   class="text-center"
@@ -82,7 +96,12 @@
                 </b-form-group>
                 <b-row>
                   <b-col md="6" xl="6" class="text-center">
-                    <b-button variant="alt-success" @click="search" block>
+                    <b-button
+                      variant="alt-success"
+                      @click="search"
+                      block
+                      :disabled="types.length == 0"
+                    >
                       <i class="fa fa-search mr-1"></i> Rechercher
                     </b-button>
                   </b-col>
@@ -121,8 +140,10 @@ import ProjectComponent from '../components/ProjectComponent.vue'
 import VueSelect from 'vue-select'
 import { getTags } from '@/api/services/TagsService'
 import { ProjectPaginationDTO, TagDTO } from '@/typings/scrutia-types'
-import { getIdeasWithFilters } from '@/api/services/ProjectsService'
+import { getProjectsWithFilters } from '@/api/services/ProjectsService'
 import { subDays } from 'date-fns'
+
+const all_types = ['Idées', "Projets d'initiative"]
 
 export default {
   name: 'BrowseIdeaView',
@@ -135,7 +156,9 @@ export default {
       datesRanges: ['Tout', '-24h', '-48h', '-1 semaine'],
       currentRange: 0,
       options: [],
+      typesOptions: all_types,
       tags: [],
+      types: all_types,
       current_page: 1,
       last_page_url: '',
       next_page_url: '',
@@ -161,13 +184,15 @@ export default {
       this.isLoadingTags = false
     },
     async loadIdeas(
+      types: string[] | null,
       text: string | null,
       startDate: Date | null,
       endDate: Date | null,
       tags: string[] | null
     ) {
       this.isLoading = true
-      const response: Response = await getIdeasWithFilters(
+      const response: Response = await getProjectsWithFilters(
+        types,
         text,
         startDate,
         endDate,
@@ -204,18 +229,26 @@ export default {
           startDate = subDays(new Date(), 7)
           break
       }
-      this.loadIdeas(this.$data.searchText, startDate, null, this.$data.tags)
+      this.loadIdeas(
+        this.$data.types,
+        this.$data.searchText,
+        startDate,
+        null,
+        this.$data.tags
+      )
     },
     onClear() {
       if (
+        this.$data.types.length !== all_types.length ||
         this.$data.searchText !== '' ||
         this.$data.currentRange !== 0 ||
         this.$data.tags.length !== 0
       ) {
+        this.$data.types = all_types
         this.$data.searchText = ''
         this.$data.currentRange = 0
         this.$data.tags = []
-        this.loadIdeas()
+        this.loadIdeas(null, null, null, null, null)
       }
     },
     filterByDate(range: number) {
@@ -231,7 +264,7 @@ export default {
   },
   async created() {
     this.loadTags()
-    this.loadIdeas(null, null, null, null)
+    this.loadIdeas(null, null, null, null, null)
   },
 }
 </script>
