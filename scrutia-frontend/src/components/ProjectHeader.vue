@@ -123,7 +123,6 @@ export default {
         'info',
         'warning',
         'danger',
-        'light',
         'dark',
       ]
       const index = Math.floor(Math.random() * colors.length)
