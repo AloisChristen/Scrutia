@@ -123,6 +123,7 @@ export default {
   name: 'BrowseIdeaView',
   data() {
     return {
+      ideas: [],
       searchText: '',
       isLoading: true,
       isLoadingTags: true,

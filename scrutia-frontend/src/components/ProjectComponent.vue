@@ -84,6 +84,7 @@ export default {
   },
   methods: {
     getFormatedDate() {
+      if (this.project.created_at === undefined) return ''
       return format(new Date(this.project.created_at), 'dd LLLL yyyy', {
         locale: frenchLocale,
       })
