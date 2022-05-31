@@ -18,7 +18,12 @@
         <div class="block-options-item text-success custom-font-size">
           {{ project.performance }}
         </div>
-        <button type="button" class="btn-block-option" @click="addToFavorites">
+        <button
+          type="button"
+          class="btn-block-option"
+          @click="addToFavorites"
+          v-show="isUserConnected()"
+        >
           <i
             v-bind:class="[
               { fa: isFavorite },
@@ -83,6 +88,9 @@ export default {
     }
   },
   methods: {
+    isUserConnected() {
+      return this.$store.getters.isConnected
+    },
     getFormatedDate() {
       if (this.project.created_at === undefined) return ''
       return format(new Date(this.project.created_at), 'dd LLLL yyyy', {
@@ -96,7 +104,6 @@ export default {
       return color
     },
     addToFavorites() {
-      // TODO : display button only if user authenticated
       this.$data.isFavorite = !this.$data.isFavorite
       if (this.$data.isFavorite) addFavorite(this.project.id)
       else deleteFavorite(this.project.id)
@@ -107,6 +114,7 @@ export default {
   },
   created() {
     this.$data.isFavorite = this.project.is_favorite
+    console.log(this.isUserConnected())
   },
   computed: {
     isNew() {
