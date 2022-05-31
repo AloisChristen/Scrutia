@@ -39,13 +39,13 @@
                       class="form-control-alt"
                       id="username"
                       name="username"
-                      placeholder="Username"
+                      placeholder="Nom d'utilisateur"
                       v-model="$v.form.username.$model"
                       :state="!$v.form.username.$error && null"
                       aria-describedby="username-feedback"
                     ></b-form-input>
                     <b-form-invalid-feedback id="username-feedback">
-                      Nom d'utilisateur
+                      Doit être remplit
                     </b-form-invalid-feedback>
                   </div>
                   <div class="form-group">
@@ -55,19 +55,14 @@
                       class="form-control-alt"
                       id="password"
                       name="password"
-                      placeholder="Password"
+                      placeholder="Mot de passe"
                       v-model="$v.form.password.$model"
                       :state="!$v.form.password.$error && null"
                       aria-describedby="password-feedback"
                     ></b-form-input>
                     <b-form-invalid-feedback id="password-feedback">
-                      Mot de passe
+                      Doit être remplit
                     </b-form-invalid-feedback>
-                  </div>
-                  <div class="form-group">
-                    <b-form-checkbox id="remember" name="remember"
-                      >Se souvenir de moi</b-form-checkbox
-                    >
                   </div>
                 </div>
                 <b-row class="form-group">
