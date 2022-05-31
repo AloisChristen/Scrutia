@@ -120,7 +120,8 @@ import ProjectComponent from '../components/ProjectComponent.vue'
 import VueSelect from 'vue-select'
 import { getTags } from '@/api/services/TagsService'
 import { ProjectPaginationDTO, TagDTO } from '@/typings/scrutia-types'
-import { getIdeas } from '@/api/services/ProjectsService'
+import { getIdeasWithFilters } from '@/api/services/ProjectsService'
+import { subDays } from 'date-fns'
 
 export default {
   name: 'BrowseIdeaView',
@@ -155,9 +156,19 @@ export default {
       }
       this.isLoadingTags = false
     },
-    async loadIdeas() {
+    async loadIdeas(
+      text: string | null,
+      startDate: Date | null,
+      endDate: Date | null,
+      tags: string[] | null
+    ) {
       this.isLoading = true
-      const response: Response = await getIdeas()
+      const response: Response = await getIdeasWithFilters(
+        text,
+        startDate,
+        endDate,
+        tags
+      )
       if (response.ok) {
         const projectsPagingation: ProjectPaginationDTO = await response.json()
         this.ideas = projectsPagingation.data
@@ -170,7 +181,21 @@ export default {
       }
       this.isLoading = false
     },
-    search() {},
+    search() {
+      let startDate = null
+      switch (this.currentRange) {
+        case 1:
+          startDate = subDays(new Date(), 1)
+          break
+        case 2:
+          startDate = subDays(new Date(), 2)
+          break
+        case 3:
+          startDate = subDays(new Date(), 7)
+          break
+      }
+      this.loadIdeas(this.$data.searchText, startDate, null, this.$data.tags)
+    },
     onClear() {
       if (
         this.$data.searchText !== '' ||
@@ -193,7 +218,7 @@ export default {
   },
   async created() {
     this.loadTags()
-    this.loadIdeas()
+    this.loadIdeas(null, null, null, null)
   },
 }
 </script>
