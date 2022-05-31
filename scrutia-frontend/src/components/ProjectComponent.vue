@@ -4,47 +4,60 @@
     header-bg
     rounded
     tag="a"
-    href="javascript:void(0)"
     link-pop
+    style="cursor: auto"
   >
     <template #options>
-      <div
-        v-show="isNew && project.isProjectInitiative"
-        class="block-options-item text-primary-light custom-font-size"
-      >
-        Nouveau !
+      <div @click="() => {}">
+        <div
+          v-show="isNew && isProjectInitiative"
+          class="block-options-item text-primary-light custom-font-size"
+        >
+          Nouveau !
+        </div>
+        <div class="block-options-item text-success custom-font-size">
+          {{ project.performance }}
+        </div>
+        <button type="button" class="btn-block-option" @click="addToFavorites">
+          <i
+            v-bind:class="[
+              { fa: isFavorite },
+              { 'fa-star': isFavorite },
+              { si: !isFavorite },
+              { 'si-star': !isFavorite },
+            ]"
+          />
+        </button>
+        <button type="button" class="btn-block-option" @click="openProject">
+          <i class="si si-eye" />
+        </button>
       </div>
-      <div class="block-options-item text-success custom-font-size">
-        {{ augmentation }}
-      </div>
-      <button type="button" class="btn-block-option">
-        <i
-          v-bind:class="[
-            { fa: isFavorite },
-            { 'fa-star': isFavorite },
-            { si: !isFavorite },
-            { 'si-star': !isFavorite },
-          ]"
-        />
-      </button>
     </template>
-    <p class="custom-font-size">{{ shortedDescription }}</p>
-    <address v-show="project.isProjectInitiative">
-      <a href="#" class="custom-font-size">Jose Wagner</a
-      ><em class="custom-font-size">, le 12 avril 2022</em><br />
-      <b-badge :variant="getNextColor()">Pandas</b-badge>
-      <b-badge :variant="getNextColor()">Environnement</b-badge>
-      <b-badge :variant="getNextColor()">Planète</b-badge>
-      <b-badge :variant="getNextColor()">Animaux</b-badge>
-      <b-badge :variant="getNextColor()">Asie</b-badge>
-    </address>
-    <address v-show="!project.isProjectInitiative" class="custom-font-size">
-      <i class="fa fa-thumbs-up custom-font-size" /> {{ likes }} personnes
-      soutiennent déjà l'idée
-    </address>
+    <div @click="openProject" style="cursor: pointer">
+      <p class="custom-font-size">{{ shortedDescription }}</p>
+      <address v-show="isProjectInitiative">
+        <a class="custom-font-size">{{ project.author }}</a
+        ><em class="custom-font-size">, le {{ getFormatedDate() }}</em
+        ><br />
+        <b-badge
+          style="margin-right: 5px"
+          v-for="tag in project.tags"
+          v-bind:key="tag.title"
+          :variant="getNextColor()"
+          >{{ tag.title }}</b-badge
+        >
+      </address>
+      <address v-show="!isProjectInitiative" class="custom-font-size">
+        <i class="fa fa-thumbs-up custom-font-size" />
+        {{ project.likes_count }} personnes soutiennent déjà l'idée
+      </address>
+    </div>
   </base-block>
 </template>
-<script>
+<script lang="ts">
+import { addFavorite, deleteFavorite } from '@/api/services/FavoritesService'
+import { format } from 'date-fns'
+import frenchLocale from 'date-fns/locale/fr'
 const COLOR_VARIANTS = ['primary', 'success', 'info', 'warning', 'danger']
 let currentColor = 0
 
@@ -64,36 +77,55 @@ export default {
       description: 'If the project is in initiative state',
     },
   },
+  data() {
+    return {
+      isFavorite: false,
+    }
+  },
   methods: {
+    getFormatedDate() {
+      if (this.project.created_at === undefined) return ''
+      return format(new Date(this.project.created_at), 'dd LLLL yyyy', {
+        locale: frenchLocale,
+      })
+    },
     getNextColor() {
       const color = COLOR_VARIANTS[currentColor]
       currentColor =
         currentColor >= COLOR_VARIANTS.length ? 0 : currentColor + 1
       return color
     },
+    addToFavorites() {
+      // TODO : display button only if user authenticated
+      this.$data.isFavorite = !this.$data.isFavorite
+      if (this.$data.isFavorite) addFavorite(this.project.id)
+      else deleteFavorite(this.project.id)
+    },
+    openProject() {
+      this.$router.push({ path: `/project/${this.project.id}`, replace: true })
+    },
+  },
+  created() {
+    this.$data.isFavorite = this.project.is_favorite
   },
   computed: {
     isNew() {
-      return Math.random() < 0.5
-    },
-    augmentation() {
-      return '+' + Math.round(Math.random() * 100) + '%'
-    },
-    likes() {
-      return Math.round(Math.random() * 1000)
-    },
-    isFavorite() {
-      return Math.random() < 0.5
+      return (
+        604800 <
+        new Date().getTime() - new Date(this.project.created_at).getTime()
+      )
     },
     shortedTitle() {
-      const title = this.project.title
-      if (title.length > 40) return title.substring(0, 37) + '...'
-      else return title
+      if (this.project.title === null) return 'Aucun titre...'
+      if (this.project.title.length > 40)
+        return this.project.title.substring(0, 37) + '...'
+      else return this.project.title
     },
     shortedDescription() {
-      const description = this.project.description
-      if (description.length > 200) return description.substring(0, 197) + '...'
-      else return description
+      if (this.project.last_description === null) return 'Aucune description...'
+      if (this.project.last_description.length > 200)
+        return this.project.last_description.substring(0, 197) + '...'
+      else return this.project.last_description
     },
   },
 }

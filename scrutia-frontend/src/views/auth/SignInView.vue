@@ -10,13 +10,13 @@
             themed
             header-class="bg-primary-dark"
             class="mb-0"
-            title="Sign In"
+            title="Connexion"
           >
             <template #options>
               <router-link
                 to="/auth/reminder"
                 class="btn-block-option font-size-sm"
-                >Forgot Password?</router-link
+                >Mot de passe oublié?</router-link
               >
               <router-link
                 to="/auth/signup"
@@ -27,8 +27,8 @@
               </router-link>
             </template>
             <div class="p-sm-3 px-lg-4 py-lg-5">
-              <h1 class="h2 mb-1">OneUI</h1>
-              <p class="text-muted">Welcome, please login.</p>
+              <h1 class="h2 mb-1">{{ $store.getters.appName }}</h1>
+              <p class="text-muted">Bienvenue, veuillez vous connecter.</p>
 
               <!-- Sign In Form -->
               <b-form @submit.stop.prevent="onSubmit">
@@ -39,13 +39,13 @@
                       class="form-control-alt"
                       id="username"
                       name="username"
-                      placeholder="Username"
+                      placeholder="Nom d'utilisateur"
                       v-model="$v.form.username.$model"
                       :state="!$v.form.username.$error && null"
                       aria-describedby="username-feedback"
                     ></b-form-input>
                     <b-form-invalid-feedback id="username-feedback">
-                      Please enter your username
+                      Doit être remplit
                     </b-form-invalid-feedback>
                   </div>
                   <div class="form-group">
@@ -55,29 +55,37 @@
                       class="form-control-alt"
                       id="password"
                       name="password"
-                      placeholder="Password"
+                      placeholder="Mot de passe"
                       v-model="$v.form.password.$model"
                       :state="!$v.form.password.$error && null"
                       aria-describedby="password-feedback"
                     ></b-form-input>
                     <b-form-invalid-feedback id="password-feedback">
-                      Please enter your password
+                      Doit être remplit
                     </b-form-invalid-feedback>
-                  </div>
-                  <div class="form-group">
-                    <b-form-checkbox id="remember" name="remember"
-                      >Remember Me</b-form-checkbox
-                    >
                   </div>
                 </div>
                 <b-row class="form-group">
                   <b-col md="6" xl="5">
                     <b-button type="submit" variant="alt-primary" block>
-                      <i class="fa fa-fw fa-sign-in-alt mr-1"></i> Sign In
+                      <i class="fa fa-fw fa-sign-in-alt mr-1"></i> Se connecter
+                    </b-button>
+                  </b-col>
+                </b-row>
+                <b-row class="form-group">
+                  <b-col md="6" xl="5">
+                    <b-button
+                      size="sm"
+                      variant="dual"
+                      @click="$router.go(-1)"
+                      block
+                    >
+                      <i class="fa fa-undo mr-1"></i> Retour
                     </b-button>
                   </b-col>
                 </b-row>
               </b-form>
+
               <!-- END Sign In Form -->
             </div>
           </base-block>
@@ -86,9 +94,7 @@
       </b-row>
     </div>
     <div class="content content-full font-size-sm text-muted text-center">
-      <strong>{{
-        $store.getters.appName + ' ' + $store.getters.appVersion
-      }}</strong>
+      <strong>{{ $store.getters.appName }}</strong>
       &copy; {{ $store.getters.appCopyright }}
     </div>
   </div>
@@ -136,9 +142,9 @@ export default {
       }
 
       // TODO threat case when not connected
-      login(account).then((session) => {
-        this.$store.commit('session', session)
-        console.log(this.$store.getters.authToken)
+      login(account).then(async (resp) => {
+        let session: LoginDTO = (await resp.json()) as LoginDTO
+        this.$store.commit('connect', session)
         this.$router.push('/')
       })
     },

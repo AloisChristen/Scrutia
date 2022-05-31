@@ -11,24 +11,28 @@
         v-show="isLoading || isLoadingTags"
       ></b-spinner>
       <b-row>
-        <b-col cols="7">
-          <div
-            v-for="index in 3"
-            :key="index"
-            v-show="!isLoading && !isLoadingTags"
-          >
-            <project-component
-              v-bind:project="{
-                title: 'Sauver les pandas en Asie',
-                description:
-                  'Description de mon projet. Ce texte peut parfois être super long. Ce texte peut parfois être super long. Ce texte peut parfois être super long.',
-                isProjectInitiative: false,
-              }"
-              :reducedDisplay="true"
-            />
-          </div>
+        <b-col cols="8">
+          <p v-show="!isLoading && !isLoadingTags && ideas.length === 0">
+            Aucune idée correspondant aux filtres n'existe...
+          </p>
+          <b-row v-show="ideas.length > 0">
+            <b-col
+              sm="12"
+              md="6"
+              xl="6"
+              v-for="idea in ideas"
+              v-bind:key="idea.id"
+              v-show="!isLoading && !isLoadingTags"
+            >
+              <project-component
+                v-bind:project="idea"
+                :reducedDisplay="true"
+                :isProjectInitiative="true"
+              />
+            </b-col>
+          </b-row>
         </b-col>
-        <b-col cols="5">
+        <b-col cols="4">
           <base-block
             rounded
             title="Filtres"
@@ -46,8 +50,7 @@
                   <b-form-input
                     id="contains-text"
                     placeholder="Votre recherche..."
-                    @keydown.enter="filterByText"
-                    @blur="(e) => filterByText(e.target.value())"
+                    v-model="searchText"
                   ></b-form-input>
                 </b-form-group>
                 <b-form-group label="Tags" label-for="tags" class="text-center">
@@ -58,7 +61,6 @@
                     v-model="tags"
                     :options="options"
                     placeholder="Définissez des tags..."
-                    v-on:input="filterByTags"
                   ></v-select>
                 </b-form-group>
                 <b-form-group
@@ -68,19 +70,33 @@
                 >
                   <b-button-group>
                     <b-button
-                      v-for="item in datesRanges"
+                      v-for="(item, index) in datesRanges"
                       :key="item"
-                      variant="outline-primary"
-                      @click="filterByDate"
+                      @click="filterByDate(index)"
+                      :variant="
+                        index === currentRange ? 'primary' : 'outline-primary'
+                      "
                       >{{ item }}</b-button
                     >
                   </b-button-group>
                 </b-form-group>
+                <b-row>
+                  <b-col md="6" xl="6" class="text-center">
+                    <b-button variant="alt-success" @click="search" block>
+                      <i class="fa fa-search mr-1"></i> Rechercher
+                    </b-button>
+                  </b-col>
+                  <b-col md="6" xl="6" class="text-center">
+                    <b-button variant="alt-warning" @click="onClear" block>
+                      <i class="fa fa-trash mr-1"></i> Réinitialiser
+                    </b-button>
+                  </b-col>
+                </b-row>
               </b-form>
             </p>
           </base-block>
         </b-col>
-        <b-col cols="7">
+        <b-col cols="8">
           <b-pagination
             v-model="currentPage"
             :total-rows="rows"
@@ -104,15 +120,19 @@ import ProjectComponent from '../components/ProjectComponent.vue'
 import VueSelect from 'vue-select'
 import { getTags } from '@/api/services/TagsService'
 import { ProjectPaginationDTO, TagDTO } from '@/typings/scrutia-types'
-import { getProjects } from '@/api/services/ProjectsService'
+import { getIdeasWithFilters } from '@/api/services/ProjectsService'
+import { subDays } from 'date-fns'
 
 export default {
   name: 'BrowseIdeaView',
   data() {
     return {
+      ideas: [],
+      searchText: '',
       isLoading: true,
       isLoadingTags: true,
       datesRanges: ['Tout', '-24h', '-48h', '-1 semaine'],
+      currentRange: 0,
       rows: 30,
       perPage: 3,
       currentPage: 1,
@@ -122,6 +142,7 @@ export default {
   },
   methods: {
     async loadTags() {
+      this.isLoadingTags = true
       const response: Response = await getTags()
       if (response.ok) {
         const tags = await response.json()
@@ -135,12 +156,22 @@ export default {
       }
       this.isLoadingTags = false
     },
-    async loadIdeas() {
+    async loadIdeas(
+      text: string | null,
+      startDate: Date | null,
+      endDate: Date | null,
+      tags: string[] | null
+    ) {
       this.isLoading = true
-      const response: Response = await getProjects()
+      const response: Response = await getIdeasWithFilters(
+        text,
+        startDate,
+        endDate,
+        tags
+      )
       if (response.ok) {
         const projectsPagingation: ProjectPaginationDTO = await response.json()
-        console.log(projectsPagingation)
+        this.ideas = projectsPagingation.data
       } else {
         this.$swal({
           icon: 'error',
@@ -150,15 +181,35 @@ export default {
       }
       this.isLoading = false
     },
-    filterByText(text: string) {
-      console.log(text)
-      console.log('Filter by text')
+    search() {
+      let startDate = null
+      switch (this.currentRange) {
+        case 1:
+          startDate = subDays(new Date(), 1)
+          break
+        case 2:
+          startDate = subDays(new Date(), 2)
+          break
+        case 3:
+          startDate = subDays(new Date(), 7)
+          break
+      }
+      this.loadIdeas(this.$data.searchText, startDate, null, this.$data.tags)
     },
-    filterByTags() {
-      console.log('Filter by tags')
+    onClear() {
+      if (
+        this.$data.searchText !== '' ||
+        this.$data.currentRange !== 0 ||
+        this.$data.tags.length !== 0
+      ) {
+        this.$data.searchText = ''
+        this.$data.currentRange = 0
+        this.$data.tags = []
+        this.loadIdeas()
+      }
     },
-    filterByDate() {
-      console.log('Filter by date')
+    filterByDate(range: number) {
+      this.currentRange = range
     },
   },
   components: {
@@ -167,7 +218,7 @@ export default {
   },
   async created() {
     this.loadTags()
-    this.loadIdeas()
+    this.loadIdeas(null, null, null, null)
   },
 }
 </script>
