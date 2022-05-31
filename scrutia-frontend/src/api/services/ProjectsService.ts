@@ -23,17 +23,20 @@ function filterBuilder(
 }
 
 export async function getIdeas() {
-  return await fetch(`${api.projects}?filter[status]=idee`, {
+  return await fetch(`${api.projects}/nb_per_page/6?filter[status]=idee`, {
     method: 'GET',
     headers: makeHeader({}),
   })
 }
 
 export async function getProjects() {
-  return await fetch(`${api.projects}?filter[status]=Initiative`, {
-    method: 'GET',
-    headers: makeHeader({}),
-  })
+  return await fetch(
+    `${api.projects}/nb_per_page/4?filter[status]=Initiative`,
+    {
+      method: 'GET',
+      headers: makeHeader({}),
+    }
+  )
 }
 
 export async function getIdeasWithFilters(
@@ -43,10 +46,13 @@ export async function getIdeasWithFilters(
   tags: string[] | null
 ) {
   const filters = filterBuilder(text, startDate, endDate, tags)
-  return await fetch(`${api.projects}?filter[status]=idee${filters}`, {
-    method: 'GET',
-    headers: makeHeader({}),
-  })
+  return await fetch(
+    `${api.projects}/nb_per_page/4?filter[status]=idee${filters}`,
+    {
+      method: 'GET',
+      headers: makeHeader({}),
+    }
+  )
 }
 
 export async function getProjectsWithFilters(
@@ -56,10 +62,13 @@ export async function getProjectsWithFilters(
   tags: string[] | null
 ) {
   const filters = filterBuilder(text, startDate, endDate, tags)
-  return await fetch(`${api.projects}?filter[status]=Initiative${filters}`, {
-    method: 'GET',
-    headers: makeHeader({}),
-  })
+  return await fetch(
+    `${api.projects}/nb_per_page/4?filter[status]=Initiative${filters}`,
+    {
+      method: 'GET',
+      headers: makeHeader({}),
+    }
+  )
 }
 
 export async function addProject(idea: ProjectStore) {

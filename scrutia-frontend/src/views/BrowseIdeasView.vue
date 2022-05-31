@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="content">
-      <h1 class="content-heading">Parcourir les idées</h1>
+      <h1 class="content-heading">Parcourir les idées et projets</h1>
       <p>
         Laissez vous convaincre et apportez votre soutient aux bonnes idées.
       </p>
@@ -103,6 +103,7 @@
             :per-page="per_page"
             v-show="!isLoading && !isLoadingTags"
             align="right"
+            @change="changePage()"
           ></b-pagination>
         </b-col>
       </b-row>
@@ -219,6 +220,9 @@ export default {
     },
     filterByDate(range: number) {
       this.currentRange = range
+    },
+    changePage() {
+      console.log(this.current_page)
     },
   },
   components: {
