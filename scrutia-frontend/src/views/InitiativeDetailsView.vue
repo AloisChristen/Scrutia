@@ -37,126 +37,83 @@
       </div>
     </div>
 
-    <div class="block-rounded block">
-      <!----><!---->
-      <ul class="nav nav-tabs nav-tabs-block" role="tablist">
-        <li class="nav-item">
-          <button
-            class="nav-link active"
-            id="btabs-animated-fade-home-tab"
-            data-bs-toggle="tab"
-            data-bs-target="#btabs-animated-fade-home"
-            role="tab"
-            aria-controls="btabs-animated-fade-home"
-            aria-selected="true"
-          >
-            Révisions
-          </button>
-        </li>
+    <!-- Block Tabs Default Style -->
+    <b-tabs
+      class="block"
+      nav-class="nav-tabs-block"
+      content-class="block-content"
+    >
+      <b-tab title="Révisions" active>
+        <div class="block-rounded block">
+          <b-col>
+            <base-block
+              rounded
+              title="Title"
+              subtitle="Subtitle"
+              ref="exampleBlock1"
+              btn-option-fullscreen
+              btn-option-pinned
+              btn-option-content
+              btn-option-close
+            >
+              <template #options>
+                <button
+                  type="button"
+                  class="btn-block-option"
+                  @click="loadData('exampleBlock1')"
+                >
+                  <i class="si si-refresh"></i>
+                </button>
+              </template>
 
-        <li class="nav-item">
-          <button
-            class="nav-link"
-            id="btabs-animated-fade-profile-tab"
-            data-bs-toggle="tab"
-            data-bs-target="#btabs-animated-fade-profile"
-            role="tab"
-            aria-controls="btabs-animated-fade-profile"
-            aria-selected="false"
-          >
-            Fils de discussions
-          </button>
-        </li>
-      </ul>
-      <div class="block-content tab-content overflow-hidden container">
-        <div
-          class="tab-pane fade active show"
-          id="btabs-animated-fade-home"
-          role="tabpanel"
-          aria-labelledby="btabs-animated-fade-home-tab"
-        >
-          <div>
-            <div class="block-rounded block">
-              <div class="block-header block-header-default">
-                <h3 class="block-title">
-                  Title
-                  <small>Subtitle</small>
-                </h3>
-                <div class="block-options space-x-1">
-                  <button type="button" class="btn-block-option">
-                    <i class="si si-refresh"></i>
-                  </button>
-                  <button type="button" class="btn-block-option">
-                    <i class="si si-size-fullscreen"></i>
-                  </button>
-                  <button type="button" class="btn-block-option">
-                    <i class="si si-pin"></i></button
-                  ><button type="button" class="btn-block-option">
-                    <i class="si si-arrow-up"></i></button
-                  ><button type="button" class="btn-block-option">
-                    <i class="si si-close"></i>
-                  </button>
-                </div>
-              </div>
-              <div class="block-content">
-                <!---->
-                <p>
-                  Dolor posuere proin blandit accumsan senectus netus nullam
-                  curae, ornare laoreet adipiscing luctus mauris adipiscing
-                  pretium eget fermentum, tristique lobortis est ut metus
-                  lobortis tortor tincidunt himenaeos habitant quis dictumst
-                  proin odio sagittis purus mi, nec taciti vestibulum quis in
-                  sit varius lorem sit metus mi.
-                </p>
-              </div>
-            </div>
-          </div>
+              <p>
+                Dolor posuere proin blandit accumsan senectus netus nullam
+                curae, ornare laoreet adipiscing luctus mauris adipiscing
+                pretium eget fermentum, tristique lobortis est ut metus lobortis
+                tortor tincidunt himenaeos habitant quis dictumst proin odio
+                sagittis purus mi, nec taciti vestibulum quis in sit varius
+                lorem sit metus mi.
+              </p>
+            </base-block>
+          </b-col>
         </div>
-        <div
-          class="tab-pane fade"
-          id="btabs-animated-fade-profile"
-          role="tabpanel"
-          aria-labelledby="btabs-animated-fade-profile-tab"
-        >
-          <div>
-            <div class="block-rounded block">
-              <div class="block-header block-header-default">
-                <h3 class="block-title">
-                  Title
-                  <small>Subtitle</small>
-                </h3>
-                <div class="block-options space-x-1">
-                  <button type="button" class="btn-block-option">
-                    <i class="si si-refresh"></i>
-                  </button>
-                  <button type="button" class="btn-block-option">
-                    <i class="si si-size-fullscreen"></i>
-                  </button>
-                  <button type="button" class="btn-block-option">
-                    <i class="si si-pin"></i></button
-                  ><button type="button" class="btn-block-option">
-                    <i class="si si-arrow-up"></i></button
-                  ><button type="button" class="btn-block-option">
-                    <i class="si si-close"></i>
-                  </button>
-                </div>
-              </div>
-              <div class="block-content">
-                <!---->
-                <p>
-                  Dolor posuere proin blandit accumsan senectus netus nullam
-                  curae, ornare laoreet adipiscing luctus mauris adipiscing
-                  pretium eget fermentum, tristique lobortis est ut metus
-                  lobortis tortor tincidunt himenaeos habitant quis dictumst
-                  proin odio sagittis purus mi, nec taciti vestibulum quis in
-                  sit varius lorem sit metus mi.
-                </p>
-              </div>
-            </div>
-          </div>
+      </b-tab>
+      <b-tab title="Fils de discussion" active>
+        <div class="block-rounded block">
+          <b-col>
+            <base-block
+              rounded
+              title="Title"
+              subtitle="Subtitle"
+              ref="exampleBlock1"
+              btn-option-fullscreen
+              btn-option-pinned
+              btn-option-content
+              btn-option-close
+            >
+              <template #options>
+                <button
+                  type="button"
+                  class="btn-block-option"
+                  @click="loadData('exampleBlock1')"
+                >
+                  <i class="si si-refresh"></i>
+                </button>
+              </template>
+
+              <p>
+                Dolor posuere proin blandit accumsan senectus netus nullam
+                curae, ornare laoreet adipiscing luctus mauris adipiscing
+                pretium eget fermentum, tristique lobortis est ut metus lobortis
+                tortor tincidunt himenaeos habitant quis dictumst proin odio
+                sagittis purus mi, nec taciti vestibulum quis in sit varius
+                lorem sit metus mi.
+              </p>
+            </base-block>
+          </b-col>
         </div>
-      </div>
-    </div>
+      </b-tab>
+    </b-tabs>
   </div>
 </template>
 
