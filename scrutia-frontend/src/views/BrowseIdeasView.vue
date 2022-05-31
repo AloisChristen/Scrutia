@@ -122,7 +122,7 @@
             :per-page="per_page"
             v-show="!isLoading && !isLoadingTags"
             align="right"
-            @change="changePage()"
+            @change="(newValue) => changePage(newValue)"
           ></b-pagination>
         </b-col>
       </b-row>
@@ -254,8 +254,8 @@ export default {
     filterByDate(range: number) {
       this.currentRange = range
     },
-    changePage() {
-      console.log(this.current_page)
+    changePage(newValue: number) {
+      console.log(newValue)
     },
   },
   components: {
