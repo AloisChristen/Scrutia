@@ -17,8 +17,14 @@ describe("Authentification test", () => {
   });
 
   describe("Happy scenario", () => {
+    afterEach(() => {
+      // log out
+      cy.visit("/")
+    })
     xit("Should register a new account", () => {
       cy.visit("/auth/signup")
+    })
+    xit("Should sign in again", () => {
 
     })
   })
@@ -64,7 +70,7 @@ describe("Authentification test", () => {
       cy.get('input[name="password"').should("have.attr", "placeholder", "Mot de passe");
       cy.contains("button", "Se connecter")
     });
-    it("Should display error message with empty input", () => {
+    xit("Should display error message with empty input", () => {
       cy.contains("button", "Se connecter").click()
       cy.get("#username-feedback").should("have.class", "invalid-feedback").contains("Doit être remplit")
       cy.get("#password-feedback").should("have.class", "invalid-feedback").contains("Doit être remplit")
@@ -76,7 +82,7 @@ describe("Authentification test", () => {
       cy.url().should('include', '/auth/signin')
       // TODO assure server errors are displayed
     });
-    it("Should navigate to sign in page", () => {
+    xit("Should navigate to sign in page", () => {
       cy.get('a[href="/auth/signup"]').click()
       cy.url().should('include', '/auth/signup')
     });

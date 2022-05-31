@@ -42,23 +42,23 @@
               class="dropdown-item d-flex align-items-center justify-content-between"
               to="/favorites"
             >
-              <span class="font-size-sm font-w500">Favoris</span>
-              <span class="badge badge-pill badge-primary ml-2">3</span>
+              <span class="font-size-sm font-w500">Mes favoris</span>
             </router-link>
             <router-link
               class="dropdown-item d-flex align-items-center justify-content-between"
               to="/userIdeasAndInitiatives"
             >
-              <span class="font-size-sm font-w500">Idées et initiatives</span>
-              <span class="badge badge-pill badge-primary ml-2">1</span>
+              <span class="font-size-sm font-w500"
+                >Mes idées et initiatives</span
+              >
             </router-link>
             <div role="separator" class="dropdown-divider"></div>
-            <router-link
+            <!-- <router-link
               class="dropdown-item d-flex align-items-center justify-content-between"
               to="/userProfile"
             >
               <span class="font-size-sm font-w500">Profil</span>
-            </router-link>
+            </router-link> -->
             <router-link
               class="dropdown-item d-flex align-items-center justify-content-between"
               to="/auth/signin"
@@ -77,6 +77,7 @@
         class="d-inline-block ml-2"
         menu-class="p-0 border-0 font-size-sm"
         to="auth/signin"
+        id="noUserProfile"
         block
       >
         <i class="fa fa-sign-in-alt mr-1"></i> Connexion
