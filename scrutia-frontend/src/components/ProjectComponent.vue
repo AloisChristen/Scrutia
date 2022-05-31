@@ -37,8 +37,7 @@
       <p class="custom-font-size">{{ shortedDescription }}</p>
       <address v-show="isProjectInitiative">
         <a class="custom-font-size">{{ project.author }}</a
-        ><em class="custom-font-size"
-          >, le {{ new Date(project.created_at).toLocaleDateString('fr') }}</em
+        ><em class="custom-font-size">, le {{ getFormatedDate() }}</em
         ><br />
         <b-badge
           style="margin-right: 5px"
@@ -57,6 +56,8 @@
 </template>
 <script lang="ts">
 import { addFavorite, deleteFavorite } from '@/api/services/FavoritesService'
+import { format } from 'date-fns'
+import frenchLocale from 'date-fns/locale/fr'
 const COLOR_VARIANTS = ['primary', 'success', 'info', 'warning', 'danger']
 let currentColor = 0
 
@@ -82,6 +83,11 @@ export default {
     }
   },
   methods: {
+    getFormatedDate() {
+      return format(new Date(this.project.created_at), 'dd LLLL yyyy', {
+        locale: frenchLocale,
+      })
+    },
     getNextColor() {
       const color = COLOR_VARIANTS[currentColor]
       currentColor =
