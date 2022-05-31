@@ -17,6 +17,12 @@ class Question extends Model
         'description',
     ];
 
+    protected $appends = ['upvotes', 'downvotes', 'user_vote'];
+
+    protected $hidden = ['version_id', 'user_id','updated_at'];
+
+
+
     public function version(): BelongsTo
     {
         return $this->belongsTo(Version::class);
@@ -35,5 +41,28 @@ class Question extends Model
     public function likes(): MorphMany
     {
         return $this->morphMany(Like::class, 'likeable');
+    }
+
+    public function getUpvotesAttribute(): int
+    {
+        return $this->likes()->where('value', 1)->count();
+    }
+
+    public function getDownvotesAttribute(): int
+    {
+        return $this->likes()->where('value', -1)->count();
+    }
+
+    public function getUserVoteAttribute(): Vote
+    {
+        $vote = Vote::UNVOTED;
+        if(auth()->user() != null){
+            foreach ($this->likes()->get() as $like){
+                if($like->user->id == auth()->user()->id){
+                    $vote = $like->value;
+                }
+            }
+        }
+        return $vote;
     }
 }

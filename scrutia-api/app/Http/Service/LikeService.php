@@ -18,6 +18,7 @@ class LikeService
                 $DOWNVOTE_VALUE = -1;
                 break;
             case Likeable::VERSION:
+            case Likeable::PROJECT:
                 $UPVOTE_VALUE = 5;
                 $DOWNVOTE_VALUE = -2;
                 break;

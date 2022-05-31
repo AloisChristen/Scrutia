@@ -14,6 +14,8 @@ class Tag extends Model
         'title',
     ];
 
+    protected $hidden = ['pivot'];
+
     public function projects(): BelongsToMany
     {
         return $this->belongsToMany(Project::class)->withTimestamps();
