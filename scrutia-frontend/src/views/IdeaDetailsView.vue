@@ -2,7 +2,11 @@
   <div>
     <div class="content">
 
-      <ProjectHeader></ProjectHeader>
+      <ProjectHeader
+        title="sauver les pandas du feu"
+        tag-list="['d', 'asd', 'env']"
+        ></ProjectHeader>
+
 
     </div>
   </div>
