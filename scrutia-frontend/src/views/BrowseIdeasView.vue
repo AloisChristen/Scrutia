@@ -12,7 +12,10 @@
       ></b-spinner>
       <b-row>
         <b-col cols="8">
-          <b-row>
+          <p v-show="!isLoading && !isLoadingTags && ideas.length === 0">
+            Aucune idée correspondant aux filtres n'existe...
+          </p>
+          <b-row v-show="ideas.length > 0">
             <b-col
               sm="12"
               md="6"
@@ -182,7 +185,6 @@ export default {
     },
     filterByDate(range: number) {
       this.currentRange = range
-      console.log('Filter by date')
     },
   },
   components: {
