@@ -98,9 +98,9 @@
         </b-col>
         <b-col cols="8">
           <b-pagination
-            v-model="currentPage"
-            :total-rows="rows"
-            :per-page="perPage"
+            v-model="current_page"
+            :total-rows="total"
+            :per-page="per_page"
             v-show="!isLoading && !isLoadingTags"
             align="right"
           ></b-pagination>
@@ -133,11 +133,14 @@ export default {
       isLoadingTags: true,
       datesRanges: ['Tout', '-24h', '-48h', '-1 semaine'],
       currentRange: 0,
-      rows: 30,
-      perPage: 3,
-      currentPage: 1,
       options: [],
       tags: [],
+      current_page: 1,
+      last_page_url: '',
+      next_page_url: '',
+      prev_page_url: '',
+      total: 0,
+      per_page: 0,
     }
   },
   methods: {
@@ -172,6 +175,12 @@ export default {
       if (response.ok) {
         const projectsPagingation: ProjectPaginationDTO = await response.json()
         this.ideas = projectsPagingation.data
+        this.current_page = projectsPagingation.current_page
+        this.last_page_url = projectsPagingation.last_page_url
+        this.next_page_url = projectsPagingation.next_page_url
+        this.prev_page_url = projectsPagingation.prev_page_url
+        this.per_page = projectsPagingation.per_page
+        this.total = projectsPagingation.total
       } else {
         this.$swal({
           icon: 'error',
