@@ -9,6 +9,7 @@
         canBePromoted
         ></ProjectHeader>
 
+      <ProjectDiscussion/>
 
     </div>
   </div>

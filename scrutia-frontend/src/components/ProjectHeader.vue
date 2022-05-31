@@ -1,6 +1,14 @@
 <template>
 <div>
   <b-row style="padding-left: 0" no-gutters>
+    <b-col>
+      <img
+        v-if="displayPicture"
+        src="https://via.placeholder.com/120x120"
+        alt="..."
+        class="img-fluid"
+      />
+    </b-col>
     <b-col cols="8">
       <base-block rounded class="mb-0" transparent>
         <h1 class="font-w400">{{ title }}</h1>
@@ -24,8 +32,21 @@
         </div>
       </base-block>
       <b-button v-if="canBePromoted" v-on:click="promote">
-
+        promouvoire le projet
       </b-button>
+    </b-col>
+  </b-row>
+
+  <b-row style="padding-left: 0" no-gutters>
+    <b-col cols="12">
+      <b-badge v-for="tag in tagList" :key="tag.id" :variant="getNextColor()" >
+        {{ tag }}
+      </b-badge>
+    </b-col>
+    <b-col cols="12">
+      <p>
+        {{description}}
+      </p>
     </b-col>
   </b-row>
   <div class="block-rounded block-transparent block col-xl-10">
@@ -42,17 +63,10 @@
               alt="..."
               class="img-fluid"
             />
-            <b-badge v-for="tag in tagList" :key="tag.id" :variant="getNextColor()" >
-              {{ tag }}
-            </b-badge>
+
 
           </div>
 
-          <div class="block-content-right col-xl-10">
-            <p>
-              {{description}}
-            </p>
-          </div>
         </div>
       </div>
 
@@ -71,7 +85,7 @@ export default {
       default: 'Ceci est un titre'
     },
     tagList: {
-      type: [String],
+      type: Array,
       required: true
     },
     description: {
@@ -123,6 +137,8 @@ export default {
     promote(){
       console.log("promoting....")
     }
+
+
 
 
 
