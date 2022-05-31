@@ -8,47 +8,51 @@
     style="cursor: auto"
   >
     <template #options>
-      <div
-        v-show="isNew && isProjectInitiative"
-        class="block-options-item text-primary-light custom-font-size"
-      >
-        Nouveau !
+      <div @click="() => {}">
+        <div
+          v-show="isNew && isProjectInitiative"
+          class="block-options-item text-primary-light custom-font-size"
+        >
+          Nouveau !
+        </div>
+        <div class="block-options-item text-success custom-font-size">
+          {{ project.performance }}
+        </div>
+        <button type="button" class="btn-block-option" @click="addToFavorites">
+          <i
+            v-bind:class="[
+              { fa: isFavorite },
+              { 'fa-star': isFavorite },
+              { si: !isFavorite },
+              { 'si-star': !isFavorite },
+            ]"
+          />
+        </button>
+        <button type="button" class="btn-block-option" @click="openProject">
+          <i class="si si-eye" />
+        </button>
       </div>
-      <div class="block-options-item text-success custom-font-size">
-        {{ project.performance }}
-      </div>
-      <button type="button" class="btn-block-option" @click="addToFavorites">
-        <i
-          v-bind:class="[
-            { fa: isFavorite },
-            { 'fa-star': isFavorite },
-            { si: !isFavorite },
-            { 'si-star': !isFavorite },
-          ]"
-        />
-      </button>
-      <button type="button" class="btn-block-option" @click="openProject">
-        <i class="si si-eye" />
-      </button>
     </template>
-    <p class="custom-font-size">{{ shortedDescription }}</p>
-    <address v-show="isProjectInitiative">
-      <a class="custom-font-size">{{ project.author }}</a
-      ><em class="custom-font-size"
-        >, le {{ new Date(project.created_at).toLocaleDateString('fr') }}</em
-      ><br />
-      <b-badge
-        style="margin-right: 5px"
-        v-for="tag in project.tags"
-        v-bind:key="tag.title"
-        :variant="getNextColor()"
-        >{{ tag.title }}</b-badge
-      >
-    </address>
-    <address v-show="!isProjectInitiative" class="custom-font-size">
-      <i class="fa fa-thumbs-up custom-font-size" />
-      {{ project.likes_count }} personnes soutiennent déjà l'idée
-    </address>
+    <div @click="openProject" style="cursor: pointer">
+      <p class="custom-font-size">{{ shortedDescription }}</p>
+      <address v-show="isProjectInitiative">
+        <a class="custom-font-size">{{ project.author }}</a
+        ><em class="custom-font-size"
+          >, le {{ new Date(project.created_at).toLocaleDateString('fr') }}</em
+        ><br />
+        <b-badge
+          style="margin-right: 5px"
+          v-for="tag in project.tags"
+          v-bind:key="tag.title"
+          :variant="getNextColor()"
+          >{{ tag.title }}</b-badge
+        >
+      </address>
+      <address v-show="!isProjectInitiative" class="custom-font-size">
+        <i class="fa fa-thumbs-up custom-font-size" />
+        {{ project.likes_count }} personnes soutiennent déjà l'idée
+      </address>
+    </div>
   </base-block>
 </template>
 <script lang="ts">
@@ -91,7 +95,7 @@ export default {
       else deleteFavorite(this.project.id)
     },
     openProject() {
-      this.$router.push(`/project/${this.project.id}`)
+      this.$router.push({ path: `/project/${this.project.id}`, replace: true })
     },
   },
   created() {
