@@ -72,7 +72,20 @@
                     </b-button>
                   </b-col>
                 </b-row>
+                <b-row class="form-group">
+                  <b-col md="6" xl="5">
+                    <b-button
+                      size="sm"
+                      variant="dual"
+                      @click="$router.go(-1)"
+                      block
+                    >
+                      <i class="fa fa-undo mr-1"></i> Retour
+                    </b-button>
+                  </b-col>
+                </b-row>
               </b-form>
+
               <!-- END Sign In Form -->
             </div>
           </base-block>
@@ -81,9 +94,7 @@
       </b-row>
     </div>
     <div class="content content-full font-size-sm text-muted text-center">
-      <strong>{{
-        $store.getters.appName + ' ' + $store.getters.appVersion
-      }}</strong>
+      <strong>{{ $store.getters.appName }}</strong>
       &copy; {{ $store.getters.appCopyright }}
     </div>
   </div>
