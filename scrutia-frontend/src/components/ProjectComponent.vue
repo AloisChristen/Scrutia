@@ -109,7 +109,10 @@ export default {
       else deleteFavorite(this.project.id)
     },
     openProject() {
-      this.$router.push({ path: `/project/${this.project.id}`, replace: true })
+      this.$router.push({
+        path: `/project/${this.project.id}#`,
+        replace: true,
+      })
     },
   },
   created() {
