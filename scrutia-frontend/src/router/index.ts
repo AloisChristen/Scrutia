@@ -18,7 +18,6 @@ const BrowseIdeas = () => import('@/views/BrowseIdeasView.vue')
 const AddIdea = () => import('@/views/AddIdeaView.vue')
 const IdeaDetails = () => import('@/views/IdeaDetailsView.vue')
 const Chat = () => import('@/views/ChatView.vue')
-const BrowseInitiatives = () => import('@/views/BrowseInitiativesView.vue')
 const InitiativeDetails = () => import('@/views/InitiativeDetailsView.vue')
 const UserIdeasAndInitiatives = () => import('@/views/UserIdeasAndInitiativesView.vue')
 const UserProfile = () => import('@/views/UserProfileView.vue')
@@ -65,11 +64,6 @@ export default new Router({
           path: 'chat',
           name: 'Scrutia | Discussions',
           component: Chat,
-        },
-        {
-          path: 'browseInitiatives',
-          name: 'Scrutia | Parcourir les initiatives',
-          component: BrowseInitiatives,
         },
         {
           path: 'initiativeDetails',

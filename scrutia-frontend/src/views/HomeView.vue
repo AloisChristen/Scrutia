@@ -19,10 +19,10 @@
       <p>
         <b-link
           class="link-fx"
-          href="/browseIdeas"
+          href="/browseIdeas?type=ideas"
           style="float: right; margin-bottom: 10px; margin-top: -10px"
           v-show="!isLoading"
-          >et {{ nbOtherIdeas }} autres...</b-link
+          >et {{ nbIdeas }} autres...</b-link
         >
       </p>
       <h2 class="content-heading">Projets d'initiative les plus actifs...</h2>
@@ -49,10 +49,10 @@
       <p>
         <b-link
           class="link-fx"
-          href="browseInitiatives"
+          href="browseIdeas?type=initiatives"
           style="float: right; margin-bottom: 10px; margin-top: -10px"
           v-show="!isLoadingProjects"
-          >et {{ nbOtherProjects }} autres...</b-link
+          >et {{ nbProjects }} autres...</b-link
         >
       </p>
     </div>
@@ -79,8 +79,6 @@ import { ProjectPaginationDTO } from '@/typings/scrutia-types'
       projects: [],
       isLoading: true,
       isLoadingProjects: true,
-      nbOtherIdeas: 0,
-      nbOtherProjects: 0,
     }
   },
   async created() {
@@ -93,7 +91,7 @@ import { ProjectPaginationDTO } from '@/typings/scrutia-types'
       const response: Response = await getIdeas()
       if (response.ok) {
         const projectsPagingation: ProjectPaginationDTO = await response.json()
-        this.$data.nbOtherIdeas = projectsPagingation.total
+        this.$data.nbIdeas = projectsPagingation.total
         for (let i = 0; i < projectsPagingation.data.length && i < 6; i++)
           this.$data.ideas.push(projectsPagingation.data[i])
       } else {
@@ -110,7 +108,7 @@ import { ProjectPaginationDTO } from '@/typings/scrutia-types'
       const response: Response = await getProjects()
       if (response.ok) {
         const projectsPagingation: ProjectPaginationDTO = await response.json()
-        this.$data.nbOtherProjects = projectsPagingation.total
+        this.$data.nbProjects = projectsPagingation.total
         for (let i = 0; i < projectsPagingation.data.length && i < 4; i++)
           this.$data.projects.push(projectsPagingation.data[i])
       } else {

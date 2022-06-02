@@ -32,7 +32,14 @@
               ></b-form-input>
               <b-input-group-append>
                 <span class="input-group-text bg-body border-0">
-                  <i class="fa fa-search"></i>
+                  <button
+                    type="button"
+                    class="btn-block-option"
+                    @click="onSubmit"
+                    style="height: 20px"
+                  >
+                    <i class="fa fa-search" />
+                  </button>
                 </span>
               </b-input-group-append>
             </b-input-group>
@@ -58,7 +65,7 @@
                   action="headerSearchOff"
                   variant="alt-danger"
                 >
-                  <i class="fa fa-fw fa-times-circle"></i>
+                  <i class="fa fa-fw fa-times-circle" />
                 </base-layout-modifier>
               </b-input-group-append>
             </b-input-group>
@@ -137,7 +144,23 @@ export default {
   },
   methods: {
     onSubmit() {
-      this.$router.push('/search?question=' + this.baseSearchTerm)
+      this.$router
+        .replace({
+          path: '/search',
+          query: {
+            question: this.baseSearchTerm,
+          },
+        })
+        .catch((error) => {
+          if (
+            error.name !== 'NavigationDuplicated' &&
+            !error.message.includes(
+              'Avoided redundant navigation to current location'
+            )
+          ) {
+            console.log(error)
+          }
+        })
     },
     eventHeaderSearch(event) {
       // When ESCAPE key is hit close the header search section
