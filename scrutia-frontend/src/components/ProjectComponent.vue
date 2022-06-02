@@ -136,22 +136,55 @@ export default {
         replace: true,
       })
     },
-    likeProject() {
+    async likeProject() {
       switch (this.$data.like) {
         case DISLIKE:
           likeProject(this.project.id, NO_LIKE)
-          this.$data.like = NO_LIKE
+            .then(() => {
+              this.$data.like = NO_LIKE
+            })
+            .catch((error) => {
+              this.handleError(error)
+            })
           break
         case NO_LIKE:
           likeProject(this.project.id, LIKE)
-          this.$data.like = LIKE
-          this.$data.nblikes += 1
+            .then(() => {
+              this.$data.like = LIKE
+              this.$data.nblikes += 1
+            })
+            .catch((error) => {
+              this.handleError(error)
+            })
           break
         case LIKE:
           likeProject(this.project.id, DISLIKE)
-          this.$data.like = DISLIKE
-          this.$data.nblikes -= 1
+            .then(() => {
+              this.$data.like = LIKE
+              this.$data.nblikes += 1
+            })
+            .catch((error) => {
+              this.handleError(error)
+            })
           break
+      }
+    },
+    async handleError(error: Response) {
+      // TODO : Check if it works
+      const body = await error.json()
+      if (error.status === 403 && body.errors[0].reputation !== undefined) {
+        this.$swal({
+          icon: 'error',
+          title:
+            "Vous n'avez pas la réputation nécessaire pour effectuer cette action",
+          showConfirmButton: true,
+        })
+      } else {
+        this.$swal({
+          icon: 'error',
+          title: "Une erreur s'est produite lors de l'action",
+          showConfirmButton: true,
+        })
       }
     },
   },
