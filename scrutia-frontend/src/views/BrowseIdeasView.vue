@@ -194,6 +194,8 @@ export default {
       tags: string[] | null,
       page: number = 1
     ) {
+      console.log('types', types)
+
       this.isLoading = true
       const response: Response = await getProjectsWithFilters(
         types,
@@ -269,8 +271,15 @@ export default {
     'v-select': VueSelect,
   },
   async created() {
+    const url = new URL(window.location.href)
+    const search = url.searchParams.get('question')
+    this.$data.searchText = search
+    let type = url.searchParams.get('type')
+    if (type !== 'ideas' && type !== 'initiatives') type = null
+    else if (type === 'ideas') this.$data.types = [all_types[0]]
+    else this.$data.types = [all_types[1]]
     this.loadTags()
-    this.loadIdeas(null, null, null, null, null)
+    this.search()
   },
 }
 </script>

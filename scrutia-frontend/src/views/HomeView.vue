@@ -19,7 +19,7 @@
       <p>
         <b-link
           class="link-fx"
-          href="/browseIdeas"
+          href="/browseIdeas?type=ideas"
           style="float: right; margin-bottom: 10px; margin-top: -10px"
           v-show="!isLoading"
           >et d'autres...</b-link
@@ -49,7 +49,7 @@
       <p>
         <b-link
           class="link-fx"
-          href="browseIdeas"
+          href="browseIdeas?type=initiatives"
           style="float: right; margin-bottom: 10px; margin-top: -10px"
           v-show="!isLoadingProjects"
           >et d'autres...</b-link
