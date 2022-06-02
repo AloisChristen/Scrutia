@@ -54,6 +54,7 @@
                     v-model="types"
                     :options="typesOptions"
                     placeholder="Choisissez un / des types..."
+                    v-on:input="search"
                   ></v-select>
                 </b-form-group>
                 <b-form-group
@@ -65,6 +66,7 @@
                     id="contains-text"
                     placeholder="Votre recherche..."
                     v-model="searchText"
+                    @keyup.enter="search"
                   ></b-form-input>
                 </b-form-group>
                 <b-form-group label="Tags" label-for="tags" class="text-center">
@@ -75,6 +77,7 @@
                     v-model="tags"
                     :options="options"
                     placeholder="Définissez des tags..."
+                    v-on:input="search"
                   ></v-select>
                 </b-form-group>
                 <b-form-group
@@ -188,7 +191,8 @@ export default {
       text: string | null,
       startDate: Date | null,
       endDate: Date | null,
-      tags: string[] | null
+      tags: string[] | null,
+      page: number = 1
     ) {
       this.isLoading = true
       const response: Response = await getProjectsWithFilters(
@@ -196,7 +200,8 @@ export default {
         text,
         startDate,
         endDate,
-        tags
+        tags,
+        page
       )
       if (response.ok) {
         const projectsPagingation: ProjectPaginationDTO = await response.json()
@@ -253,9 +258,10 @@ export default {
     },
     filterByDate(range: number) {
       this.currentRange = range
+      this.search()
     },
     changePage(newValue: number) {
-      console.log(newValue)
+      this.loadIdeas(null, null, null, null, null, newValue)
     },
   },
   components: {

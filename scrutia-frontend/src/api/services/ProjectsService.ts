@@ -7,20 +7,23 @@ function filterBuilder(
   text: string | null,
   startDate: Date | null,
   endDate: Date | null,
-  tags: string[] | null
+  tags: string[] | null,
+  page: number
 ) {
   let filters = ''
-  if (types !== null && types.length !== 2) {
+  console.log(types)
+  if (types && types.length == 1) {
     filters += types.includes('Idées')
       ? 'filter[status]=idee'
       : 'filter[status]=Initiative'
   }
-  if (text !== null) filters += `&filter[title]=${text}`
+  if (page > 1) filters += `&page=${page}`
+  if (text !== null && text !== '') filters += `&filter[title]=${text}`
   if (startDate !== null)
     filters += `&filter[startDate]=${format(startDate, 'yyyy-MM-dd')}`
   if (endDate !== null)
     filters += `&filter[endDate]=${format(endDate, 'yyyy-MM-dd')}`
-  if (tags !== null) {
+  if (tags !== null && tags.length > 0) {
     let tagString = ''
     tags.forEach((tag) => (tagString += tag + ','))
     filters += `&filter[tags]=${tagString}`
@@ -50,9 +53,10 @@ export async function getProjectsWithFilters(
   text: string | null,
   startDate: Date | null,
   endDate: Date | null,
-  tags: string[] | null
+  tags: string[] | null,
+  page: number
 ) {
-  const filters = filterBuilder(types, text, startDate, endDate, tags)
+  const filters = filterBuilder(types, text, startDate, endDate, tags, page)
   return await fetch(`${api.projects}/nb_per_page/4?${filters}`, {
     method: 'GET',
     headers: makeHeader({}),
