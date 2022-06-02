@@ -1,8 +1,13 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import VueCookies from 'vue-cookies-ts'
+import { AuthUserDTO } from '@/typings/scrutia-types'
 
 // Register Vuex
 Vue.use(Vuex)
+Vue.use(VueCookies)
+
+const sessionCookieName = 'ScrutiaSession'
 
 // Helpers
 const helpers = {
@@ -16,6 +21,28 @@ const helpers = {
   getCurrentYear() {
     return new Date().getFullYear()
   },
+  loadSession(){
+    if(Vue.prototype.$cookies.isKey(sessionCookieName)){
+      const session =  Vue.prototype.$cookies.get(sessionCookieName)
+      return {
+        currentUser: session.user,
+        authToken: session.token,
+      }
+    } else {
+      return {
+        currentUser: null,
+        authToken: null,
+      }
+    }
+  },
+  saveSession(session:AuthUserDTO|null){
+    if(Vue.prototype.$cookies.isKey(sessionCookieName)){
+      Vue.prototype.$cookies.remove(sessionCookieName)
+    }
+    if(session != null){
+      Vue.prototype.$cookies.set(sessionCookieName, session,{'secure': true})
+    }
+  }
 }
 
 // Vuex Store
@@ -29,10 +56,7 @@ export default new Vuex.Store({
     },
 
     // User session
-    session: {
-      currentUser: null,
-      authToken: null,
-    },
+    session: helpers.loadSession(),
 
     // Default layout options
     layout: {
@@ -88,11 +112,13 @@ export default new Vuex.Store({
     connect(state, payload){
       state.session.currentUser = payload.user;
       state.session.authToken = payload.token;
+      helpers.saveSession(payload)
     },
 
     disconnect(state){
       state.session.authToken = null;
       state.session.currentUser = null;
+      helpers.saveSession(null)
     },
     // Sets the layout, useful for setting different layouts (under layouts/variations/)
     setLayout(state, payload) {
