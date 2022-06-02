@@ -1,4 +1,4 @@
-import { ProjectStore } from '@/typings/scrutia-types'
+import { ProjectStore, VoteDTO } from '@/typings/scrutia-types'
 import { api, makeHeader } from '../api'
 import { format } from 'date-fns'
 
@@ -60,6 +60,16 @@ export async function getProjectsWithFilters(
   return await fetch(`${api.projects}/nb_per_page/4?${filters}`, {
     method: 'GET',
     headers: makeHeader({}),
+  })
+}
+
+export async function likeProject(projectId: number, like: number) {
+  return await fetch(`${api.projects}/${projectId}/like`, {
+    method: 'POST',
+    headers: makeHeader({}),
+    body: JSON.stringify({
+      value: like,
+    }),
   })
 }
 

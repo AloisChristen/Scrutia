@@ -77,10 +77,14 @@
 </template>
 <script lang="ts">
 import { addFavorite, deleteFavorite } from '@/api/services/FavoritesService'
+import { likeProject } from '@/api/services/ProjectsService'
 import { format } from 'date-fns'
 import frenchLocale from 'date-fns/locale/fr'
 const COLOR_VARIANTS = ['primary', 'success', 'info', 'warning', 'danger']
 let currentColor = 0
+const DISLIKE = -1
+const LIKE = 1
+const NO_LIKE = 0
 
 export default {
   name: 'ProjectComponent',
@@ -101,7 +105,7 @@ export default {
   data() {
     return {
       isFavorite: false,
-      like: 0,
+      like: NO_LIKE,
     }
   },
   methods: {
@@ -126,21 +130,24 @@ export default {
       else deleteFavorite(this.project.id)
     },
     openProject() {
-      this.$router.push({
-        path: `/project/${this.project.id}`,
+      this.$router.replace({
+        path: `/project/${this.project.id}#`,
         replace: true,
       })
     },
     likeProject() {
       switch (this.$data.like) {
-        case -1:
-          this.$data.like = 0
+        case DISLIKE:
+          likeProject(this.project.id, NO_LIKE)
+          this.$data.like = NO_LIKE
           break
-        case 0:
-          this.$data.like = 1
+        case NO_LIKE:
+          likeProject(this.project.id, LIKE)
+          this.$data.like = LIKE
           break
-        case 1:
-          this.$data.like = -1
+        case LIKE:
+          likeProject(this.project.id, DISLIKE)
+          this.$data.like = DISLIKE
           break
       }
     },

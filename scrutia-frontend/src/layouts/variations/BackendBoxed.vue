@@ -137,7 +137,23 @@ export default {
   },
   methods: {
     onSubmit() {
-      this.$router.push('/search?question=' + this.baseSearchTerm)
+      this.$router
+        .replace({
+          path: '/search',
+          query: {
+            question: this.baseSearchTerm,
+          },
+        })
+        .catch((error) => {
+          if (
+            error.name !== 'NavigationDuplicated' &&
+            !error.message.includes(
+              'Avoided redundant navigation to current location'
+            )
+          ) {
+            console.log(error)
+          }
+        })
     },
     eventHeaderSearch(event) {
       // When ESCAPE key is hit close the header search section
