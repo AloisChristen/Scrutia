@@ -70,7 +70,7 @@
       </address>
       <address v-show="!isProjectInitiative" class="custom-font-size">
         <i class="fa fa-thumbs-up custom-font-size" />
-        {{ project.likes_count }} personnes soutiennent déjà l'idée
+        {{ nblikes }} personnes soutiennent déjà l'idée
       </address>
     </div>
   </base-block>
@@ -105,7 +105,8 @@ export default {
   data() {
     return {
       isFavorite: false,
-      like: NO_LIKE,
+      like: this.project.user_vote,
+      nblikes: this.project.likes_count,
     }
   },
   methods: {
@@ -144,17 +145,18 @@ export default {
         case NO_LIKE:
           likeProject(this.project.id, LIKE)
           this.$data.like = LIKE
+          this.$data.nblikes += 1
           break
         case LIKE:
           likeProject(this.project.id, DISLIKE)
           this.$data.like = DISLIKE
+          this.$data.nblikes -= 1
           break
       }
     },
   },
   created() {
     this.$data.isFavorite = this.project.is_favorite
-    console.log(this.isUserConnected())
   },
   computed: {
     isNew() {
