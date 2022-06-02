@@ -21,6 +21,22 @@
         <button
           type="button"
           class="btn-block-option"
+          @click="likeProject"
+          v-show="isUserConnected()"
+        >
+          <i
+            v-bind:class="[
+              { fa: like !== 0 },
+              { 'fa-thumbs-up': like === 1 },
+              { 'fa-thumbs-down': like === -1 },
+              { si: like === 0 },
+              { 'si-like': like === 0 },
+            ]"
+          />
+        </button>
+        <button
+          type="button"
+          class="btn-block-option"
           @click="addToFavorites"
           v-show="isUserConnected()"
         >
@@ -85,6 +101,7 @@ export default {
   data() {
     return {
       isFavorite: false,
+      like: 0,
     }
   },
   methods: {
@@ -110,9 +127,22 @@ export default {
     },
     openProject() {
       this.$router.push({
-        path: `/project/${this.project.id}#`,
+        path: `/project/${this.project.id}`,
         replace: true,
       })
+    },
+    likeProject() {
+      switch (this.$data.like) {
+        case -1:
+          this.$data.like = 0
+          break
+        case 0:
+          this.$data.like = 1
+          break
+        case 1:
+          this.$data.like = -1
+          break
+      }
     },
   },
   created() {
