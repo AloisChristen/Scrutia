@@ -2,8 +2,14 @@
 
 namespace App\Http\Service;
 
+use App\Http\Requests\LikeRequest;
+use App\Models\Answer;
+use App\Models\Like;
 use App\Models\Likeable;
+use App\Models\Project;
+use App\Models\Question;
 use App\Models\User;
+use App\Models\Version;
 use App\Models\Vote;
 
 class LikeService
@@ -58,5 +64,32 @@ class LikeService
     {
         $question_owner->reputation += 2;
         $question_owner->save();
+    }
+
+    public static function addVote(Project|Version|Question|Answer $likeable, LikeRequest $request): array
+    {
+        $like = Like::where("user_id", auth()->user()->id)
+            ->where("likeable_id",$likeable->id)
+            ->where("likeable_type", $likeable->getMorphClass())
+            ->first();
+
+
+        $modified = false;
+        if($like == null && $request->value != Vote::UNVOTED){
+            $like = Like::create([
+                "value" => $request->value
+            ]);
+            $like->user()->associate(auth()->user());
+            $likeable->likes()->save($like);
+        }else if($request->value != Vote::UNVOTED){
+            $like->value = $request->value;
+            $like->save();
+            $modified = true;
+        }
+        else{
+            $like->delete();
+            $modified = true;
+        }
+        return ["modified" => $modified, "value" => $like->value];
     }
 }
