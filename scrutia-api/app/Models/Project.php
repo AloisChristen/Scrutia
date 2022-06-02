@@ -164,12 +164,10 @@ class Project extends Model
     public function getPerformanceAttribute(): string
     {
         $perf = '0%';
-        if($this->likes()->count() > 0){
-            $perf = ($this->likes()
-                        ->whereDate('created_at', '<=', Carbon::today())->count() /
-                    $this->likes()
-                        ->whereDate('created_at', '<=', Carbon::yesterday())->count()) *
-                100 . '%';
+        $yesterday_count = $this->likes()->whereDate('created_at', '<=', Carbon::yesterday())->count();
+        if($yesterday_count > 0){
+            $perf = ($this->likes()->whereDate('created_at', '<=', Carbon::today())->count() /
+                    $yesterday_count) * 100 . '%';
         }
         return $perf;
     }

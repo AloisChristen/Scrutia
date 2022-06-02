@@ -127,27 +127,9 @@ class VersionController extends Controller
         }
 
 
-        $like = Like::where("user_id", $version->user->id)
-            ->where("likeable_id",$version->id)
-            ->where("likeable_type", "App\Models\Version")
-            ->first();
+        $vote = LikeService::addVote($version, $request);
 
-        $modified = false;
-        if($like == null){
-            $like = Like::create([
-                "value" => $request->value
-            ]);
-            $like->user()->associate(auth()->user());
-            $version->likes()->save($like);
-        }
-        else {
-            $like->value = $request->value;
-            $modified = true;
-        }
-
-        $like->save();
-
-        LikeService::addVoteReputation($version->user, $like->value, auth()->user()->id, Likeable::VERSION, $modified);
+        LikeService::addVoteReputation($version->user, $vote['value'], auth()->user()->id, Likeable::VERSION, $vote['modified']);
 
         return response()->json("Liked");
     }
