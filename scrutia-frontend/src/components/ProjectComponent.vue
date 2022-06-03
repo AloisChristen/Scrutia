@@ -136,38 +136,41 @@ export default {
       })
     },
     async likeProject() {
+      let response: Response = new Response()
       switch (this.$data.like) {
         case DISLIKE:
           this.$data.like = NO_LIKE
-          likeProject(this.project.id, NO_LIKE).catch((error) => {
+          response = await likeProject(this.project.id, NO_LIKE)
+          if (!response.ok) {
             this.$data.like = NO_LIKE
-            this.handleError(error)
-          })
+            this.handleError(response)
+          }
           break
         case NO_LIKE:
           this.$data.like = LIKE
           this.$data.nblikes += 1
-          likeProject(this.project.id, LIKE).catch((error) => {
+          response = await likeProject(this.project.id, LIKE)
+          if (!response.ok) {
             this.$data.like = NO_LIKE
             this.$data.nblikes -= 1
-            this.handleError(error)
-          })
+            this.handleError(response)
+          }
           break
         case LIKE:
           this.$data.like = DISLIKE
           this.$data.nblikes -= 1
-          likeProject(this.project.id, DISLIKE).catch((error) => {
+          response = await likeProject(this.project.id, DISLIKE)
+          if (!response.ok) {
             this.$data.nblikes += 1
             this.$data.like = NO_LIKE
-            this.handleError(error)
-          })
+            this.handleError(response)
+          }
           break
       }
     },
-    async handleError(error: Response) {
-      // TODO : Check if it works
-      const body = await error.json()
-      if (error.status === 403 && body.errors[0].reputation !== undefined) {
+    async handleError(response: Response) {
+      const body = await response.json()
+      if (response.status === 403 && body.errors.reputation !== undefined) {
         this.$swal({
           icon: 'error',
           title:
