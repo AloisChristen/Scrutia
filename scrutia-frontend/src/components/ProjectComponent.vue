@@ -138,33 +138,29 @@ export default {
     async likeProject() {
       switch (this.$data.like) {
         case DISLIKE:
-          likeProject(this.project.id, NO_LIKE)
-            .then(() => {
-              this.$data.like = NO_LIKE
-            })
-            .catch((error) => {
-              this.handleError(error)
-            })
+          this.$data.like = NO_LIKE
+          likeProject(this.project.id, NO_LIKE).catch((error) => {
+            this.$data.like = NO_LIKE
+            this.handleError(error)
+          })
           break
         case NO_LIKE:
-          likeProject(this.project.id, LIKE)
-            .then(() => {
-              this.$data.like = LIKE
-              this.$data.nblikes += 1
-            })
-            .catch((error) => {
-              this.handleError(error)
-            })
+          this.$data.like = LIKE
+          this.$data.nblikes += 1
+          likeProject(this.project.id, LIKE).catch((error) => {
+            this.$data.like = NO_LIKE
+            this.$data.nblikes -= 1
+            this.handleError(error)
+          })
           break
         case LIKE:
-          likeProject(this.project.id, DISLIKE)
-            .then(() => {
-              this.$data.like = DISLIKE
-              this.$data.nblikes += 1
-            })
-            .catch((error) => {
-              this.handleError(error)
-            })
+          this.$data.like = DISLIKE
+          this.$data.nblikes -= 1
+          likeProject(this.project.id, DISLIKE).catch((error) => {
+            this.$data.nblikes += 1
+            this.$data.like = NO_LIKE
+            this.handleError(error)
+          })
           break
       }
     },
