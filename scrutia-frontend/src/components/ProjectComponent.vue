@@ -4,7 +4,6 @@
     header-bg
     rounded
     tag="a"
-    link-pop
     style="cursor: auto"
   >
     <template #options>
