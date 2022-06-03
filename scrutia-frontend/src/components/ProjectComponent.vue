@@ -160,7 +160,7 @@ export default {
         case LIKE:
           likeProject(this.project.id, DISLIKE)
             .then(() => {
-              this.$data.like = LIKE
+              this.$data.like = DISLIKE
               this.$data.nblikes += 1
             })
             .catch((error) => {
