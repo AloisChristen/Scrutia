@@ -65,19 +65,16 @@
                     </b-form-invalid-feedback>
                   </div>
                 </div>
-                <b-row class="form-group">
-                  <b-col md="6" xl="5">
+                <b-row>
+                  <b-col md="6" xl="6">
                     <b-button type="submit" variant="alt-primary" block>
                       <i class="fa fa-fw fa-sign-in-alt mr-1"></i> Se connecter
                     </b-button>
                   </b-col>
-                </b-row>
-                <b-row class="form-group">
-                  <b-col md="6" xl="5">
+                  <b-col md="6" xl="6">
                     <b-button
-                      size="sm"
                       variant="dual"
-                      @click="$router.go(-1)"
+                      @click="$router.replace('/home')"
                       block
                     >
                       <i class="fa fa-undo mr-1"></i> Retour

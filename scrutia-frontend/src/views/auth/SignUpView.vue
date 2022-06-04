@@ -216,9 +216,7 @@
       </b-row>
     </div>
     <div class="content content-full font-size-sm text-muted text-center">
-      <strong>{{
-        $store.getters.appName + ' ' + $store.getters.appVersion
-      }}</strong>
+      <strong>{{ $store.getters.appName }}</strong>
       &copy; {{ $store.getters.appCopyright }}
     </div>
   </div>
