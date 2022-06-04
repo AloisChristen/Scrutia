@@ -36,7 +36,7 @@
                     type="button"
                     class="btn-block-option"
                     @click="onSubmit"
-                    style="height: 20px"
+                    style="height: 23px"
                   >
                     <i class="fa fa-search" />
                   </button>

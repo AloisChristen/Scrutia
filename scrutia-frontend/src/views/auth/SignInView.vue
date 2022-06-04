@@ -3,13 +3,13 @@
   <div class="hero-static">
     <div class="content">
       <b-row class="justify-content-center">
-        <b-col md="8" lg="6" xl="4">
+        <b-col md="8" lg="8" xl="6">
           <!-- Sign In Block -->
           <base-block
             rounded
             themed
-            header-class="bg-primary-dark"
             class="mb-0"
+            header-class="bg-primary-dark"
             title="Connexion"
           >
             <template #options>
@@ -26,7 +26,7 @@
                 <i class="fa fa-user-plus"></i>
               </router-link>
             </template>
-            <div class="p-sm-3 px-lg-4 py-lg-5">
+            <div class="p-sm-3 px-lg-3 py-lg-3">
               <h1 class="h2 mb-1">{{ $store.getters.appName }}</h1>
               <p class="text-muted">Bienvenue, veuillez vous connecter.</p>
 
@@ -65,9 +65,14 @@
                     </b-form-invalid-feedback>
                   </div>
                 </div>
-                <b-row>
+                <b-row class="form-group">
                   <b-col md="6" xl="6">
-                    <b-button type="submit" variant="alt-primary" block>
+                    <b-button
+                      class="mb-4"
+                      type="submit"
+                      variant="alt-primary"
+                      block
+                    >
                       <i class="fa fa-fw fa-sign-in-alt mr-1"></i> Se connecter
                     </b-button>
                   </b-col>
