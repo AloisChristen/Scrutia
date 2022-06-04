@@ -1,8 +1,3 @@
-let credentials = {
-  username: "testname" + Cypress._.random(0, 100) + Date.now(),
-  password: ""
-}
-
 describe("Authentification test", () => {
   xit("Visits the app root url", () => {
     cy.visit("/");
