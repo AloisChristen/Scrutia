@@ -36,7 +36,7 @@
                     type="button"
                     class="btn-block-option"
                     @click="onSubmit"
-                    style="height: 20px"
+                    style="height: 23px"
                   >
                     <i class="fa fa-search" />
                   </button>
@@ -145,7 +145,7 @@ export default {
   methods: {
     onSubmit() {
       this.$router
-        .replace({
+        .push({
           path: '/search',
           query: {
             question: this.baseSearchTerm,

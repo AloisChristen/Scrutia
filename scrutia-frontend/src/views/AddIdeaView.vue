@@ -196,7 +196,6 @@ export default {
           showConfirmButton: false,
           timer: 1500,
         })
-        console.log(response)
         this.$router.push('/')
       } else {
         this.$swal({

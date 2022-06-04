@@ -5,34 +5,8 @@
       <p>
         Laissez vous convaincre et apportez votre soutient aux bonnes idées.
       </p>
-      <b-spinner
-        variant="primary"
-        label="Loading..."
-        v-show="isLoading || isLoadingTags"
-      ></b-spinner>
       <b-row>
-        <b-col cols="8">
-          <p v-show="!isLoading && !isLoadingTags && ideas.length === 0">
-            Aucune idée correspondant aux filtres n'existe...
-          </p>
-          <b-row v-show="ideas.length > 0">
-            <b-col
-              sm="12"
-              md="6"
-              xl="6"
-              v-for="idea in ideas"
-              v-bind:key="idea.id"
-              v-show="!isLoading && !isLoadingTags"
-            >
-              <project-component
-                v-bind:project="idea"
-                :reducedDisplay="true"
-                :isProjectInitiative="true"
-              />
-            </b-col>
-          </b-row>
-        </b-col>
-        <b-col cols="4">
+        <b-col sm="12" md="6" xl="4">
           <base-block
             rounded
             title="Filtres"
@@ -100,6 +74,7 @@
                 <b-row>
                   <b-col md="6" xl="6" class="text-center">
                     <b-button
+                      class="mb-4"
                       variant="alt-success"
                       @click="search"
                       block
@@ -118,7 +93,33 @@
             </p>
           </base-block>
         </b-col>
-        <b-col cols="8">
+        <b-spinner
+          variant="primary"
+          label="Loading..."
+          v-show="isLoading || isLoadingTags"
+        ></b-spinner>
+        <b-col sm="12" md="6" xl="8">
+          <p v-show="!isLoading && !isLoadingTags && ideas.length === 0">
+            Aucune idée correspondant aux filtres n'existe...
+          </p>
+          <b-row v-show="ideas.length > 0">
+            <b-col
+              sm="12"
+              md="12"
+              xl="6"
+              v-for="idea in ideas"
+              v-bind:key="idea.id"
+              v-show="!isLoading && !isLoadingTags"
+            >
+              <project-component
+                v-bind:project="idea"
+                :reducedDisplay="true"
+                :isProjectInitiative="true"
+              />
+            </b-col>
+          </b-row>
+        </b-col>
+        <b-col sm="12" md="12" xl="12">
           <b-pagination
             v-model="current_page"
             :total-rows="total"
@@ -194,8 +195,6 @@ export default {
       tags: string[] | null,
       page: number = 1
     ) {
-      console.log('types', types)
-
       this.isLoading = true
       const response: Response = await getProjectsWithFilters(
         types,

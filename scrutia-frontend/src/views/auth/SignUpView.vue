@@ -216,9 +216,7 @@
       </b-row>
     </div>
     <div class="content content-full font-size-sm text-muted text-center">
-      <strong>{{
-        $store.getters.appName + ' ' + $store.getters.appVersion
-      }}</strong>
+      <strong>{{ $store.getters.appName }}</strong>
       &copy; {{ $store.getters.appCopyright }}
     </div>
   </div>
@@ -290,7 +288,6 @@ export default {
       register(account).then(async (resp) => {
         let session: LoginDTO = (await resp.json()) as LoginDTO
         this.$store.commit('connect', session)
-        console.log(this.$store.getters.authToken)
         this.$router.push('/')
       })
     },

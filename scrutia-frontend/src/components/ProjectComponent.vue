@@ -3,12 +3,11 @@
     :title="shortedTitle"
     header-bg
     rounded
-    tag="a"
-    link-pop
     style="cursor: auto"
+    link-shadow
   >
     <template #options>
-      <div @click="() => {}">
+      <div>
         <div
           v-show="isNew && isProjectInitiative"
           class="block-options-item text-primary-light custom-font-size"
@@ -49,28 +48,36 @@
             ]"
           />
         </button>
-        <button type="button" class="btn-block-option" @click="openProject">
-          <i class="si si-eye" />
-        </button>
       </div>
     </template>
-    <div @click="openProject" style="cursor: pointer">
-      <p class="custom-font-size">{{ shortedDescription }}</p>
-      <address v-show="isProjectInitiative">
-        <a class="custom-font-size">{{ project.author }}</a
-        ><em class="custom-font-size">, le {{ getFormatedDate() }}</em
-        ><br />
-        <b-badge
-          style="margin-right: 5px"
-          v-for="tag in project.tags"
-          v-bind:key="tag.title"
-          :variant="getNextColor()"
-          >{{ tag.title }}</b-badge
-        >
-      </address>
-      <address v-show="!isProjectInitiative" class="custom-font-size">
-        <i class="fa fa-thumbs-up custom-font-size" />
-        {{ nblikes }} personnes soutiennent déjà l'idée
+    <div>
+      <p class="custom-font-size" style="text-align: justify">
+        {{ shortedDescription }}
+      </p>
+      <address v-show="isProjectInitiative"></address>
+      <address class="custom-font-size">
+        <div v-show="!isProjectInitiative">
+          <i class="fa fa-thumbs-up custom-font-size" />
+          {{ nblikes }} personnes aiment déjà
+          {{ isProjectInitiative ? 'ce projet' : 'cette idée' }}...{{ ' ' }}
+          <router-link :to="`/project/${project.id}`">
+            <em>consulter le détail...</em>
+          </router-link>
+        </div>
+        <div v-show="isProjectInitiative">
+          <b-badge
+            style="margin-right: 5px"
+            v-for="tag in project.tags"
+            v-bind:key="tag.title"
+            :variant="getNextColor()"
+            >{{ tag.title }}</b-badge
+          ><br />
+          <a class="custom-font-size">{{ project.author }}</a
+          ><em class="custom-font-size">, le {{ getFormatedDate() }}... </em>
+          <router-link :to="`/project/${project.id}`">
+            <em>consulter le détail...</em>
+          </router-link>
+        </div>
       </address>
     </div>
   </base-block>
@@ -131,48 +138,47 @@ export default {
       else deleteFavorite(this.project.id)
     },
     openProject() {
-      this.$router.replace({
+      this.$router.push({
         path: `/project/${this.project.id}#`,
         replace: true,
       })
     },
     async likeProject() {
+      let response: Response = new Response()
       switch (this.$data.like) {
         case DISLIKE:
-          likeProject(this.project.id, NO_LIKE)
-            .then(() => {
-              this.$data.like = NO_LIKE
-            })
-            .catch((error) => {
-              this.handleError(error)
-            })
+          this.$data.like = NO_LIKE
+          response = await likeProject(this.project.id, NO_LIKE)
+          if (!response.ok) {
+            this.$data.like = NO_LIKE
+            this.handleError(response)
+          }
           break
         case NO_LIKE:
-          likeProject(this.project.id, LIKE)
-            .then(() => {
-              this.$data.like = LIKE
-              this.$data.nblikes += 1
-            })
-            .catch((error) => {
-              this.handleError(error)
-            })
+          this.$data.like = LIKE
+          this.$data.nblikes += 1
+          response = await likeProject(this.project.id, LIKE)
+          if (!response.ok) {
+            this.$data.like = NO_LIKE
+            this.$data.nblikes -= 1
+            this.handleError(response)
+          }
           break
         case LIKE:
-          likeProject(this.project.id, DISLIKE)
-            .then(() => {
-              this.$data.like = LIKE
-              this.$data.nblikes += 1
-            })
-            .catch((error) => {
-              this.handleError(error)
-            })
+          this.$data.like = DISLIKE
+          this.$data.nblikes -= 1
+          response = await likeProject(this.project.id, DISLIKE)
+          if (!response.ok) {
+            this.$data.nblikes += 1
+            this.$data.like = NO_LIKE
+            this.handleError(response)
+          }
           break
       }
     },
-    async handleError(error: Response) {
-      // TODO : Check if it works
-      const body = await error.json()
-      if (error.status === 403 && body.errors[0].reputation !== undefined) {
+    async handleError(response: Response) {
+      const body = await response.json()
+      if (response.status === 403 && body.errors.reputation !== undefined) {
         this.$swal({
           icon: 'error',
           title:

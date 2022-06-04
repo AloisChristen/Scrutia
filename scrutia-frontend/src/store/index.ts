@@ -1,7 +1,12 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import VueCookies from 'vue-cookies-ts'
-import { AuthUserDTO } from '@/typings/scrutia-types'
+import {
+  AuthUserDTO,
+  ProjectDetailsDTO,
+  ProjectPaginationDTO,
+} from '@/typings/scrutia-types'
+import { getIdeas, getProjects } from '@/api/services/ProjectsService'
 
 // Register Vuex
 Vue.use(Vuex)
@@ -21,9 +26,9 @@ const helpers = {
   getCurrentYear() {
     return new Date().getFullYear()
   },
-  loadSession(){
-    if(Vue.prototype.$cookies.isKey(sessionCookieName)){
-      const session =  Vue.prototype.$cookies.get(sessionCookieName)
+  loadSession() {
+    if (Vue.prototype.$cookies.isKey(sessionCookieName)) {
+      const session = Vue.prototype.$cookies.get(sessionCookieName)
       return {
         currentUser: session.user,
         authToken: session.token,
@@ -35,14 +40,14 @@ const helpers = {
       }
     }
   },
-  saveSession(session:AuthUserDTO|null){
-    if(Vue.prototype.$cookies.isKey(sessionCookieName)){
+  saveSession(session: AuthUserDTO | null) {
+    if (Vue.prototype.$cookies.isKey(sessionCookieName)) {
       Vue.prototype.$cookies.remove(sessionCookieName)
     }
-    if(session != null){
-      Vue.prototype.$cookies.set(sessionCookieName, session,{'secure': true})
+    if (session != null) {
+      Vue.prototype.$cookies.set(sessionCookieName, session, { secure: true })
     }
-  }
+  },
 }
 
 // Vuex Store
@@ -57,6 +62,16 @@ export default new Vuex.Store({
 
     // User session
     session: helpers.loadSession(),
+
+    // Trends
+    trendings: {
+      ideas: [] as ProjectDetailsDTO[],
+      nbIdeas: 0,
+      projects: [] as ProjectDetailsDTO[],
+      nbProjects: 0,
+      isLoadingProjects: false,
+      isLoadingIdeas: false,
+    },
 
     // Default layout options
     layout: {
@@ -96,7 +111,9 @@ export default new Vuex.Store({
       return state.settings.colorTheme
     },
     isConnected: (state) => {
-      return state.session.currentUser != null && state.session.authToken != null;
+      return (
+        state.session.currentUser != null && state.session.authToken != null
+      )
     },
     // Get current connected User
     currentUser: (state) => {
@@ -106,18 +123,66 @@ export default new Vuex.Store({
     authToken: (state) => {
       return state.session.authToken
     },
+    isLoadingProjects: (state) => {
+      return state.trendings.isLoadingProjects
+    },
+    isLoadingIdeas: (state) => {
+      return state.trendings.isLoadingIdeas
+    },
+    nbProjects: (state) => {
+      return state.trendings.nbProjects
+    },
+    nbIdeas: (state) => {
+      return state.trendings.nbIdeas
+    },
   },
   mutations: {
+    // Load trending ideas
+    async loadIdeas(state) {
+      state.trendings.isLoadingIdeas = true
+      const response: Response = await getIdeas()
+      if (response.ok) {
+        const projectsPagingation: ProjectPaginationDTO = await response.json()
+        state.trendings.nbIdeas = projectsPagingation.total
+        for (let i = 0; i < projectsPagingation.data.length && i < 6; i++)
+          state.trendings.ideas.push(projectsPagingation.data[i])
+      } else {
+        this.$swal({
+          icon: 'error',
+          title: "Une erreur s'est produite lors du chargement des idées",
+          showConfirmButton: true,
+        })
+      }
+      state.trendings.isLoadingIdeas = false
+    },
+    // Load trending projects
+    async loadProjects(state) {
+      state.trendings.isLoadingProjects = true
+      const response: Response = await getProjects()
+      if (response.ok) {
+        const projectsPagingation: ProjectPaginationDTO = await response.json()
+        state.trendings.nbProjects = projectsPagingation.total
+        for (let i = 0; i < projectsPagingation.data.length && i < 4; i++)
+          state.trendings.projects.push(projectsPagingation.data[i])
+      } else {
+        this.$swal({
+          icon: 'error',
+          title: "Une erreur s'est produite lors du chargement des projets",
+          showConfirmButton: true,
+        })
+      }
+      state.trendings.isLoadingProjects = false
+    },
     // Set currentUser and authToken
-    connect(state, payload){
-      state.session.currentUser = payload.user;
-      state.session.authToken = payload.token;
+    connect(state, payload) {
+      state.session.currentUser = payload.user
+      state.session.authToken = payload.token
       helpers.saveSession(payload)
     },
-
-    disconnect(state){
-      state.session.authToken = null;
-      state.session.currentUser = null;
+    // Disconnect current user
+    disconnect(state) {
+      state.session.authToken = null
+      state.session.currentUser = null
       helpers.saveSession(null)
     },
     // Sets the layout, useful for setting different layouts (under layouts/variations/)
