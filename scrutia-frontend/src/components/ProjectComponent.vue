@@ -7,7 +7,7 @@
     style="cursor: auto"
   >
     <template #options>
-      <div @click="() => {}">
+      <div>
         <div
           v-show="isNew && isProjectInitiative"
           class="block-options-item text-primary-light custom-font-size"
@@ -130,7 +130,7 @@ export default {
       else deleteFavorite(this.project.id)
     },
     openProject() {
-      this.$router.replace({
+      this.$router.push({
         path: `/project/${this.project.id}#`,
         replace: true,
       })

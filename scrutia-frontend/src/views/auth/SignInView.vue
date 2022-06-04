@@ -79,7 +79,7 @@
                   <b-col md="6" xl="6">
                     <b-button
                       variant="dual"
-                      @click="$router.replace('/home')"
+                      @click="$router.push('/home')"
                       block
                     >
                       <i class="fa fa-undo mr-1"></i> Retour

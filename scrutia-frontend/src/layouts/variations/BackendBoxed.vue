@@ -145,7 +145,7 @@ export default {
   methods: {
     onSubmit() {
       this.$router
-        .replace({
+        .push({
           path: '/search',
           query: {
             question: this.baseSearchTerm,
