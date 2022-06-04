@@ -5,6 +5,7 @@
     rounded
     tag="a"
     style="cursor: auto"
+    link-shadow
   >
     <template #options>
       <div>
@@ -48,28 +49,36 @@
             ]"
           />
         </button>
-        <button type="button" class="btn-block-option" @click="openProject">
-          <i class="si si-eye" />
-        </button>
       </div>
     </template>
-    <div @click="openProject" style="cursor: pointer">
-      <p class="custom-font-size">{{ shortedDescription }}</p>
-      <address v-show="isProjectInitiative">
-        <a class="custom-font-size">{{ project.author }}</a
-        ><em class="custom-font-size">, le {{ getFormatedDate() }}</em
-        ><br />
-        <b-badge
-          style="margin-right: 5px"
-          v-for="tag in project.tags"
-          v-bind:key="tag.title"
-          :variant="getNextColor()"
-          >{{ tag.title }}</b-badge
-        >
-      </address>
-      <address v-show="!isProjectInitiative" class="custom-font-size">
-        <i class="fa fa-thumbs-up custom-font-size" />
-        {{ nblikes }} personnes soutiennent déjà l'idée
+    <div>
+      <p class="custom-font-size" style="text-align: justify">
+        {{ shortedDescription }}
+      </p>
+      <address v-show="isProjectInitiative"></address>
+      <address class="custom-font-size">
+        <div v-show="!isProjectInitiative">
+          <i class="fa fa-thumbs-up custom-font-size" />
+          {{ nblikes }} personnes aiment déjà
+          {{ isProjectInitiative ? 'ce projet' : 'cette idée' }}...{{ ' ' }}
+          <router-link :to="`/project/${project.id}`">
+            <em>consulter le détail...</em>
+          </router-link>
+        </div>
+        <div v-show="isProjectInitiative">
+          <b-badge
+            style="margin-right: 5px"
+            v-for="tag in project.tags"
+            v-bind:key="tag.title"
+            :variant="getNextColor()"
+            >{{ tag.title }}</b-badge
+          ><br />
+          <a class="custom-font-size">{{ project.author }}</a
+          ><em class="custom-font-size">, le {{ getFormatedDate() }}... </em>
+          <router-link :to="`/project/${project.id}`">
+            <em>consulter le détail...</em>
+          </router-link>
+        </div>
       </address>
     </div>
   </base-block>

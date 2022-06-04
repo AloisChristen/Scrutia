@@ -22,7 +22,7 @@
           href="/browseIdeas?type=ideas"
           style="float: right; margin-bottom: 10px; margin-top: -10px"
           v-show="!isLoading"
-          >et {{ nbIdeas }} autres...</b-link
+          >parmi {{ nbIdeas }} idées...</b-link
         >
       </p>
       <h2 class="content-heading">Projets d'initiative les plus actifs...</h2>
@@ -52,7 +52,7 @@
           href="browseIdeas?type=initiatives"
           style="float: right; margin-bottom: 10px; margin-top: -10px"
           v-show="!isLoadingProjects"
-          >et {{ nbProjects }} autres...</b-link
+          >parmi {{ nbProjects }} projets...</b-link
         >
       </p>
     </div>
