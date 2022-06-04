@@ -288,7 +288,6 @@ export default {
       register(account).then(async (resp) => {
         let session: LoginDTO = (await resp.json()) as LoginDTO
         this.$store.commit('connect', session)
-        console.log(this.$store.getters.authToken)
         this.$router.push('/')
       })
     },

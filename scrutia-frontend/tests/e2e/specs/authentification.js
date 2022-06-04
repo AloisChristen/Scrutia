@@ -3,8 +3,6 @@ let credentials = {
   password: ""
 }
 
-console.log(credentials.username)
-
 describe("Authentification test", () => {
   xit("Visits the app root url", () => {
     cy.visit("/");
@@ -30,7 +28,7 @@ describe("Authentification test", () => {
   })
 
   describe("Sign in page", () => {
-    beforeEach(() => { cy.visit("/auth/signin")})
+    beforeEach(() => { cy.visit("/auth/signin") })
     xit("Should have sign in form", () => {
       cy.contains("h3", "Connexion")
       cy.get('input[name="username"').should("have.attr", "placeholder", "Nom d'utilisateur");

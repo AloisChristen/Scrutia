@@ -195,8 +195,6 @@ export default {
       tags: string[] | null,
       page: number = 1
     ) {
-      console.log('types', types)
-
       this.isLoading = true
       const response: Response = await getProjectsWithFilters(
         types,

@@ -11,7 +11,6 @@ function filterBuilder(
   page: number
 ) {
   let filters = ''
-  console.log(types)
   if (types && types.length == 1) {
     filters += types.includes('Idées')
       ? 'filter[status]=idee'
