@@ -3,7 +3,6 @@
     :title="shortedTitle"
     header-bg
     rounded
-    tag="a"
     style="cursor: auto"
     link-shadow
   >
