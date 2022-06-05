@@ -14,21 +14,16 @@
           >
             <template #options>
               <router-link
-                to="/auth/reminder"
-                class="btn-block-option font-size-sm"
-                >Mot de passe oublié?</router-link
-              >
-              <router-link
                 to="/auth/signup"
-                class="btn-block-option"
-                v-b-tooltip.hover.nofade.left="'New Account'"
+                class="btn-block-option font-size-sm"
               >
-                <i class="fa fa-user-plus"></i>
+                <i class="fa fa-fw fa-plus"></i>
+                S'enregistrer
               </router-link>
             </template>
             <div class="p-sm-3 px-lg-3 py-lg-3">
               <h1 class="h2 mb-1">{{ $store.getters.appName }}</h1>
-              <p class="text-muted">Bienvenue, veuillez vous connecter.</p>
+              <p class="text-muted">Veuillez vous connectez</p>
 
               <!-- Sign In Form -->
               <b-form @submit.stop.prevent="onSubmit">
@@ -68,7 +63,7 @@
                 <b-row class="form-group">
                   <b-col md="6" xl="6">
                     <b-button
-                      class="mb-4"
+                      class="mb-2"
                       type="submit"
                       variant="alt-primary"
                       block
