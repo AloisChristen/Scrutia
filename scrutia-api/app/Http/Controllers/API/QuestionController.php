@@ -127,26 +127,10 @@ class QuestionController extends Controller
             ]], 403);
         }
 
-        $like = Like::where("user_id", $question->user->id)
-            ->where("likeable_id",$question->id)
-            ->where("likeable_type", "App\Models\Question")
-            ->first();
+        $vote = LikeService::addVote($question, $request);
 
 
-        $modified = false;
-        if($like == null){
-            $like = Like::create([
-                "value" => $request->value
-            ]);
-            $like->user()->associate(auth()->user());
-            $question->likes()->save($like);
-        }else{
-            $like->value = $request->value;
-            $modified = true;
-        }
-        $like->save();
-
-        LikeService::addVoteReputation($question->user, $like->value, auth()->user()->id, Likeable::QUESTION, $modified);
+        LikeService::addVoteReputation($question->user, $vote['value'], auth()->user()->id, Likeable::QUESTION, $vote['modified']);
 
         return response()->json("Liked");
     }

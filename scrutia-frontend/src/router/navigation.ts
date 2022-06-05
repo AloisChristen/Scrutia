@@ -9,22 +9,13 @@ export const Navigation = [
     heading: true,
   },
   {
-    name: 'Urne à idées',
-    icon: 'si si-bulb',
-    sub: [
-      {
-        name: 'Parcourir les idées',
-        to: '/browseIdeas',
-      },
-      {
-        name: 'Ajouter une idée',
-        to: '/addIdea',
-      },
-    ],
+    name: 'Ajouter une idée',
+    to: '/addIdea',
+    icon: 'si si-plus',
   },
   {
-    name: "Projets d'initiatives",
-    to: '/browseInitiatives',
+    name: 'Parcourir les idées et projets',
+    to: '/browseIdeas',
     icon: 'si si-puzzle',
   },
   {

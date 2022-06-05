@@ -3,12 +3,11 @@
     :title="shortedTitle"
     header-bg
     rounded
-    tag="a"
-    link-pop
     style="cursor: auto"
+    link-shadow
   >
     <template #options>
-      <div @click="() => {}">
+      <div>
         <div
           v-show="isNew && isProjectInitiative"
           class="block-options-item text-primary-light custom-font-size"
@@ -18,7 +17,28 @@
         <div class="block-options-item text-success custom-font-size">
           {{ project.performance }}
         </div>
-        <button type="button" class="btn-block-option" @click="addToFavorites">
+        <button
+          type="button"
+          class="btn-block-option"
+          @click="likeProject"
+          v-show="isUserConnected()"
+        >
+          <i
+            v-bind:class="[
+              { fa: like !== 0 },
+              { 'fa-thumbs-up': like === 1 },
+              { 'fa-thumbs-down': like === -1 },
+              { si: like === 0 },
+              { 'si-like': like === 0 },
+            ]"
+          />
+        </button>
+        <button
+          type="button"
+          class="btn-block-option"
+          @click="addToFavorites"
+          v-show="isUserConnected()"
+        >
           <i
             v-bind:class="[
               { fa: isFavorite },
@@ -28,38 +48,50 @@
             ]"
           />
         </button>
-        <button type="button" class="btn-block-option" @click="openProject">
-          <i class="si si-eye" />
-        </button>
       </div>
     </template>
-    <div @click="openProject" style="cursor: pointer">
-      <p class="custom-font-size">{{ shortedDescription }}</p>
-      <address v-show="isProjectInitiative">
-        <a class="custom-font-size">{{ project.author }}</a
-        ><em class="custom-font-size">, le {{ getFormatedDate() }}</em
-        ><br />
-        <b-badge
-          style="margin-right: 5px"
-          v-for="tag in project.tags"
-          v-bind:key="tag.title"
-          :variant="getNextColor()"
-          >{{ tag.title }}</b-badge
-        >
-      </address>
-      <address v-show="!isProjectInitiative" class="custom-font-size">
-        <i class="fa fa-thumbs-up custom-font-size" />
-        {{ project.likes_count }} personnes soutiennent déjà l'idée
+    <div>
+      <p class="custom-font-size" style="text-align: justify">
+        {{ shortedDescription }}
+      </p>
+      <address v-show="isProjectInitiative"></address>
+      <address class="custom-font-size">
+        <div v-show="!isProjectInitiative">
+          <i class="fa fa-thumbs-up custom-font-size" />
+          {{ nblikes }} personnes aiment déjà
+          {{ isProjectInitiative ? 'ce projet' : 'cette idée' }}...{{ ' ' }}
+          <router-link :to="`/project/${project.id}`">
+            <em>consulter le détail...</em>
+          </router-link>
+        </div>
+        <div v-show="isProjectInitiative">
+          <b-badge
+            style="margin-right: 5px"
+            v-for="tag in project.tags"
+            v-bind:key="tag.title"
+            :variant="getNextColor()"
+            >{{ tag.title }}</b-badge
+          ><br />
+          <a class="custom-font-size">{{ project.author }}</a
+          ><em class="custom-font-size">, le {{ getFormatedDate() }}... </em>
+          <router-link :to="`/project/${project.id}`">
+            <em>consulter le détail...</em>
+          </router-link>
+        </div>
       </address>
     </div>
   </base-block>
 </template>
 <script lang="ts">
 import { addFavorite, deleteFavorite } from '@/api/services/FavoritesService'
+import { likeProject } from '@/api/services/ProjectsService'
 import { format } from 'date-fns'
 import frenchLocale from 'date-fns/locale/fr'
 const COLOR_VARIANTS = ['primary', 'success', 'info', 'warning', 'danger']
 let currentColor = 0
+const DISLIKE = -1
+const LIKE = 1
+const NO_LIKE = 0
 
 export default {
   name: 'ProjectComponent',
@@ -80,9 +112,14 @@ export default {
   data() {
     return {
       isFavorite: false,
+      like: this.project.user_vote,
+      nblikes: this.project.likes_count,
     }
   },
   methods: {
+    isUserConnected() {
+      return this.$store.getters.isConnected
+    },
     getFormatedDate() {
       if (this.project.created_at === undefined) return ''
       return format(new Date(this.project.created_at), 'dd LLLL yyyy', {
@@ -96,13 +133,65 @@ export default {
       return color
     },
     addToFavorites() {
-      // TODO : display button only if user authenticated
       this.$data.isFavorite = !this.$data.isFavorite
       if (this.$data.isFavorite) addFavorite(this.project.id)
       else deleteFavorite(this.project.id)
     },
     openProject() {
-      this.$router.push({ path: `/project/${this.project.id}`, replace: true })
+      this.$router.push({
+        path: `/project/${this.project.id}#`,
+        replace: true,
+      })
+    },
+    async likeProject() {
+      let response: Response = new Response()
+      switch (this.$data.like) {
+        case DISLIKE:
+          this.$data.like = NO_LIKE
+          response = await likeProject(this.project.id, NO_LIKE)
+          if (!response.ok) {
+            this.$data.like = NO_LIKE
+            this.handleError(response)
+          }
+          break
+        case NO_LIKE:
+          this.$data.like = LIKE
+          this.$data.nblikes += 1
+          response = await likeProject(this.project.id, LIKE)
+          if (!response.ok) {
+            this.$data.like = NO_LIKE
+            this.$data.nblikes -= 1
+            this.handleError(response)
+          }
+          break
+        case LIKE:
+          this.$data.like = DISLIKE
+          this.$data.nblikes -= 1
+          response = await likeProject(this.project.id, DISLIKE)
+          if (!response.ok) {
+            this.$data.nblikes += 1
+            this.$data.like = NO_LIKE
+            this.handleError(response)
+          }
+          break
+      }
+    },
+    async handleError(response: Response) {
+      const body = await response.json()
+      if (response.status === 403 && body.errors.reputation !== undefined) {
+        this.$swal({
+          icon: 'error',
+          title:
+            "Vous n'avez pas la réputation nécessaire pour effectuer cette action",
+          showConfirmButton: true,
+        })
+      } else {
+        this.$swal({
+          icon: 'error',
+          title: "Une erreur s'est produite lors de l'action",
+          showConfirmButton: true,
+        })
+      }
     },
   },
   created() {

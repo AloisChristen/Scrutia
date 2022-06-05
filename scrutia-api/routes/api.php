@@ -34,7 +34,7 @@ Route::get('/tags', [TagController::class,'index'])->name('tag.index');
 
 Route::controller(ProjectController::class)->middleware("auth.optional")->prefix('/projects')->group(
     function () {
-        Route::get('/', 'index')->name('project.index');
+        Route::get('/nb_per_page/{nb_per_page}', 'index')->name('project.index');
         Route::get('/{id}', 'show')->name('project.show');
     }
 );
@@ -64,6 +64,9 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         function () {
             Route::post('/', 'store')->name('project.store');
             Route::put('/{id}/promote', 'promote')->name('project.promote');
+
+            Route::post('/{id}/like', 'like')->name('project.like');
+
         }
     );
 

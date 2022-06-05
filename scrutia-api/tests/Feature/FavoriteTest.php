@@ -142,4 +142,34 @@ class FavoriteTest extends TestCase
         $response->assertNotFound();
         $this->assertEquals(1, $user->favorites()->count());
     }
+
+    /**
+     * Test user can delete a favorite
+     *
+     * @return void
+     */
+    public function test_user_can_add_then_delete_and_then_add_favorite_again(): void
+    {
+        $user = User::factory()->create();
+        $project = Project::factory()->create();
+
+        $response = $this->actingAs($user)->post("/api/favorites", [
+            "project_id" => $project->id
+        ]);
+
+        $response->assertCreated();
+        $this->assertDatabaseCount("project_user", 1);
+
+        $response = $this->actingAs($user)->delete("/api/favorites/".$project->id);
+        $user = User::find($user->id);
+        $response->assertSuccessful();
+        $this->assertEquals(0, $user->favorites()->count());
+
+        $response = $this->actingAs($user)->post("/api/favorites", [
+            "project_id" => $project->id
+        ]);
+
+        $response->assertCreated();
+        $this->assertDatabaseCount("project_user", 1);
+    }
 }

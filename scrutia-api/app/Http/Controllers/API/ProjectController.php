@@ -24,7 +24,7 @@ class ProjectController extends Controller
      * Display projects based on filters.
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(int $nb_per_page = 15): JsonResponse
     {
         $search = QueryBuilder::for(Project::class)
             ->allowedFilters([
@@ -37,7 +37,7 @@ class ProjectController extends Controller
             ->with('tags:title')
             ->withCount('likes')
             ->orderByDesc('likes_count')
-            ->paginate();
+            ->paginate($nb_per_page);
 
 
         return response()->json($search);
@@ -175,26 +175,9 @@ class ProjectController extends Controller
             ]], 403);
         }
 
-        $like = Like::where("user_id", $project->user->id)
-            ->where("likeable_id",$project->id)
-            ->where("likeable_type", $project->getMorphClass())
-            ->first();
+        $vote = LikeService::addVote($project, $request);
 
-
-        $modified = false;
-        if($like == null){
-            $like = Like::create([
-                "value" => $request->value
-            ]);
-            $like->user()->associate(auth()->user());
-            $project->likes()->save($like);
-        }else{
-            $like->value = $request->value;
-            $modified = true;
-        }
-        $like->save();
-
-        LikeService::addVoteReputation($project->user, $like->value, auth()->user()->id, Likeable::PROJECT, $modified);
+        LikeService::addVoteReputation($project->user, $vote['value'], auth()->user()->id, Likeable::PROJECT, $vote['modified']);
 
         return response()->json("Liked");
     }

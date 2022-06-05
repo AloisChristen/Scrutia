@@ -46,7 +46,7 @@
                   </b-form-invalid-feedback>
                 </div>
                 <b-row class="form-group">
-                  <b-col md="6" xl="5">
+                  <b-col md="6" xl="6">
                     <b-button type="submit" variant="alt-primary" block>
                       <i class="fa fa-fw fa-envelope mr-1"></i> Envoyez-moi un
                       mail
