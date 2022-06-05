@@ -282,6 +282,24 @@ export default {
     },
   },
   methods: {
+    async submitSuccess(resp: any) {
+      let session: LoginDTO = (await resp.json()) as LoginDTO
+      this.$store.commit('connect', session)
+      this.$router.push('/')
+    },
+    async formErrors(resp: any) {
+      let error: Error = (await resp.json()) as Error
+      this.$swal({
+        icon: 'error',
+        title: "Nom d'utilisateur ou email déjà utilisé",
+        showConfirmButton: true,
+      })
+      console.log(error)
+    },
+    async otherErrors() {
+      this.$router.push('/')
+    },
+
     onSubmit() {
       this.$v.form.$touch()
 
@@ -290,14 +308,20 @@ export default {
         return
       }
 
-      // Form submit logic
-
       // TODO threat case when not connected
-      register(account).then(async (resp) => {
-        let session: LoginDTO = (await resp.json()) as LoginDTO
-        this.$store.commit('connect', session)
-        this.$router.push('/')
-      })
+      register(account).then(
+        async (resp) => {
+          console.log('Success :', resp.status)
+          if (resp.ok) {
+            this.submitSuccess(resp)
+          } else if (resp.status === 400) {
+            this.formErrors(resp)
+          } else {
+            this.otherErrors()
+          }
+        },
+        (rejected) => console.log(rejected.status)
+      )
     },
   },
 }

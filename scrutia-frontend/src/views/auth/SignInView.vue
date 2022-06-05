@@ -24,7 +24,6 @@
             <div class="p-sm-3 px-lg-3 py-lg-3">
               <h1 class="h2 mb-1">{{ $store.getters.appName }}</h1>
               <p class="text-muted">Veuillez vous connectez</p>
-
               <!-- Sign In Form -->
               <b-form @submit.stop.prevent="onSubmit">
                 <div class="py-3">
@@ -129,6 +128,22 @@ export default {
     },
   },
   methods: {
+    async submitSuccess(resp: any) {
+      let session: LoginDTO = (await resp.json()) as LoginDTO
+      this.$store.commit('connect', session)
+      this.$router.push('/')
+    },
+    async formErrors() {
+      this.$swal({
+        icon: 'error',
+        title: "Nom d'utilisateur ou mot de passe incorrect",
+        showConfirmButton: true,
+      })
+    },
+    async otherErrors() {
+      this.$router.push('/')
+    },
+
     onSubmit() {
       this.$v.form.$touch()
 
@@ -140,9 +155,13 @@ export default {
 
       // TODO threat case when not connected
       login(account).then(async (resp) => {
-        let session: LoginDTO = (await resp.json()) as LoginDTO
-        this.$store.commit('connect', session)
-        this.$router.push('/')
+        if (resp.ok) {
+          this.submitSuccess(resp)
+        } else if (resp.status === 401) {
+          this.formErrors()
+        } else {
+          this.otherErrors()
+        }
       })
     },
   },
