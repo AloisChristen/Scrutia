@@ -13,67 +13,12 @@
             title="Création de compte"
           >
             <template #options>
-              <!-- Terms Modal -->
-              <button
-                type="button"
-                class="btn-block-option font-size-sm"
-                v-b-modal.one-signup-terms
-              >
-                Voir les Termes
-              </button>
-              <b-modal
-                id="one-signup-terms"
-                size="lg"
-                body-class="p-0"
-                hide-footer
-                hide-header
-              >
-                <div
-                  class="block block-rounded block-themed block-transparent mb-0"
-                >
-                  <div class="block-header bg-primary-dark">
-                    <h3 class="block-title">Termes &amp; Conditions</h3>
-                    <div class="block-options">
-                      <button
-                        type="button"
-                        class="btn-block-option"
-                        @click="$bvModal.hide('one-signup-terms')"
-                      >
-                        <i class="fa fa-fw fa-times"></i>
-                      </button>
-                    </div>
-                  </div>
-                  <div class="block-content">
-                    <p>
-                      L'utilisateur s'engage à ne pas proférer des propos
-                      inconvenants.
-                    </p>
-                  </div>
-                  <div
-                    class="block-content block-content-full text-right border-top"
-                  >
-                    <b-button
-                      variant="alt-primary"
-                      class="mr-1"
-                      @click="$bvModal.hide('one-signup-terms')"
-                      >Fermer</b-button
-                    >
-                    <b-button
-                      variant="primary"
-                      @click="$bvModal.hide('one-signup-terms')"
-                      >J'accepte</b-button
-                    >
-                  </div>
-                </div>
-              </b-modal>
-              <!-- END Terms Modal -->
-
               <router-link
                 to="/auth/signin"
-                class="btn-block-option"
-                v-b-tooltip.hover.nofade.left="'Sign In'"
+                class="btn-block-option font-size-sm"
               >
-                <i class="fa fa-sign-in-alt"></i>
+                <i class="fa fa-fw fa-sign-in-alt mr-1"></i>
+                Se connecter
               </router-link>
             </template>
             <div class="p-sm-3 px-lg-4 py-lg-5">
@@ -83,6 +28,74 @@
               <!-- Sign Up Form -->
               <b-form @submit.stop.prevent="onSubmit">
                 <div class="py-3">
+                  <div class="form-group">
+                    <b-form-checkbox
+                      id="terms"
+                      name="terms"
+                      v-model="$v.form.terms.$model"
+                      :state="!$v.form.terms.$error && null"
+                      aria-describedby="terms-feedback"
+                      >J'accepte les Termes &amp; Conditions</b-form-checkbox
+                    >
+                    <b-form-invalid-feedback
+                      id="terms-feedback"
+                      :state="
+                        $v.form.terms.$dirty ? !$v.form.terms.$error : null
+                      "
+                    >
+                      Vous devez accepter les termes et conditions
+                    </b-form-invalid-feedback>
+                    <div>
+                      <a
+                        type="button"
+                        class="font-size-sm"
+                        v-b-modal.one-signup-terms
+                      >
+                        Voir les Termes &amp; Conditions
+                      </a>
+                      <!-- Terms Modal -->
+                      <b-modal
+                        id="one-signup-terms"
+                        size="lg"
+                        body-class="p-0"
+                        hide-footer
+                        hide-header
+                      >
+                        <div
+                          class="block block-rounded block-themed block-transparent mb-0"
+                        >
+                          <div class="block-header bg-primary-dark">
+                            <h3 class="block-title">Termes &amp; Conditions</h3>
+                            <div class="block-options">
+                              <button
+                                type="button"
+                                class="btn-block-option"
+                                @click="$bvModal.hide('one-signup-terms')"
+                              >
+                                <i class="fa fa-fw fa-times"></i>
+                              </button>
+                            </div>
+                          </div>
+                          <div class="block-content">
+                            <p>
+                              L'utilisateur s'engage à ne pas proférer des
+                              propos inconvenants.
+                            </p>
+                          </div>
+                          <div
+                            class="block-content block-content-full text-right border-top"
+                          >
+                            <b-button
+                              variant="alt-primary"
+                              @click="$bvModal.hide('one-signup-terms')"
+                              >Fermer</b-button
+                            >
+                          </div>
+                        </div>
+                      </b-modal>
+                      <!-- END Terms Modal -->
+                    </div>
+                  </div>
                   <div><h5>Informations de compte</h5></div>
                   <div class="form-group">
                     <b-form-input
@@ -180,30 +193,25 @@
                       Veuillez entrer votre nom de famille
                     </b-form-invalid-feedback>
                   </div>
-
-                  <div class="form-group">
-                    <b-form-checkbox
-                      id="terms"
-                      name="terms"
-                      v-model="$v.form.terms.$model"
-                      :state="!$v.form.terms.$error && null"
-                      aria-describedby="terms-feedback"
-                      >J'accepte les Termes &amp; Conditions</b-form-checkbox
-                    >
-                    <b-form-invalid-feedback
-                      id="terms-feedback"
-                      :state="
-                        $v.form.terms.$dirty ? !$v.form.terms.$error : null
-                      "
-                    >
-                      Vous devez accepter les termes et conditions
-                    </b-form-invalid-feedback>
-                  </div>
                 </div>
                 <b-row class="form-group">
-                  <b-col md="6" xl="5">
-                    <b-button type="submit" variant="alt-success" block>
+                  <b-col md="6" xl="6">
+                    <b-button
+                      type="submit"
+                      class="mb-2"
+                      variant="alt-success"
+                      block
+                    >
                       <i class="fa fa-fw fa-plus mr-1"></i> S'inscrire
+                    </b-button>
+                  </b-col>
+                  <b-col md="6" xl="6">
+                    <b-button
+                      variant="dual"
+                      @click="$router.push('/home')"
+                      block
+                    >
+                      <i class="fa fa-undo mr-1"></i> Retour
                     </b-button>
                   </b-col>
                 </b-row>
@@ -274,6 +282,24 @@ export default {
     },
   },
   methods: {
+    async submitSuccess(resp: any) {
+      let session: LoginDTO = (await resp.json()) as LoginDTO
+      this.$store.commit('connect', session)
+      this.$router.push('/')
+    },
+    async formErrors(resp: any) {
+      let error: Error = (await resp.json()) as Error
+      this.$swal({
+        icon: 'error',
+        title: "Nom d'utilisateur ou email déjà utilisé",
+        showConfirmButton: true,
+      })
+      console.log(error)
+    },
+    async otherErrors() {
+      this.$router.push('/')
+    },
+
     onSubmit() {
       this.$v.form.$touch()
 
@@ -282,14 +308,20 @@ export default {
         return
       }
 
-      // Form submit logic
-
       // TODO threat case when not connected
-      register(account).then(async (resp) => {
-        let session: LoginDTO = (await resp.json()) as LoginDTO
-        this.$store.commit('connect', session)
-        this.$router.push('/')
-      })
+      register(account).then(
+        async (resp) => {
+          console.log('Success :', resp.status)
+          if (resp.ok) {
+            this.submitSuccess(resp)
+          } else if (resp.status === 400) {
+            this.formErrors(resp)
+          } else {
+            this.otherErrors()
+          }
+        },
+        (rejected) => console.log(rejected.status)
+      )
     },
   },
 }
