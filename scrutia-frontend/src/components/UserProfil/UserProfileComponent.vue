@@ -61,7 +61,7 @@
             </router-link> -->
             <router-link
               class="dropdown-item d-flex align-items-center justify-content-between"
-              to="/auth/signin"
+              to="/"
               @click.native="disconnect()"
             >
               <span class="font-size-sm font-w500">Se déconnecter</span>

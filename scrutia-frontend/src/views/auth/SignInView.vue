@@ -157,7 +157,7 @@ export default {
       login(account).then(async (resp) => {
         if (resp.ok) {
           this.submitSuccess(resp)
-        } else if (resp.status === 401) {
+        } else if (resp.status === 401 || resp.status === 404) {
           this.formErrors()
         } else {
           this.otherErrors()
