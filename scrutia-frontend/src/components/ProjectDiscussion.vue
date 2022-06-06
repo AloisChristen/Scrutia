@@ -3,7 +3,7 @@
     <b-col cols="12">
       <base-block
         rounded
-        :title=projectDiscussion.title
+        :title=title
         btn-option-content
       >
 
@@ -13,7 +13,7 @@
             <div>likecount</div>
             <div>arrow down</div>
           </div>
-          <p>{{projectDiscussion.text}}</p>
+          <p>{{text}}</p>
         </div>
       </base-block>
     </b-col>
@@ -21,11 +21,15 @@
 </template>
 
 <script lang="ts">
+
 export default {
   name: "ProjectDiscussion",
   props: {
-    projectDiscussion: {
-      type: Object,
+    title: {
+      type: String
+    },
+    text: {
+      type: String
     }
   }
 }
