@@ -6,7 +6,7 @@
         btn-option-content
         ref="baseBlockDiscussionComponent"
       >
-        <template #title>
+        <template v-if="!modeRevision" #title>
           <div style="display: flex;">
             <div style="display: flex; flex-direction: column; width: 50px; align-items: center; margin-right: 16px">
               <i v-if="dataIsUpvoted" class="fa fa-angle-up mr-1"></i>
@@ -23,6 +23,30 @@
               </div>
             </div>
           </div>
+        </template>
+
+        <!-- titre pour mode revision -->
+        <template v-else #title>
+          <div style="display: flex">
+
+            <div>
+              <div style="display: flex; flex-direction: column; width: 50px; align-items: center; margin-right: 16px">
+                <i v-if="versionData.user_vote === 1" class="fa fa-angle-up mr-1"></i>
+                <i v-else class="fa fa-angle-up mr-1" v-on:click="upvote()" style="color: lightgray"></i>
+                <div>{{ versionData.upvotes - versionData.downvotes}}</div>
+                <i v-if="versionData.user_vote === -1" class="fa fa-angle-down mr-1"></i>
+                <i v-else class="fa fa-angle-down mr-1" v-on:click="downvote()" style="color: lightgray"></i>
+              </div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; font-size: small;">
+              <div style="font-size: x-small">Le {{getFormatedDate(version.created_at)}}</div>
+              <div>{{ version.description }}</div>
+            </div>
+          </div>
+
+
+
         </template>
 
         <!-- content below -->
@@ -126,6 +150,13 @@ export default {
     userForReply: {
       type: String,
       default: ''
+    },
+    modeRevision: {
+      type: Boolean,
+      default: false,
+    },
+    version: {
+      type: Object
     }
   },
   mounted() {
@@ -145,6 +176,7 @@ export default {
       dataResponse: "",
       dataAnswers: this.answers,
       isLoaded: false,
+      versionData: this.version
     }
   },
   methods: {
