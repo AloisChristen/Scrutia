@@ -42,7 +42,7 @@
             <div v-if="showLink" style="margin-left: auto">
               <router-link :to="{ name: 'ideaDiscussion', params: { project_id: projectId, discussion_id: discussionId }}">Voir le fil de discussion -></router-link>
             </div>
-            <div v-if="completeView" style="width: 100%">
+            <div v-if="canReply" style="width: 100%">
               <b-form @submit.prevent class="mb-5">
                 <b-form-group label="Votre réponse" label-for="response">
                   <b-form-input id="response" type="text" placeholder="Votre réponse" v-model="dataResponse"></b-form-input>
@@ -97,7 +97,7 @@ export default {
       type: Boolean,
       default: true
     },
-    completeView: {
+    canReply: {
       type: Boolean,
       default: false,
     },
@@ -121,6 +121,10 @@ export default {
     onlyThreeAnswer: {
       type: Boolean,
       default: false,
+    },
+    userForReply: {
+      type: String,
+      default: ''
     }
   },
   mounted() {

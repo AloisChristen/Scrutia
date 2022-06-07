@@ -30,6 +30,10 @@
                           onlyThreeAnswer
       />
 
+      <div v-if="questions.length === 0">
+        Il n'y a pas de question pour le moment...
+      </div>
+
     </div>
   </div>
 </template>

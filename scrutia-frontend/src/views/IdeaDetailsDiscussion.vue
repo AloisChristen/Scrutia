@@ -1,24 +1,34 @@
 <template>
   <div>
-    <div class="content">
-
+    <div class="content" v-if="isLoaded">
+      <!-- http://localhost:8080/project/1/discussion/0 -->
       <ProjectHeader
-        :project-id="$route.params.project_id"
-        title="Sauver les pandas du feu"
-        description="Le Lorem Ipsum est le faux texte standard de l'imprimerie depuis les années 1500, quand un imprimeur anonyme assembla ensemble des morceaux de texte pour réaliser un livre spécimen de polices de texte. Il n'a pas fait que survivre cinq siècles, mais s'est aussi adapté à la bureautique informatique, sans que son contenu n'en soit modifié. Il a été popularisé dans les années 1960 grâce à la vente de feuilles Letraset contenant des passages du Lorem Ipsum, et, plus récemment, par son inclusion dans des applications de mise en page de texte, comme Aldus PageMaker."
-        :tagList="['climat', 'energies', 'écologie']"
+        :projectId="projectId"
+        :title="title"
+        :description="description"
+        :tagList="tagList"
+        :likesCount="likesCount"
         :canBePromoted="projectCanBePromoted"
+        :isLiked="isLiked"
+        :versionId="latestVersionId"
         ideaActionActivated
       ></ProjectHeader>
 
       <ProjectDiscussion
-                         :project-id="$route.params.project_id"
-                         :key="discussion.id"
-                         :title="discussion.title"
-                         :text="discussion.text"
-                         :answers="discussion.answers"
+                         :key="question.id"
+                         :discussion-id="question.id"
+                         :title="question.title"
+                         :date="question.created_at"
+                         :projectId="projectId"
+                         :versionId="latestVersionId"
+                         :likeCount="question.nb_upvotes - question.nb_downvotes"
+                         :isUpvoted="question.user_vote == 1"
+                         :isDownvoted="question.user_vote == -1"
+                         :answers="question.answers"
+                         :author="question.user_id"
+                         :can-reply="isLoggedIn"
+                         :userForReply="username"
                          :showLink="false"
-                         completeView
       />
 
     </div>
@@ -36,23 +46,18 @@ export default {
   },
   data() {
     return {
-      discussion:  {
-        id: 1,
-        title: 'pourquoi la terre se rechauffe ?',
-        author: 'fred dupont',
-        likesCurrent: 200,
-        text: "This rule reports the elements which have v-for and do not have v-bind:key with exception to custom components.",
-        answers: [
-          {id: 1, author: "karl", text: "vraiment d'accord", isLiked: true},
-          {id: 2, author: "Fred", text: "vraiment pas d'accord", isLiked: false},
-          {id: 3, author: "Gilbert", text: "vraiment d'accord", isLiked: true},
-        ]
-      },
-      isLoaded: false,
+      projectId: 0,
       title: "",
       description: "",
-      tagList: ["climat", "environnement", "panda"],
-      projectCanBePromoted: true
+      tagList: [],
+      likesCount: 0,
+      projectCanBePromoted: false,
+      isLiked: false,
+      latestVersionId: 0,
+      question: {},
+      isLoaded: false,
+      username: '',
+      isLoggedIn: false,
     }
   },
   async mounted() {
@@ -61,8 +66,65 @@ export default {
     if (response.ok) {
       const data = await response.json()
       console.log(data)
+      this.projectId = data.id;
+      this.title = data.title;
+      this.likesCount = data.upvotes;
+      this.isLiked = data.user_vote === 1;
+      this.description = data.last_description;
+      this.tagList = data.tags;
+
+      this.latestVersionId = data.latestVersionId;
+      this.question = this.getFakeQuestion();
+      this.username = this.getUsername();
+      if(this.username !== 'No user'){
+        this.isLoggedIn = true;
+      }
     }
     this.isLoaded = true
+  },
+  methods: {
+    getFakeQuestion() {
+      return {
+        "id": 0,
+        "title": "string",
+        "user_id": "string",
+        "created_at": "2022-06-07T10:14:47.867Z",
+        "updated_at": "2022-06-07T10:14:47.867Z",
+        "nb_upvotes": 0,
+        "nb_downvotes": 0,
+        "user_vote": -1,
+        "answers": [
+        {
+          "id": 0,
+          "description": "string",
+          "user_id": "string",
+          "nb_upvotes": 0,
+          "nb_downvotes": 0,
+          "user_vote": -1,
+          "created_at": "2022-06-07T10:14:47.867Z",
+          "updated_at": "2022-06-07T10:14:47.867Z"
+        },
+        {
+          "id": 1,
+          "description": "string",
+          "user_id": "string",
+          "nb_upvotes": 0,
+          "nb_downvotes": 0,
+          "user_vote": -1,
+          "created_at": "2022-06-07T10:14:47.867Z",
+          "updated_at": "2022-06-07T10:14:47.867Z"
+        }
+      ]
+      }
+    },
+    getUsername: function () {
+      let user = this.$store.getters.currentUser
+      if (user == undefined) {
+        return 'No user'
+      } else {
+        return user.username
+      }
+    },
   }
 }
 </script>
