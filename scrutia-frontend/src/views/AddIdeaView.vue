@@ -59,6 +59,7 @@
                 <div class="form-group">
                   <v-select
                     id="tags"
+                    name="tags"
                     size="lg"
                     class="form-control-alt"
                     taggable
@@ -73,6 +74,7 @@
               <b-row class="form-group">
                 <b-col md="6" xl="6">
                   <b-button
+                    id="submit"
                     class="mb-4"
                     type="submit"
                     variant="alt-success"
@@ -88,7 +90,12 @@
                   </b-button>
                 </b-col>
                 <b-col md="6" xl="6">
-                  <b-button variant="alt-warning" block @click="onClear">
+                  <b-button
+                    id="clear"
+                    variant="alt-warning"
+                    block
+                    @click="onClear"
+                  >
                     <i class="fa fa-trash mr-1"></i> Réinitialiser
                   </b-button>
                 </b-col>

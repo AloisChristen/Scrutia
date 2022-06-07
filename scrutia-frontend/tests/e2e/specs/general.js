@@ -7,21 +7,11 @@ describe("General layout test", () => {
   it("Displays the navigation menu", () => {
     cy.visit("/home");
     cy.contains("a", "Accueil").should("have.attr", "href", "/home");
-    cy.contains("a", "Urne à idées").should("have.attr", "href", "#");
-    cy.contains("span", "Parcourir")
-      .parent()
+    cy.contains("a", "Ajouter une idée").should("have.attr", "href", "/addIdea");
+    cy.contains("a", "Parcourir les idées et projets")
       .should("have.attr", "href", "/browseIdeas")
       .should("not.have.class", "active");
-    cy.contains("span", "Ajouter une idée")
-      .parent()
-      .should("have.attr", "href", "/addIdea")
-      .should("not.have.class", "active");
-    cy.contains("span", "Projets d'initiative")
-      .parent()
-      .should("have.attr", "href", "/browseInitiatives")
-      .should("not.have.class", "active");
-    cy.contains("span", "À propos")
-      .parent()
+    cy.contains("a", "À propos")
       .should("have.attr", "href", "/about")
       .should("not.have.class", "active");
   });
@@ -33,34 +23,19 @@ describe("General layout test", () => {
   });
   it("Navigates between the main pages", () => {
     cy.visit("/home");
-    cy.contains("span", "Parcourir")
-      .parent()
+    cy.contains("a", "Ajouter une idée").click({ force: true });
+    cy.url().should("include", "/auth/signin");
+    cy.visit("/home");
+    cy.contains("a", "Parcourir les idées et projets")
       .click({ force: true })
       .should("have.class", "active");
     cy.url().should("include", "/browseIdeas");
     cy.contains("a", "Accueil").should("not.have.class", "active");
-    cy.contains("span", "Ajouter une idée")
-      .parent()
-      .click({ force: true })
-      .should("have.class", "active");
-    cy.url().should("include", "/addIdea");
-    cy.contains("span", "Parcourir")
-      .parent()
-      .should("not.have.class", "active");
-    cy.contains("span", "Projets d'initiative")
-      .parent()
-      .click()
-      .should("have.class", "active");
-    cy.url().should("include", "/browseInitiatives");
-    cy.contains("span", "Ajouter une idée")
-      .parent()
-      .should("not.have.class", "active");
-    cy.contains("span", "À propos")
-      .parent()
+    cy.contains("a", "À propos")
       .click()
       .should("have.class", "active");
     cy.url().should("include", "/about");
-    cy.contains("span", "Projets d'initiative")
+    cy.contains("a", "Parcourir les idées et projets")
       .parent()
       .should("not.have.class", "active");
   });
@@ -95,7 +70,6 @@ describe("General layout test", () => {
       .should("have.class", "active");
     cy.url().should("include", "/userProfile")
   });
-
   it("Displays a 404 error page", () => {
     cy.visit("/notExistingPage");
     cy.contains("h1", "404").should("have.class", "font-w600").should("have.class", "text-city").should("have.class", "display-1")

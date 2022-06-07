@@ -24,8 +24,9 @@
       </b-row>
       <p>
         <b-link
+          id="linkToIdeas"
           class="link-fx"
-          href="/browseIdeas?type=ideas"
+          href="browseIdeas?type=ideas"
           style="float: right; margin-bottom: 10px; margin-top: -10px"
           v-show="!$store.getters.isLoadingIdeas"
           >parmi {{ $store.getters.nbIdeas }} idées...</b-link
@@ -54,6 +55,7 @@
       </b-row>
       <p>
         <b-link
+          id="linkToProjects"
           class="link-fx"
           href="browseIdeas?type=initiatives"
           style="float: right; margin-bottom: 10px; margin-top: -10px"
