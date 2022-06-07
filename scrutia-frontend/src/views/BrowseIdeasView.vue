@@ -22,7 +22,7 @@
                   class="text-center"
                 >
                   <v-select
-                    id="tags"
+                    id="types"
                     size="lg"
                     multiple
                     v-model="types"
@@ -74,6 +74,7 @@
                 <b-row>
                   <b-col md="6" xl="6" class="text-center">
                     <b-button
+                      id="search"
                       class="mb-4"
                       variant="alt-success"
                       @click="search"
@@ -84,7 +85,12 @@
                     </b-button>
                   </b-col>
                   <b-col md="6" xl="6" class="text-center">
-                    <b-button variant="alt-warning" @click="onClear" block>
+                    <b-button
+                      id="reset"
+                      variant="alt-warning"
+                      @click="onClear"
+                      block
+                    >
                       <i class="fa fa-trash mr-1"></i> Réinitialiser
                     </b-button>
                   </b-col>
