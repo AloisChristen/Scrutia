@@ -80,9 +80,19 @@ import { Component, Vue } from 'vue-property-decorator'
     }
   },
   async created() {
-    this.loadFavorites()
+    if (this.checkUser()) {
+      this.loadFavorites()
+    }
   },
   methods: {
+    checkUser: function () {
+      if (this.$store.getters.isConnected) {
+        return true
+      } else {
+        this.$router.push('/auth/signin')
+        return false
+      }
+    },
     loadFavorites: async function (page: number = 1) {
       this.$data.isLoading = true
       let resp = await getFavorites(page)
