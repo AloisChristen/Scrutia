@@ -81,7 +81,6 @@ export default {
       this.latestVersionId = data.latestVersionId;
 
       this.questions = data.versions[0].questions;
-      this.questions = this.getFakeQuestion().questions
 
       if(this.getUsername() !== data.author) {
         this.projectCanBePromoted = false;
@@ -103,131 +102,6 @@ export default {
         return user.username
       }
     },
-
-    getFakeQuestion() {
-      return {
-
-        "questions": [
-          {
-            "id": 0,
-            "title": "titre question 1",
-            "user_id": "user_question1",
-            "created_at": "2022-06-07T10:14:47.867Z",
-            "updated_at": "2022-06-07T10:14:47.867Z",
-            "nb_upvotes": 2,
-            "nb_downvotes": 1,
-            "user_vote": 1,
-            "answers": [
-              {
-                "id": 0,
-                "description": "Tres pertinent",
-                "user_id": "jabs83",
-                "nb_upvotes": 0,
-                "nb_downvotes": 0,
-                "user_vote": 1,
-                "created_at": "2022-06-07T10:14:47.867Z",
-                "updated_at": "2022-06-07T10:14:47.867Z"
-              },
-              {
-                "id": 1,
-                "description": "osef de ca",
-                "user_id": "lorius22",
-                "nb_upvotes": 0,
-                "nb_downvotes": 0,
-                "user_vote": 0,
-                "created_at": "2022-06-07T10:14:47.867Z",
-                "updated_at": "2022-06-07T10:14:47.867Z"
-              },
-              {
-                "id": 3,
-                "description": "osef de ca 2",
-                "user_id": "lorius2242",
-                "nb_upvotes": 0,
-                "nb_downvotes": 0,
-                "user_vote": 0,
-                "created_at": "2022-06-07T10:14:47.867Z",
-                "updated_at": "2022-06-07T10:14:47.867Z"
-              },
-              {
-                "id": 4,
-                "description": "osef de ca 2",
-                "user_id": "lorius2242",
-                "nb_upvotes": 0,
-                "nb_downvotes": 0,
-                "user_vote": 0,
-                "created_at": "2022-06-07T10:14:47.867Z",
-                "updated_at": "2022-06-07T10:14:47.867Z"
-              }
-            ]
-          },
-          {
-            "id": 1,
-            "title": "string",
-            "user_id": "string",
-            "created_at": "2022-06-07T10:14:47.867Z",
-            "updated_at": "2022-06-07T10:14:47.867Z",
-            "nb_upvotes": 0,
-            "nb_downvotes": 0,
-            "user_vote": -1,
-            "answers": [
-              {
-                "id": 0,
-                "description": "string",
-                "user_id": "string",
-                "nb_upvotes": 0,
-                "nb_downvotes": 0,
-                "user_vote": -1,
-                "created_at": "2022-06-07T10:14:47.867Z",
-                "updated_at": "2022-06-07T10:14:47.867Z"
-              },
-              {
-                "id": 1,
-                "description": "string",
-                "user_id": "string",
-                "nb_upvotes": 0,
-                "nb_downvotes": 0,
-                "user_vote": -1,
-                "created_at": "2022-06-07T10:14:47.867Z",
-                "updated_at": "2022-06-07T10:14:47.867Z"
-              }
-            ]
-          },
-          {
-            "id": 2,
-            "title": "string",
-            "user_id": "string",
-            "created_at": "2022-06-07T10:14:47.867Z",
-            "updated_at": "2022-06-07T10:14:47.867Z",
-            "nb_upvotes": 0,
-            "nb_downvotes": 0,
-            "user_vote": -1,
-            "answers": [
-              {
-                "id": 0,
-                "description": "string",
-                "user_id": "string",
-                "nb_upvotes": 0,
-                "nb_downvotes": 0,
-                "user_vote": -1,
-                "created_at": "2022-06-07T10:14:47.867Z",
-                "updated_at": "2022-06-07T10:14:47.867Z"
-              },
-              {
-                "id": 1,
-                "description": "string",
-                "user_id": "string",
-                "nb_upvotes": 0,
-                "nb_downvotes": 0,
-                "user_vote": -1,
-                "created_at": "2022-06-07T10:14:47.867Z",
-                "updated_at": "2022-06-07T10:14:47.867Z"
-              }
-            ]
-          }
-        ]
-
-        }
-    }
   }
 }
 
