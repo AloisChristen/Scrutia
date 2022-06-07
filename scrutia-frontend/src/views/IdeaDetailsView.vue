@@ -1,22 +1,23 @@
 <template>
-  <div>
+  <div v-if="isLoaded">
     <div class="content">
-
+      <!-- http://localhost:8080/project/1 -->
       <ProjectHeader
-        :project-id="$route.params.project_id"
+        :projectId="projectId"
         :title="title"
         :description="description"
         :tagList="tagList"
         :likesCount="likesCount"
         :canBePromoted="projectCanBePromoted"
         :isLiked="isLiked"
+        :versionId="latestVersionId"
         ideaActionActivated
       ></ProjectHeader>
 
       <ProjectDiscussion v-for="(d, index) in discussions"
                           :key="d.id"
                           :discussion-id="d.id"
-                          :project-id="$route.params.project_id"
+                          :projectId="projectId"
                           :versionId="latestVersionId"
                           :title="d.title"
                           :text="d.text"
@@ -53,27 +54,43 @@ export default {
       description: "",
       tagList: [],
       projectCanBePromoted: true,
+      projectId: 0,
       isLiked: false,
       latestVersionId: 0,
     }
   },
   async mounted() {
     const project_id_str = this.$route.params.project_id;
-    const response: Response = await getProjectDetails(Number(project_id_str))
+    const response: Response = await getProjectDetails(Number(project_id_str));
     if (response.ok) {
-      const data = await response.json()
-      console.log(data)
+      const data = await response.json();
+      console.log(data);
       if(data.status !== "idee"){
-        await router.push({ name: 'initiativeDetails', params: { initiative_id: data.id } })
+        await router.push({ name: 'initiativeDetails', params: { initiative_id: data.id } });
       }
-      this.title = data.title
-      this.likesCount = data.upvotes
-      this.isLiked = data.user_vote === 1
-      this.description = data.last_description
-      this.tagList = data.tags
-      this.latestVersionId = data.latestVersionId
+      this.projectId = data.id;
+      this.title = data.title;
+      this.likesCount = data.upvotes;
+      this.isLiked = data.user_vote === 1;
+      this.description = data.last_description;
+      this.tagList = data.tags;
+      this.latestVersionId = data.latestVersionId;
+      this.discussions = data.question;
+      if(this.getUsername() !== data.author) {
+        this.projectCanBePromoted = false;
+      }
     }
-    this.isLoaded = true
+    this.isLoaded = true;
+  },
+  methods: {
+    getUsername: function () {
+      let user = this.$store.getters.currentUser
+      if (user == undefined) {
+        return 'No user'
+      } else {
+        return user.username
+      }
+    },
   }
 }
 

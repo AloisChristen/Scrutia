@@ -71,15 +71,13 @@
 </template>
 
 <script lang="ts">
-import {promoteProject} from "@/api/services/ProjectsService";
-import {likeVersion} from "@/api/services/VersionsService";
-import {LikeDTO} from "@/typings/scrutia-types";
+import {likeProject, promoteProject} from "@/api/services/ProjectsService";
 
 export default {
   name: "ProjectHeader",
   props: {
     projectId: {
-      type: String
+      type: Number
     },
     title: {
       type: String,
@@ -141,11 +139,9 @@ export default {
 
     //- --- -- idea actions -- -- - - -- -
     async like_current() {
-      console.log("liking...-");
+      console.log("liking project ", this.projectId);
 
-      let likeDto: LikeDTO = {} as LikeDTO;
-      likeDto.value = 1
-      const response: Response = await likeVersion(this.versionId, likeDto)
+      const response: Response = await likeProject(this.projectId, 1)
       if(!response.ok){
         this.$swal({
           icon: 'error',
@@ -163,7 +159,7 @@ export default {
     },
     async promote() {
       console.log("promoting....");
-      const response: Response = await promoteProject(Number(this.projectId));
+      const response: Response = await promoteProject(this.projectId);
       if(!response.ok){
         this.$swal({
           icon: 'error',
