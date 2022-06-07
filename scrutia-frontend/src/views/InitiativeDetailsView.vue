@@ -2,11 +2,11 @@
   <div class="content" v-if="isLoaded">
     <!-- initiativeDetails/:initiative_id -->
     <ProjectHeader
-      :projectId="projectId"
-      :title="title"
-      :description="description"
-      :tagList="tagList"
-      :likesCount="likesCount"
+      :projectId="project.id"
+      :title="project.title"
+      :description="project.last_description"
+      :tagList="project.tags"
+      :likesCount="project.upvotes - project.downvotes"
       :canBePromoted="projectCanBePromoted"
       :isLiked="isLiked"
       :versionId="latestVersionId"
@@ -88,18 +88,11 @@ export default {
     const response: Response = await getProjectDetails(Number(this.initiative_id));
     if (response.ok) {
       const data = await response.json();
-      console.log(data);
       if(data.status === "idee"){
         await router.push({ name: 'IdeaDetails', params: { project_id: this.initiative_id } });
       }
-      this.projectId = data.id;
-      this.title = data.title;
-      this.likesCount = data.upvotes;
-      this.isLiked = data.user_vote === 1;
-      this.description = data.last_description;
-      this.tagList = data.tags;
-
-      this.latestVersionId = data.latestVersionId;
+      this.project = data;
+      console.log("project", data);
 
 
       if(this.getUsername() !== data.author) {
