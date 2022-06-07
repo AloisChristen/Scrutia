@@ -81,8 +81,6 @@ export default {
       if(data.questions != undefined && data.questions.length !== 0){
         let questions = data.versions[0].questions;
         this.question = questions.filter((x: { id: number; }) => x.id === Number(question_id_str))[0]
-      } else {
-        this.question = this.getFakeQuestion();
       }
       this.username = this.getUsername();
       if(this.username !== 'No user'){
@@ -96,40 +94,6 @@ export default {
     this.isLoaded = true
   },
   methods: {
-    getFakeQuestion() {
-      return {
-        "id": 0,
-        "title": "string",
-        "user_id": "string",
-        "created_at": "2022-06-07T10:14:47.867Z",
-        "updated_at": "2022-06-07T10:14:47.867Z",
-        "nb_upvotes": 0,
-        "nb_downvotes": 0,
-        "user_vote": -1,
-        "answers": [
-        {
-          "id": 0,
-          "description": "string",
-          "user_id": "string",
-          "nb_upvotes": 0,
-          "nb_downvotes": 0,
-          "user_vote": -1,
-          "created_at": "2022-06-07T10:14:47.867Z",
-          "updated_at": "2022-06-07T10:14:47.867Z"
-        },
-        {
-          "id": 1,
-          "description": "string",
-          "user_id": "string",
-          "nb_upvotes": 0,
-          "nb_downvotes": 0,
-          "user_vote": -1,
-          "created_at": "2022-06-07T10:14:47.867Z",
-          "updated_at": "2022-06-07T10:14:47.867Z"
-        }
-      ]
-      }
-    },
     getUsername: function () {
       let user = this.$store.getters.currentUser
       if (user == undefined) {
