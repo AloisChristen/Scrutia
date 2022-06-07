@@ -64,8 +64,8 @@
 
 import {format} from "date-fns";
 import frenchLocale from "date-fns/locale/fr";
-//import { likeAnswer } from '@/api/services/AnswersService';
-import {likeAnswer as likeQuestion} from "@/api/services/QuestionsService";
+import {likeAnswer as likeAnswersService} from '@/api/services/AnswersService';
+import {likeAnswer as likeQuestionsService} from "@/api/services/QuestionsService";
 export default {
   name: "ProjectDiscussion",
   props: {
@@ -157,7 +157,7 @@ export default {
         this.dataIsUpvoted = true
         this.dataLikeCount++
       }
-      const response: Response = await likeQuestion(this.discussion_id, this.dataLikeCount)
+      const response: Response = await likeQuestionsService(this.discussion_id, this.dataLikeCount)
       if(!response.ok){
         this.dataIsUpvoted = !this.dataIsUpvoted
         this.dataLikeCount--
@@ -171,7 +171,7 @@ export default {
         this.dataIsDownvoted = true
         this.dataLikeCount--
       }
-      const response = await likeQuestion(this.discussion_id, this.dataLikeCount)
+      const response = await likeQuestionsService(this.discussion_id, this.dataLikeCount)
       if(!response.ok){
         this.dataIsDownvoted = !this.dataIsDownvoted
         this.dataLikeCount++
@@ -181,8 +181,16 @@ export default {
     repondre(){
       console.log("dataResponse", this.dataResponse);
     },
-    likeAnswer(answerId: number, value: number){
-      console.log("answerId", answerId, value)
+    async likeAnswer(answerId: number, value: number){
+       const response: Response = await likeAnswersService(answerId, {value})
+        if(response.ok){
+          this.dataAnswers = this.dataAnswers.map((a: any) => {
+            if(a.id === answerId){
+              a.user_vote = value
+            }
+            return a
+          })
+        }
     },
     getFormatedDate(date: string) {
       return format(new Date(date), 'dd LLLL yyyy', {
