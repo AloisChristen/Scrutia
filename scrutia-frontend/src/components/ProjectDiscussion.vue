@@ -99,8 +99,9 @@
 
 import {format} from "date-fns";
 import frenchLocale from "date-fns/locale/fr";
-import {likeAnswer as likeAnswersService} from '@/api/services/AnswersService';
-import {likeAnswer as likeQuestionsService} from "@/api/services/QuestionsService";
+import {addAnswer, likeAnswer as likeAnswersService} from '@/api/services/AnswersService';
+import {addQuestion, likeAnswer as likeQuestionsService} from "@/api/services/QuestionsService";
+import {AnswerStoreDTO, QuestionStoreDTO} from "@/typings/scrutia-types";
 export default {
   name: "ProjectDiscussion",
   props: {
@@ -168,7 +169,11 @@ export default {
     },
     version: {
       type: Object
+    },
+    versionId: {
+      type: Number
     }
+
   },
   mounted() {
     if(this.closed) {
@@ -249,8 +254,46 @@ export default {
       }
 
     },
-    repondre(){
+    async repondre() {
       console.log("dataResponse", this.dataResponse);
+
+      if(this.modeRevision){
+        let req = {
+          project_id: this.projectId,
+          version_number: this.versionId,
+          title: this.dataResponse,
+          description: this.dataResponse,
+        } as QuestionStoreDTO;
+        const response: Response = await addQuestion(req);
+        if (response.ok) {
+          this.$forceUpdate();
+        } else {
+          this.$swal({
+            title: 'Erreur',
+            text: 'Une erreur est survenue lors de l\'enregistrement de votre mot à dire',
+            icon: 'error',
+            confirmButtonText: 'Ok'
+          })
+        }
+      } else {
+        let req = {
+          question_id: this.discussionId,
+          title: this.dataResponse,
+          description: this.dataResponse,
+        } as AnswerStoreDTO
+        const response: Response = await addAnswer(req);
+        if (response.ok) {
+          this.$forceUpdate();
+        } else {
+          this.$swal({
+            title: 'Erreur',
+            text: 'Une erreur est survenue lors de l\'enregistrement de votre mot à dire',
+            icon: 'error',
+            confirmButtonText: 'Ok'
+          })
+        }
+      }
+
     },
     async likeAnswer(answerId: number, value: number){
       if(this.modeRevision){
