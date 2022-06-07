@@ -58,7 +58,7 @@ export default new Router({
         },
         {
           path: 'project/:project_id',
-          name: "Scrutia | Détails de l'idée",
+          name: "IdeaDetails",
           component: IdeaDetails,
         },
         {
