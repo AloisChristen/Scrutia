@@ -44,41 +44,10 @@ describe("General layout test", () => {
     cy.get("#searchInput").type("Keyword").parent().parent().submit();
     cy.url().should("include", "/search?question=Keyword");
   });
-  it("Navigates to connected user pages", () => {
-    cy.get("#userProfile").click()
-    cy.contains("span", "Favoris")
-      .parent()
-      .should("have.attr", "href", "/favorites")
-      .should("not.have.class", "active")
-      .click()
-      .should("have.class", "active");
-    cy.url().should("include", "/favorites")
-    cy.get("#userProfile").click()
-    cy.contains("span", "Idées et initiatives")
-      .parent()
-      .should("have.attr", "href", "/userIdeasAndInitiatives")
-      .should("not.have.class", "active")
-      .click()
-      .should("have.class", "active");
-    cy.url().should("include", "/userIdeasAndInitiatives")
-    cy.get("#userProfile").click()
-    cy.contains("span", "Profil")
-      .parent()
-      .should("have.attr", "href", "/userProfile")
-      .should("not.have.class", "active")
-      .click()
-      .should("have.class", "active");
-    cy.url().should("include", "/userProfile")
-  });
+  
   it("Displays a 404 error page", () => {
     cy.visit("/notExistingPage");
     cy.contains("h1", "404").should("have.class", "font-w600").should("have.class", "text-city").should("have.class", "display-1")
     cy.contains("a", "Retourner sur la page d'accueil").should("have.attr", "href", "/").click()
   });
-
-  it("Initiatives tests", () => {
-    cy.visit("/initiativeDetails/1");
-    cy.contains("h1", "Initiative 1").should("have.class", "font-w600").should("have.class", "text-city").should("have.class", "display-1")
-  });
-  
 });
