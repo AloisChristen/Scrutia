@@ -18,7 +18,7 @@
                           :key="d.id"
                           :discussion-id="d.id"
                           :title="d.title"
-                          :date="d."
+                          :date="d.title"
                           :projectId="projectId"
                           :versionId="latestVersionId"
                           :likeCount="d.nb_upvotes - d.nb_downvotes"
