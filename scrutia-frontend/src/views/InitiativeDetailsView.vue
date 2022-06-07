@@ -17,38 +17,39 @@
       content-class="block-content"
     >
       <b-tab title="Révisions" active>
-        <ProjectDiscussion
-          v-for="(v, index) in project.versions"
-          :key="v.id"
-          :project-id="project.id"
-          :versionId="v.id"
-          :text="v.description"
-          :likeCount="v.upvotes - v.downvotes"
-          :isUpvoted="v.user_vote === 1"
-          :isDownvoted="v.user_vote === -1"
-          :closed="index !== 0"
-          modeRevision
-          :show-link="false"
-          :version="v"
-          style="margin-bottom: 16px"
-          :canReply="userCanPostQuestion"
-        />
+            <ProjectDiscussion v-for="(v, index) in project.versions"
+                               :key="v.id"
+                               :project-id="project.id"
+                               :versionId="v.id"
+                               :text="v.description"
+                               :likeCount="v.upvotes - v.downvotes"
+                               :isUpvoted="v.user_vote === 1"
+                               :isDownvoted="v.user_vote === -1"
+                               :closed="index !== 0"
+                               modeRevision
+                               :show-link="false"
+                               :version="v"
+                               style="margin-bottom: 16px"
+                               :canReply="userCanPostQuestion"
+                               :userForReply="username"
+            />
+
       </b-tab>
       <b-tab title="Fils de discussion" active>
-        <!--
-        <ProjectDiscussion v-for="(d, index) in discussions"
+        <ProjectDiscussion v-for="(d, index) in project.questions"
                            :key="d.id"
                            :discussion-id="d.id"
-                           :project-id="$route.params.project_id"
+                           :project-id="initiative_id"
                            :versionId="latestVersionId"
                            :title="d.title"
                            :text="d.text"
-                           :likeCount="d.likesCurrent"
-                           :isUpvoted="d.isUpvoted"
-                           :isDownvoted="d.isDownvoted"
+                           :likeCount="d.nb_upvotes - d.nb_downvotes"
+                           :isUpvoted="d.user_vote === 1"
+                           :isDownvoted="d.user_vote === -1"
                            :closed="index !== 0"
+                           :canReply="isLoggedIn"
+                           :userForReply="username"
         />
-        -->
       </b-tab>
     </b-tabs>
     <b-row>
@@ -85,12 +86,13 @@ export default {
   },
   data() {
     return {
-      initiative_id: this.$route.params.initiative_id,
-      revisions: [],
-      discussions: [],
+      initiative_id: Number(this.$route.params.initiative_id),
       project: {},
       isLoaded: false,
       userCanPostQuestion: false,
+      latestVersionId: 0,
+      isLoggedIn: false,
+      username: ''
     }
   },
   methods: {
@@ -104,9 +106,7 @@ export default {
     },
   },
   async mounted() {
-    const response: Response = await getProjectDetails(
-      Number(this.initiative_id)
-    )
+    const response: Response = await getProjectDetails(this.initiative_id);
     if (response.ok) {
       const data = await response.json()
       if (data.status === 'idee') {
@@ -121,9 +121,19 @@ export default {
       if (this.getUsername() !== data.author) {
         this.projectCanBePromoted = false
       }
-      if (this.getUsername() !== 'No user') {
-        this.userCanPostQuestion = true
+      if(this.getUsername() !=='No user'){
+        this.userCanPostQuestion = true;
+        this.isLoggedIn = true;
+        this.username = this.getUsername();
       }
+
+      let latestVersionId = 0
+      for(let v of this.project.versions){
+        if(v.id > latestVersionId) {
+          latestVersionId = v.id;
+        }
+      }
+      this.latestVersionId = latestVersionId;
     }
 
     this.isLoaded = true
