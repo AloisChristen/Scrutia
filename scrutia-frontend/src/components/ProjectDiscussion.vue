@@ -1,0 +1,332 @@
+<template>
+  <b-row style="padding-left: 0" no-gutters >
+    <b-col cols="12">
+      <base-block
+        rounded
+        btn-option-content
+        ref="baseBlockDiscussionComponent"
+      >
+        <template v-if="!modeRevision" #title>
+          <div style="display: flex;">
+            <div style="display: flex; flex-direction: column; width: 50px; align-items: center; margin-right: 16px">
+              <i v-if="dataIsUpvoted" class="fa fa-angle-up mr-1"></i>
+              <i v-else class="fa fa-angle-up mr-1" v-on:click="upvote()" style="color: lightgray"></i>
+              <div>{{ dataLikeCount }}</div>
+              <i v-if="dataIsDownvoted" class="fa fa-angle-down mr-1"></i>
+              <i v-else class="fa fa-angle-down mr-1" v-on:click="downvote()" style="color: lightgray"></i>
+            </div>
+            <div style="display: flex; flex-direction: column; align-self: center">
+              <div class="Lead">{{title}}</div>
+              <div style="display: flex">
+                <div style="font-size: xx-small; margin-right: 16px">{{getFormatedDate(date)}}</div>
+                <div style="font-size: xx-small;">{{author}}</div>
+              </div>
+            </div>
+          </div>
+        </template>
+
+        <!-- titre pour mode revision -->
+        <template v-else #title>
+          <div style="display: flex">
+
+            <div>
+              <div style="display: flex; flex-direction: column; width: 50px; align-items: center; margin-right: 16px">
+                <i v-if="versionData.user_vote === 1" class="fa fa-angle-up mr-1"></i>
+                <i v-else class="fa fa-angle-up mr-1" v-on:click="upvote()" style="color: lightgray"></i>
+                <div>{{ versionData.upvotes - versionData.downvotes}}</div>
+                <i v-if="versionData.user_vote === -1" class="fa fa-angle-down mr-1"></i>
+                <i v-else class="fa fa-angle-down mr-1" v-on:click="downvote()" style="color: lightgray"></i>
+              </div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; font-size: small;">
+              <div style="font-size: x-small">Le {{getFormatedDate(versionData.created_at)}}</div>
+              <div>{{ versionData.description }}</div>
+            </div>
+          </div>
+
+
+
+        </template>
+
+        <!-- content below -->
+
+        <div style="display: flex; flex-direction: column" v-if="isLoaded">
+          <div style="display: flex; margin-left: 65px; flex-direction: column">
+
+            <!-- answers display -->
+            <div v-if="!modeRevision">
+              <div style="margin-bottom: 16px" v-for="a in dataAnswers" :key="a.id">
+                <i v-if="a.user_vote === 1" class="fa fa-fw fa-thumbs-up mr-1" v-on:click="likeAnswer(a.id, 0)"></i>
+                <i v-else class="fa fa-fw fa-thumbs-up mr-1" style="color: lightgray" v-on:click="likeAnswer(a.id, 1)"></i>
+                <span style="font-weight: bold">{{a.user_id}}:</span>
+                {{a.description}}
+              </div>
+            </div>
+            <div v-else>
+              <div style="margin-bottom: 16px" v-for="a in versionData.questions" :key="a.id">
+                <i v-if="a.user_vote === 1" class="fa fa-fw fa-thumbs-up mr-1" v-on:click="likeAnswer(a.id, 0)"></i>
+                <i v-else class="fa fa-fw fa-thumbs-up mr-1" style="color: lightgray" v-on:click="likeAnswer(a.id, 1)"></i>
+                <span style="font-weight: bold">{{a.user_id}}:</span>
+                {{a.description}}
+              </div>
+            </div>
+
+            <div v-if="showLink" style="margin-left: auto">
+              <router-link :to="{ name: 'ideaDiscussion', params: { project_id: projectId, discussion_id: discussionId }}">Voir le fil de discussion -></router-link>
+            </div>
+            <div v-if="canReply" style="width: 100%">
+              <b-form @submit.prevent class="mb-5">
+                <b-form-group label="Votre mot à dire" label-for="response">
+                  <b-form-input id="response" type="text" placeholder="Votre mot à dire" v-model="dataResponse"></b-form-input>
+                </b-form-group>
+                <b-form-group>
+                  <b-button type="submit" variant="primary" style="float: right" v-on:click="repondre()">Envoyer</b-button>
+                </b-form-group>
+              </b-form>
+            </div>
+          </div>
+        </div>
+        <!-- content end -->
+      </base-block>
+    </b-col>
+  </b-row>
+</template>
+
+<script lang="ts">
+
+import {format} from "date-fns";
+import frenchLocale from "date-fns/locale/fr";
+import {addAnswer, likeAnswer as likeAnswersService} from '@/api/services/AnswersService';
+import {addQuestion, likeAnswer as likeQuestionsService} from "@/api/services/QuestionsService";
+import {AnswerStoreDTO, QuestionStoreDTO} from "@/typings/scrutia-types";
+export default {
+  name: "ProjectDiscussion",
+  props: {
+    projectId: {
+      type: Number
+    },
+    discussionId: {
+      type: Number
+    },
+    title: {
+      type: String
+    },
+    text: {
+      type: String
+    },
+    likeCount: {
+      type: Number,
+    },
+    comments: {
+      type: Array
+    },
+    displayAllMode: {
+      type: Boolean
+    },
+    closed: {
+      type: Boolean,
+      default: false
+    },
+    showLink: {
+      type: Boolean,
+      default: true
+    },
+    canReply: {
+      type: Boolean,
+      default: false,
+    },
+    isUpvoted: {
+      type: Boolean,
+      default: false,
+    },
+    isDownvoted: {
+      type: Boolean,
+      default: false,
+    },
+    answers: {
+      type: Array
+    },
+    date: {
+      type: String
+    },
+    author: {
+      type: String
+    },
+    onlyThreeAnswer: {
+      type: Boolean,
+      default: false,
+    },
+    userForReply: {
+      type: String,
+      default: ''
+    },
+    modeRevision: {
+      type: Boolean,
+      default: false,
+    },
+    version: {
+      type: Object
+    },
+    versionId: {
+      type: Number
+    }
+
+  },
+  mounted() {
+    if(this.closed) {
+      this.$refs.baseBlockDiscussionComponent.contentHide()
+    }
+    if(this.onlyThreeAnswer){
+      this.dataAnswers = this.dataAnswers.filter((a: any, idx: number) => idx < 3);
+    }
+    this.isLoaded = true;
+  },
+  data() {
+    return {
+      dataIsUpvoted: this.isUpvoted,
+      dataIsDownvoted: this.isDownvoted,
+      dataLikeCount: this.likeCount,
+      dataResponse: "",
+      dataAnswers: this.answers,
+      isLoaded: false,
+      versionData: this.version
+    }
+  },
+  methods: {
+    async upvote() {
+
+      if(this.dataIsUpvoted) {
+        this.dataIsUpvoted = false
+        this.dataLikeCount--
+      } else {
+        this.dataIsUpvoted = true
+        this.dataLikeCount++
+      }
+      const response: Response = await likeQuestionsService(this.discussion_id, this.dataLikeCount)
+      if(!response.ok){
+        this.$swal({
+          title: 'Erreur',
+          text: 'Une erreur est survenue lors de l\'enregistrement de votre vote',
+          icon: 'error',
+          confirmButtonText: 'Ok'
+        })
+        this.dataIsUpvoted = !this.dataIsUpvoted
+        this.dataLikeCount--
+      }
+      else {
+        this.$swal({
+          title: 'Merci',
+          text: 'Votre vote a été enregistré',
+          icon: 'success',
+          confirmButtonText: 'Ok'
+        })
+      }
+    },
+    async downvote() {
+      if(this.dataIsDownvoted) {
+        this.dataIsDownvoted = false
+        this.dataLikeCount++
+      } else {
+        this.dataIsDownvoted = true
+        this.dataLikeCount--
+      }
+      const response = await likeQuestionsService(this.discussion_id, this.dataLikeCount)
+      if(!response.ok){
+        this.$swal({
+          title: 'Erreur',
+          text: 'Une erreur est survenue lors de l\'enregistrement de votre vote',
+          icon: 'error',
+          confirmButtonText: 'Ok'
+        })
+        this.dataIsDownvoted = !this.dataIsDownvoted
+        this.dataLikeCount++
+      }
+      else {
+        this.$swal({
+          title: 'Merci',
+          text: 'Votre vote a été enregistré',
+          icon: 'success',
+          confirmButtonText: 'Ok'
+        })
+      }
+
+    },
+    async repondre() {
+      console.log("dataResponse", this.dataResponse);
+
+      if(this.modeRevision){
+        let req = {
+          project_id: this.projectId,
+          version_number: this.versionId,
+          title: this.dataResponse,
+          description: this.dataResponse,
+        } as QuestionStoreDTO;
+        const response: Response = await addQuestion(req);
+        if (response.ok) {
+          this.$forceUpdate();
+        } else {
+          this.$swal({
+            title: 'Erreur',
+            text: 'Une erreur est survenue lors de l\'enregistrement de votre mot à dire',
+            icon: 'error',
+            confirmButtonText: 'Ok'
+          })
+        }
+      } else {
+        let req = {
+          question_id: this.discussionId,
+          title: this.dataResponse,
+          description: this.dataResponse,
+        } as AnswerStoreDTO
+        const response: Response = await addAnswer(req);
+        if (response.ok) {
+          this.$forceUpdate();
+        } else {
+          this.$swal({
+            title: 'Erreur',
+            text: 'Une erreur est survenue lors de l\'enregistrement de votre mot à dire',
+            icon: 'error',
+            confirmButtonText: 'Ok'
+          })
+        }
+      }
+
+    },
+    async likeAnswer(answerId: number, value: number){
+      if(this.modeRevision){
+        // like question not answer
+      }
+
+       const response: Response = await likeAnswersService(answerId, {value})
+        if(response.ok){
+          this.dataAnswers = this.dataAnswers.map((a: any) => {
+            if(a.id === answerId){
+              a.user_vote = value
+            }
+            return a
+          })
+        }
+        else {
+          this.$swal({
+            title: 'Erreur',
+            text: 'Une erreur est survenue lors de l\'enregistrement de votre vote',
+            icon: 'error',
+            confirmButtonText: 'Ok'
+          })
+        }
+    },
+    getFormatedDate(date: string) {
+      return format(new Date(date), 'dd LLLL yyyy', {
+        locale: frenchLocale,
+      })
+    },
+  }
+
+}
+
+</script>
+
+<style scoped>
+
+</style>
