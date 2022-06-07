@@ -26,6 +26,7 @@ describe("Browse ideas page tests", () => {
     cy.get('#types .vs__selected > .vs__deselect').click({ multiple: true })
     cy.get('#types .vs__selected').should("have.length", 0)
     cy.get('#contains-text').type("Keyword")
+    cy.get('#tags input[type="search"]').type("AD").type('{enter}')
     cy.get('.btn-group .btn').click({ multiple: true })
     cy.get('#reset').click()
     cy.get('#types .vs__selected').should("have.length", 2)
