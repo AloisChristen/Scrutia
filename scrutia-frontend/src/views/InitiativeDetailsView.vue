@@ -44,7 +44,7 @@
       content-class="block-content"
     >
       <b-tab title="Révisions" active>
-            <ProjectDiscussion v-for="(d, index) in discussions"
+            <ProjectDiscussion v-for="(d, index) in projetDiscussions"
                                :key="d.id"
                                :discussion-id="d.id"
                                :project-id="$route.params.project_id"
@@ -78,11 +78,17 @@
 
 <script lang="ts">
 import { getTags } from '@/api/services/TagsService'
+//import { getIdeas } from '@/api/services/ProjectService'
 import { TagDTO } from '@/typings/scrutia-types'
 
 export default {
   name: 'initiativeDetails',
-  data() {},
+  data() {return {
+    tags: [],
+    latestVersionId: 0,
+    discussions: [],
+    projetDiscussions: [],
+  }},
   methods: {
     async loadTags() {
       const response: Response = await getTags()
@@ -97,6 +103,20 @@ export default {
         })
       }
       this.isLoadingTags = false
+    },
+    async loadIdeas() {
+      /*const response: Response = await getIdeas()
+      if (response.ok) {
+        const ideas = await response.json()
+        this.$data.ideas = ideas
+      } else {
+        this.$swal({
+          icon: 'error',
+          title: "Une erreur s'est produite lors du chargement des idées",
+          showConfirmButton: true,
+        })
+      }
+      this.isLoadingIdeas = false*/
     },
     getNextColor() {
       const colors = [
@@ -116,7 +136,7 @@ export default {
   components: {},
   async created() {
     this.loadTags()
-    this.loadIdeas()
+    //this.loadIdeas()
   },
 }
 </script>
