@@ -77,6 +77,8 @@ import ProjectHeader from '@/components/ProjectHeader.vue'
 import ProjectDiscussion from '@/components/ProjectDiscussion.vue'
 
 import router from '@/router'
+import {addVersion} from "@/api/services/VersionsService";
+import {VersionStore} from "@/typings/scrutia-types";
 
 export default {
   name: 'initiativeDetails',
@@ -92,20 +94,20 @@ export default {
       userCanPostQuestion: false,
       latestVersionId: 0,
       isLoggedIn: false,
-      username: ''
+      username: '',
+      message: ''
     }
   },
   methods: {
 
     async reviserTexte() {
-      const response: Response = await getProjectDetails(this.initiative_id)
+      let versionNew = {
+          project_id: this.project.id,
+          description: this.message,
+        } as VersionStore;
+      const response: Response = await addVersion(versionNew)
       if (response.ok) {
-        this.project = await response.json()
-        this.latestVersionId = this.project.versions[0].id
-        this.userCanPostQuestion = this.project.user_can_post_question
-        this.isLoggedIn = this.project.user_can_post_question
-        this.username = this.project.user_name
-        this.isLoaded = true
+        this.$forceUpdate();
       }
       else {
         this.$swal({
