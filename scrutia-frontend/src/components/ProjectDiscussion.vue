@@ -142,16 +142,22 @@ export default {
   },
   methods: {
     upvote() {
-      console.log("upvoting");
-      this.dataIsUpvoted = true;
-      this.dataIsDownvoted = false;
-      this.dataLikeCount = this.dataLikeCount+1;
+      if(this.dataIsUpvoted) {
+        this.dataIsUpvoted = false
+        this.dataLikeCount--
+      } else {
+        this.dataIsUpvoted = true
+        this.dataLikeCount++
+      }
     },
     downvote() {
-      console.log("downvoting");
-      this.dataIsUpvoted = false;
-      this.dataIsDownvoted = true;
-      this.dataLikeCount = this.dataLikeCount-1;
+      if(this.dataIsDownvoted) {
+        this.dataIsDownvoted = false
+        this.dataLikeCount++
+      } else {
+        this.dataIsDownvoted = true
+        this.dataLikeCount--
+      }
     },
     repondre(){
       console.log("dataResponse", this.dataResponse);
