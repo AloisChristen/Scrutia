@@ -53,12 +53,6 @@
               >
             </router-link>
             <div role="separator" class="dropdown-divider"></div>
-            <!-- <router-link
-              class="dropdown-item d-flex align-items-center justify-content-between"
-              to="/userProfile"
-            >
-              <span class="font-size-sm font-w500">Profil</span>
-            </router-link> -->
             <router-link
               class="dropdown-item d-flex align-items-center justify-content-between"
               to="/"
