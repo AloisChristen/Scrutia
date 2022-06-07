@@ -29,7 +29,8 @@
                                modeRevision
                                :show-link="false"
                                :version="v"
-                               style="border: lightgrey; border-width: 1px; border-style: solid"
+                               style="margin-bottom: 16px"
+                               :canReply="userCanPostQuestion"
             />
 
       </b-tab>
@@ -72,6 +73,7 @@ export default {
       discussions: [],
       project: {},
       isLoaded: false,
+      userCanPostQuestion: false
     }
   },
   methods: {
@@ -97,6 +99,9 @@ export default {
 
       if(this.getUsername() !== data.author) {
         this.projectCanBePromoted = false;
+      }
+      if(this.getUsername() !=='No user'){
+        this.userCanPostQuestion = true;
       }
 
     }
