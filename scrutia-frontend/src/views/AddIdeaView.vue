@@ -18,7 +18,7 @@
             <i
               class="fa fa-question"
               v-b-tooltip.hover.bottom="
-                'Saisissez un titre à votre idée et ajoutez une description complète qui présente l\'ensemble de vos motivations. Choisissez des tags pour permettre à votre idée d\'être facilement recherchée. Une fois celle-ci publiée, vous devrez atteindre un nombre de soutient s\'élevant à 500 pour pouvoir la convertir en projet d\'initiative.'
+                'Saisissez un titre à votre idée et ajoutez une description complète qui présente l\'ensemble de vos motivations. Choisissez des tags pour permettre à votre idée d\'être facilement recherchée. Une fois celle-ci publiée, vous devrez atteindre un nombre de soutient s\'élevant à 50 pour pouvoir la convertir en projet d\'initiative.'
               "
             ></i>
           </template>
@@ -133,6 +133,7 @@ export default {
     }
   },
   async created() {
+    if (!this.isUserConnected()) this.$router.push('/auth/signin')
     const response: Response = await getTags()
     if (response.ok) {
       const tags = await response.json()
@@ -160,6 +161,9 @@ export default {
     },
   },
   methods: {
+    isUserConnected() {
+      return this.$store.getters.isConnected
+    },
     onClear() {
       this.form.title = ''
       this.form.description = ''
@@ -192,7 +196,6 @@ export default {
           showConfirmButton: false,
           timer: 1500,
         })
-        console.log(response)
         this.$router.push('/')
       } else {
         this.$swal({

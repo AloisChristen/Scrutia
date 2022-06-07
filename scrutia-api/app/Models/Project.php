@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Carbon;
 
 class Project extends Model
@@ -23,6 +24,24 @@ class Project extends Model
         'status' => Status::class
     ];
 
+    protected $hidden = [
+        'user_id',
+        'updated_at',
+        'pivot',
+        'user'
+    ];
+
+    protected $appends = [
+        'upvotes',
+        'downvotes',
+        'is_favorite',
+        'user_vote',
+        'last_description',
+        'author',
+        'performance'
+    ];
+
+
     /**
      * @return BelongsToMany
      */
@@ -37,6 +56,14 @@ class Project extends Model
     public function versions(): HasMany
     {
         return $this->hasMany(Version::class);
+    }
+
+    /**
+     * @return morphMany
+     */
+    public function likes(): MorphMany
+    {
+        return $this->morphMany(Like::class, 'likeable');
     }
 
     /**
@@ -107,8 +134,69 @@ class Project extends Model
      */
     public function scopeStatus(Builder $query, $status = null): Builder
     {
-        return $query->whereHas('tags', function (Builder $query) use ($status) {
-            $query->where('status', $status);
-        });
+        return $query->where('status', $status);
+
+    }
+
+    public function getLastDescriptionAttribute(): string|null
+    {
+        $description = null;
+        $version = $this->versions()->orderBy('number','desc')->first();
+        if($version != null){
+            $description = $version->description;
+        }
+        return $description;
+    }
+
+    public function getIsFavoriteAttribute(): bool
+    {
+        $is_favorite = false;
+        if(auth()->user() != null){
+            foreach($this->favorites()->get() as $favorite){
+                if($favorite->id == auth()->user()->id){
+                    $is_favorite = true;
+                }
+            }
+        }
+        return $is_favorite;
+    }
+
+    public function getPerformanceAttribute(): string
+    {
+        $perf = '0%';
+        $yesterday_count = $this->likes()->whereDate('created_at', '<=', Carbon::yesterday())->count();
+        if($yesterday_count > 0){
+            $perf = ($this->likes()->whereDate('created_at', '<=', Carbon::today())->count() /
+                    $yesterday_count) * 100 . '%';
+        }
+        return $perf;
+    }
+
+    public function getUpvotesAttribute(): int
+    {
+        return $this->likes()->where('value', 1)->count();
+    }
+
+    public function getDownvotesAttribute(): int
+    {
+        return $this->likes()->where('value', -1)->count();
+    }
+
+    public function getUserVoteAttribute(): Vote
+    {
+        $vote = Vote::UNVOTED;
+        if(auth()->user() != null){
+            foreach ($this->likes()->get() as $like){
+                if($like->user->id == auth()->user()->id){
+                    $vote = $like->value;
+                }
+            }
+        }
+        return $vote;
+    }
+
+    public function getAuthorAttribute(): string
+    {
+        return $this->user->username;
     }
 }

@@ -3,33 +3,27 @@
   <div class="hero-static">
     <div class="content">
       <b-row class="justify-content-center">
-        <b-col md="8" lg="6" xl="4">
+        <b-col md="8" lg="8" xl="6">
           <!-- Sign In Block -->
           <base-block
             rounded
             themed
-            header-class="bg-primary-dark"
             class="mb-0"
-            title="Sign In"
+            header-class="bg-primary-dark"
+            title="Connexion"
           >
             <template #options>
               <router-link
-                to="/auth/reminder"
-                class="btn-block-option font-size-sm"
-                >Forgot Password?</router-link
-              >
-              <router-link
                 to="/auth/signup"
-                class="btn-block-option"
-                v-b-tooltip.hover.nofade.left="'New Account'"
+                class="btn-block-option font-size-sm"
               >
-                <i class="fa fa-user-plus"></i>
+                <i class="fa fa-fw fa-plus"></i>
+                S'enregistrer
               </router-link>
             </template>
-            <div class="p-sm-3 px-lg-4 py-lg-5">
-              <h1 class="h2 mb-1">OneUI</h1>
-              <p class="text-muted">Welcome, please login.</p>
-
+            <div class="p-sm-3 px-lg-3 py-lg-3">
+              <h1 class="h2 mb-1">{{ $store.getters.appName }}</h1>
+              <p class="text-muted">Veuillez vous connectez</p>
               <!-- Sign In Form -->
               <b-form @submit.stop.prevent="onSubmit">
                 <div class="py-3">
@@ -39,13 +33,13 @@
                       class="form-control-alt"
                       id="username"
                       name="username"
-                      placeholder="Username"
+                      placeholder="Nom d'utilisateur"
                       v-model="$v.form.username.$model"
                       :state="!$v.form.username.$error && null"
                       aria-describedby="username-feedback"
                     ></b-form-input>
                     <b-form-invalid-feedback id="username-feedback">
-                      Please enter your username
+                      Doit être remplit
                     </b-form-invalid-feedback>
                   </div>
                   <div class="form-group">
@@ -55,29 +49,39 @@
                       class="form-control-alt"
                       id="password"
                       name="password"
-                      placeholder="Password"
+                      placeholder="Mot de passe"
                       v-model="$v.form.password.$model"
                       :state="!$v.form.password.$error && null"
                       aria-describedby="password-feedback"
                     ></b-form-input>
                     <b-form-invalid-feedback id="password-feedback">
-                      Please enter your password
+                      Doit être remplit
                     </b-form-invalid-feedback>
-                  </div>
-                  <div class="form-group">
-                    <b-form-checkbox id="remember" name="remember"
-                      >Remember Me</b-form-checkbox
-                    >
                   </div>
                 </div>
                 <b-row class="form-group">
-                  <b-col md="6" xl="5">
-                    <b-button type="submit" variant="alt-primary" block>
-                      <i class="fa fa-fw fa-sign-in-alt mr-1"></i> Sign In
+                  <b-col md="6" xl="6">
+                    <b-button
+                      class="mb-2"
+                      type="submit"
+                      variant="alt-primary"
+                      block
+                    >
+                      <i class="fa fa-fw fa-sign-in-alt mr-1"></i> Se connecter
+                    </b-button>
+                  </b-col>
+                  <b-col md="6" xl="6">
+                    <b-button
+                      variant="dual"
+                      @click="$router.push('/home')"
+                      block
+                    >
+                      <i class="fa fa-undo mr-1"></i> Retour
                     </b-button>
                   </b-col>
                 </b-row>
               </b-form>
+
               <!-- END Sign In Form -->
             </div>
           </base-block>
@@ -86,9 +90,7 @@
       </b-row>
     </div>
     <div class="content content-full font-size-sm text-muted text-center">
-      <strong>{{
-        $store.getters.appName + ' ' + $store.getters.appVersion
-      }}</strong>
+      <strong>{{ $store.getters.appName }}</strong>
       &copy; {{ $store.getters.appCopyright }}
     </div>
   </div>
@@ -126,6 +128,22 @@ export default {
     },
   },
   methods: {
+    async submitSuccess(resp: any) {
+      let session: LoginDTO = (await resp.json()) as LoginDTO
+      this.$store.commit('connect', session)
+      this.$router.push('/')
+    },
+    async formErrors() {
+      this.$swal({
+        icon: 'error',
+        title: "Nom d'utilisateur ou mot de passe incorrect",
+        showConfirmButton: true,
+      })
+    },
+    async otherErrors() {
+      this.$router.push('/')
+    },
+
     onSubmit() {
       this.$v.form.$touch()
 
@@ -136,10 +154,14 @@ export default {
       }
 
       // TODO threat case when not connected
-      login(account).then((session) => {
-        this.$store.commit('session', session)
-        console.log(this.$store.getters.authToken)
-        this.$router.push('/')
+      login(account).then(async (resp) => {
+        if (resp.ok) {
+          this.submitSuccess(resp)
+        } else if (resp.status === 401 || resp.status === 404) {
+          this.formErrors()
+        } else {
+          this.otherErrors()
+        }
       })
     },
   },

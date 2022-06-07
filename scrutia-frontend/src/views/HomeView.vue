@@ -5,55 +5,60 @@
       <b-spinner
         variant="primary"
         label="Loading..."
-        v-show="isLoading"
+        v-show="$store.getters.isLoadingIdeas"
       ></b-spinner>
-      <b-row v-show="!isLoading">
-        <b-col sm="12" md="4" xl="4" v-for="index in 6" :key="index">
+      <b-row v-show="!$store.getters.isLoadingIdeas">
+        <b-col
+          sm="12"
+          md="4"
+          xl="4"
+          v-for="idea in $store.state.trendings.ideas"
+          v-bind:key="idea.id"
+        >
           <project-component
-            v-bind:project="{
-              title: 'Sauver les pandas en Asie',
-              description:
-                'Description de mon projet. Ce texte peut parfois être super long. Ce texte peut parfois être super long. Ce texte peut parfois être super long.',
-              isProjectInitiative: false,
-            }"
+            v-bind:project="idea"
             :reducedDisplay="true"
+            :isProjectInitiative="false"
           />
         </b-col>
       </b-row>
       <p>
         <b-link
           class="link-fx"
-          href="javascript:void(0)"
+          href="/browseIdeas?type=ideas"
           style="float: right; margin-bottom: 10px; margin-top: -10px"
-          v-show="!isLoading"
-          >et 125 autres...</b-link
+          v-show="!$store.getters.isLoadingIdeas"
+          >parmi {{ $store.getters.nbIdeas }} idées...</b-link
         >
       </p>
       <h2 class="content-heading">Projets d'initiative les plus actifs...</h2>
       <b-spinner
         variant="primary"
         label="Loading..."
-        v-show="isLoadingProjects"
+        v-show="$store.getters.isLoadingProjects"
       ></b-spinner>
-      <b-row v-show="!isLoadingProjects">
-        <b-col sm="12" md="6" xl="6" v-for="index in 4" :key="index">
+      <b-row v-show="!$store.getters.isLoadingProjects">
+        <b-col
+          sm="12"
+          md="6"
+          xl="6"
+          v-for="project in $store.state.trendings.projects"
+          v-bind:key="project.id"
+        >
           <project-component
-            v-bind:project="{
-              title: 'Sauver les pandas en Asie',
-              description:
-                'Description de mon projet. Ce texte peut parfois être super long. Ce texte peut parfois être super long. Ce texte peut parfois être super long.',
-              isProjectInitiative: true,
-            }"
+            v-bind:project="project"
+            :reducedDisplay="true"
+            :isProjectInitiative="true"
           />
         </b-col>
       </b-row>
       <p>
         <b-link
           class="link-fx"
-          href="javascript:void(0)"
+          href="browseIdeas?type=initiatives"
           style="float: right; margin-bottom: 10px; margin-top: -10px"
-          v-show="!isLoadingProjects"
-          >et 28 autres...</b-link
+          v-show="!$store.getters.isLoadingProjects"
+          >parmi {{ $store.getters.nbProjects }} projets...</b-link
         >
       </p>
     </div>
@@ -63,38 +68,24 @@
 <script lang="ts">
 import ProjectComponent from '../components/ProjectComponent.vue'
 import { Component, Vue } from 'vue-property-decorator'
-import { getProjects } from '@/api/services/ProjectsService'
-import { ProjectPaginationDTO } from '@/typings/scrutia-types'
 
 @Component({
   name: 'HomeView',
   components: {
     ProjectComponent,
   },
-  data() {
-    return {
-      nbIdeas: 0,
-      nbProjects: 0,
-      ideas: [],
-      projects: [],
-      isLoading: true,
-      isLoadingProjects: true,
-    }
-  },
   async created() {
-    const response: Response = await getProjects()
-    if (response.ok) {
-      const projectsPagingation: ProjectPaginationDTO = await response.json()
-      console.log(projectsPagingation)
-    } else {
-      this.$swal({
-        icon: 'error',
-        title: "Une erreur s'est produite lors du chargement des projets",
-        showConfirmButton: true,
-      })
-    }
-    this.isLoading = false
-    this.isLoadingProjects = false
+    this.loadIdeas()
+    this.loadProjects()
+  },
+  methods: {
+    loadIdeas: async function () {
+      if (this.$store.getters.nbIdeas === 0) this.$store.commit('loadIdeas')
+    },
+    loadProjects: async function () {
+      if (this.$store.getters.nbProjects === 0)
+        this.$store.commit('loadProjects')
+    },
   },
 })
 export default class HomeView extends Vue {}

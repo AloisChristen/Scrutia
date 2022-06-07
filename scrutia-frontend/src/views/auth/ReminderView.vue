@@ -10,7 +10,7 @@
             themed
             header-class="bg-primary-dark"
             class="mb-0"
-            title="Password Reminder"
+            title="Mot de passe oublié"
           >
             <template #options>
               <router-link
@@ -22,10 +22,10 @@
               </router-link>
             </template>
             <div class="p-sm-3 px-lg-4 py-lg-5">
-              <h1 class="h2 mb-1">OneUI</h1>
+              <h1 class="h2 mb-1">{{ $store.getters.appName }}</h1>
               <p class="text-muted">
-                Please provide your account’s email and we will send you your
-                password.
+                Veuillez fournir votre email pour que nous puissions vous
+                envoyez votre nouveau mot de passe.
               </p>
 
               <!-- Reminder Form -->
@@ -36,19 +36,20 @@
                     class="form-control-alt"
                     id="reminder"
                     name="reminder"
-                    placeholder="Username or Email"
+                    placeholder="Email"
                     v-model="$v.form.reminder.$model"
                     :state="!$v.form.reminder.$error && null"
                     aria-describedby="reminder-feedback"
                   ></b-form-input>
                   <b-form-invalid-feedback id="reminder-feedback">
-                    Please enter your username or email
+                    Veuillez fournir votre adresse email
                   </b-form-invalid-feedback>
                 </div>
                 <b-row class="form-group">
-                  <b-col md="6" xl="5">
+                  <b-col md="6" xl="6">
                     <b-button type="submit" variant="alt-primary" block>
-                      <i class="fa fa-fw fa-envelope mr-1"></i> Send Mail
+                      <i class="fa fa-fw fa-envelope mr-1"></i> Envoyez-moi un
+                      mail
                     </b-button>
                   </b-col>
                 </b-row>

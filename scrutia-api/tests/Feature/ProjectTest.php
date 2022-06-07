@@ -146,15 +146,11 @@ class ProjectTest extends TestCase
             "status" => Status::IDEE
         ]);
 
-        $version = Version::factory()->create();
-        $version->project()->associate($project);
-        $version->save();
-
 
         Like::factory(50)->create([
             "value" => 1,
-            "likeable_type" => $version->getMorphClass(),
-            "likeable_id" => $version->id
+            "likeable_type" => $project->getMorphClass(),
+            "likeable_id" => $project->id
         ]);
 
         $response = $this->actingAs($project->user)->put('/api/projects/'.$project->id."/promote");
@@ -222,7 +218,7 @@ class ProjectTest extends TestCase
         $this->assertEquals('2020-01-02', Carbon::parse($project->created_at)
             ->format('Y-m-d'));
 
-        $response = $this->get('/api/projects?filter[startDate]=2020-01-01&filter[endDate]=2020-01-31');
+        $response = $this->get('/api/projects/nb_per_page/15?filter[startDate]=2020-01-01&filter[endDate]=2020-01-31');
         $response->assertStatus(200);
     }
 }
