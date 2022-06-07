@@ -62,6 +62,7 @@ export default {
   },
   async mounted() {
     const project_id_str = this.$route.params.project_id;
+    const question_id_str = this.$route.params.discussion_id;
     const response: Response = await getProjectDetails(Number(project_id_str))
     if (response.ok) {
       const data = await response.json()
@@ -74,7 +75,13 @@ export default {
       this.tagList = data.tags;
 
       this.latestVersionId = data.latestVersionId;
-      this.question = this.getFakeQuestion();
+      console.log(data.questions)
+      if(data.questions != undefined || data.questions.length !== 0){
+        let questions = data.versions[0].questions;
+        this.question = questions.filter((x: { id: number; }) => x.id === Number(question_id_str))[0]
+      } else {
+        this.question = this.getFakeQuestion();
+      }
       this.username = this.getUsername();
       if(this.username !== 'No user'){
         this.isLoggedIn = true;

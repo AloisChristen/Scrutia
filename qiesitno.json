@@ -1,0 +1,98 @@
+"questions": [
+	{
+	  "id": 0,
+	  "title": "string",
+	  "user_id": "string",
+	  "created_at": "2022-06-07T10:14:47.867Z",
+	  "updated_at": "2022-06-07T10:14:47.867Z",
+	  "nb_upvotes": 0,
+	  "nb_downvotes": 0,
+	  "user_vote": -1,
+	  "answers": [
+		{
+		  "id": 0,
+		  "description": "string",
+		  "user_id": "string",
+		  "nb_upvotes": 0,
+		  "nb_downvotes": 0,
+		  "user_vote": -1,
+		  "created_at": "2022-06-07T10:14:47.867Z",
+		  "updated_at": "2022-06-07T10:14:47.867Z"
+		},
+		{
+		  "id": 0,
+		  "description": "string",
+		  "user_id": "string",
+		  "nb_upvotes": 0,
+		  "nb_downvotes": 0,
+		  "user_vote": -1,
+		  "created_at": "2022-06-07T10:14:47.867Z",
+		  "updated_at": "2022-06-07T10:14:47.867Z"
+		}
+	  ]
+	},
+	{
+	  "id": 0,
+	  "title": "string",
+	  "user_id": "string",
+	  "created_at": "2022-06-07T10:14:47.867Z",
+	  "updated_at": "2022-06-07T10:14:47.867Z",
+	  "nb_upvotes": 0,
+	  "nb_downvotes": 0,
+	  "user_vote": -1,
+	  "answers": [
+		{
+		  "id": 0,
+		  "description": "string",
+		  "user_id": "string",
+		  "nb_upvotes": 0,
+		  "nb_downvotes": 0,
+		  "user_vote": -1,
+		  "created_at": "2022-06-07T10:14:47.867Z",
+		  "updated_at": "2022-06-07T10:14:47.867Z"
+		},
+		{
+		  "id": 0,
+		  "description": "string",
+		  "user_id": "string",
+		  "nb_upvotes": 0,
+		  "nb_downvotes": 0,
+		  "user_vote": -1,
+		  "created_at": "2022-06-07T10:14:47.867Z",
+		  "updated_at": "2022-06-07T10:14:47.867Z"
+		}
+	  ]
+	},
+	{
+	  "id": 0,
+	  "title": "string",
+	  "user_id": "string",
+	  "created_at": "2022-06-07T10:14:47.867Z",
+	  "updated_at": "2022-06-07T10:14:47.867Z",
+	  "nb_upvotes": 0,
+	  "nb_downvotes": 0,
+	  "user_vote": -1,
+	  "answers": [
+		{
+		  "id": 0,
+		  "description": "string",
+		  "user_id": "string",
+		  "nb_upvotes": 0,
+		  "nb_downvotes": 0,
+		  "user_vote": -1,
+		  "created_at": "2022-06-07T10:14:47.867Z",
+		  "updated_at": "2022-06-07T10:14:47.867Z"
+		},
+		{
+		  "id": 0,
+		  "description": "string",
+		  "user_id": "string",
+		  "nb_upvotes": 0,
+		  "nb_downvotes": 0,
+		  "user_vote": -1,
+		  "created_at": "2022-06-07T10:14:47.867Z",
+		  "updated_at": "2022-06-07T10:14:47.867Z"
+		}
+	  ]
+	}
+]
