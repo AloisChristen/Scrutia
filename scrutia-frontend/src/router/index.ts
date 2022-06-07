@@ -16,6 +16,7 @@ const Home = () => import('@/views/HomeView.vue')
 const BrowseIdeas = () => import('@/views/BrowseIdeasView.vue')
 const AddIdea = () => import('@/views/AddIdeaView.vue')
 const IdeaDetails = () => import('@/views/IdeaDetailsView.vue')
+const IdeaDetailsDiscussion = () => import('@/views/IdeaDetailsDiscussion.vue')
 const Chat = () => import('@/views/ChatView.vue')
 const BrowseInitiatives = () => import('@/views/BrowseInitiativesView.vue')
 const InitiativeDetails = () => import('@/views/InitiativeDetailsView.vue')
@@ -60,6 +61,11 @@ export default new Router({
           path: 'project/:project_id',
           name: "Scrutia | Détails de l'idée",
           component: IdeaDetails,
+        },
+        {
+          path: 'project/:project_id/discussion/:discussion_id',
+          name: "ideaDiscussion",
+          component: IdeaDetailsDiscussion,
         },
         {
           path: 'chat',

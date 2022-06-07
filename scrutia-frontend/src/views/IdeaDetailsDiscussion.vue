@@ -11,16 +11,14 @@
         ideaActionActivated
       ></ProjectHeader>
 
-      <ProjectDiscussion v-for="(d, index) in discussions"
-                          :key="d.id"
-                          :discussion-id="d.id"
-                          :project-id="$route.params.project_id"
-                          :title="d.title"
-                          :text="d.text"
-                          :likeCount="d.likesCurrent"
-                          :isUpvoted="d.isUpvoted"
-                          :isDownvoted="d.isDownvoted"
-                          :closed="index !== 0"
+      <ProjectDiscussion
+                         :project-id="$route.params.project_id"
+                         :key="discussion.id"
+                         :title="discussion.title"
+                         :text="discussion.text"
+                         :answers="discussion.answers"
+                         :showLink="false"
+                         completeView
       />
 
     </div>
@@ -32,17 +30,24 @@ import ProjectHeader from "@/components/ProjectHeader.vue";
 import ProjectDiscussion from "@/components/ProjectDiscussion.vue";
 import {getProjectDetails} from "@/api/services/ProjectsService";
 export default {
-  name: "IdeaDetailsView",
+  name: "IdeaDetailsDiscussion",
   components: {
     ProjectHeader,ProjectDiscussion
   },
   data() {
     return {
-      discussions: [
-        {id: 1, title: 'pourquoi la terre se rechauffe ?', author: 'fred dupont', likesCurrent: 200, text: "This rule reports the elements which have v-for and do not have v-bind:key with exception to custom components.", isUpvoted: false, isDownvoted: false},
-        {id: 2, title: 'pourquoi la terre se rechauffe ?', author: 'fred dupont', likesCurrent: 200, text: "This rule reports the elements which have v-for and do not have v-bind:key with exception to custom components.", isUpvoted: true, isDownvoted: false},
-        {id: 3, title: 'pourquoi la terre se rechauffe ?', author: 'fred dupont', likesCurrent: 200, text: "This rule reports the elements which have v-for and do not have v-bind:key with exception to custom components.", isUpvoted: false, isDownvoted: true}
-      ],
+      discussion:  {
+        id: 1,
+        title: 'pourquoi la terre se rechauffe ?',
+        author: 'fred dupont',
+        likesCurrent: 200,
+        text: "This rule reports the elements which have v-for and do not have v-bind:key with exception to custom components.",
+        answers: [
+          {id: 1, author: "karl", text: "vraiment d'accord", isLiked: true},
+          {id: 2, author: "Fred", text: "vraiment pas d'accord", isLiked: false},
+          {id: 3, author: "Gilbert", text: "vraiment d'accord", isLiked: true},
+        ]
+      },
       isLoaded: false,
       title: "",
       description: "",
@@ -60,5 +65,8 @@ export default {
     this.isLoaded = true
   }
 }
-
 </script>
+
+<style scoped>
+
+</style>

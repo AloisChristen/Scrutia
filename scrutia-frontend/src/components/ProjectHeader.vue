@@ -1,45 +1,41 @@
 <template>
 <div>
   <b-row style="padding-left: 0" no-gutters>
-    <b-col>
+    <b-col v-if="displayPicture">
       <img
-        v-if="displayPicture"
         src="https://via.placeholder.com/120x120"
         alt="..."
         class="img-fluid"
       />
     </b-col>
-    <b-col cols="8">
-      <base-block rounded class="mb-0" transparent>
+    <b-col cols="12">
+      <div style="display: flex">
         <h1 class="font-w400">{{ title }}</h1>
-      </base-block>
-    </b-col>
-    <b-col cols="4" class="mb-0" v-if="ideaActionActivated">
-      <!-- transparent -->
-      <base-block rounded transparent>
-        <div v-on:click="like_current()">
-          <div v-if="isLiked">
-            <i class="fa fa-fw fa-thumbs-up mr-1"></i>
-            {{  likesCount }}
+        <div v-if="ideaActionActivated" style="margin-right: 0; margin-left: auto; display: flex; flex-direction: column">
+          <div v-on:click="like_current()">
+            <div v-if="data_project_liked">
+              <i class="fa fa-fw fa-thumbs-up mr-1"></i>
+              {{ data_project_liked_count }} personnes soutiennent le projet
+            </div>
+            <div v-else>
+              <i
+                class="fa fa-fw fa-thumbs-up mr-1"
+                style="color: lightgray"
+              ></i>
+              {{ data_project_liked_count }} personnes soutiennent le projet
+            </div>
           </div>
-          <div v-else>
-            <i
-              class="fa fa-fw fa-thumbs-up mr-1"
-              style="color: lightgray"
-            ></i>
-            {{ likesCount }}
-          </div>
+          <b-button v-if="canBePromoted" v-on:click="promote" style="margin-right: 0; margin-left: auto">
+            promouvoir le projet
+          </b-button>
         </div>
-      </base-block>
-      <b-button v-if="canBePromoted" v-on:click="promote">
-        promouvoire le projet
-      </b-button>
+      </div>
     </b-col>
   </b-row>
 
   <b-row style="padding-left: 0" no-gutters>
     <b-col cols="12">
-      <b-badge v-for="tag in tagList" :key="tag.id" :variant="getNextColor()" >
+      <b-badge v-for="tag in tagList" :key="tag.id" :variant="getNextColor()" style="padding: 5px; margin: 2px" >
         {{ tag }}
       </b-badge>
     </b-col>
@@ -49,37 +45,18 @@
       </p>
     </b-col>
   </b-row>
-  <div class="block-rounded block-transparent block col-xl-10">
-    <div class="block-header">
-    </div>
-    <div class="block-content" style="padding: 10px 0px 0px 0px">
-      <div class="container">
-        <div class="row">
-          <div class="block-content-left col-xl-2">
-
-            <img
-              v-if="displayPicture"
-              src="https://via.placeholder.com/120x120"
-              alt="..."
-              class="img-fluid"
-            />
-
-
-          </div>
-
-        </div>
-      </div>
-
-      <!---->
-    </div>
-  </div>
 </div>
 </template>
 
 <script>
+import {promoteProject} from "@/api/services/ProjectsService";
+
 export default {
   name: "ProjectHeader",
   props: {
+    projectId: {
+      type: String
+    },
     title: {
       type: String,
       default: 'Ceci est un titre'
@@ -102,7 +79,7 @@ export default {
     },
     isLiked: {
       type: Boolean,
-      default: false
+      default: true
     },
     likesCount: {
       type: Number,
@@ -113,6 +90,13 @@ export default {
       default: false
     }
 
+  },
+  data() {
+    return {
+      data_project_liked: this.isLiked,
+      data_project_liked_count: this.likesCount
+
+    }
   },
   methods: {
     getNextColor() {
@@ -131,15 +115,21 @@ export default {
 
     //- --- -- idea actions -- -- - - -- -
     like_current(){
-      console.log("liking...-")
+      console.log("liking...-");
+      if (this.data_project_liked) {
+        this.data_project_liked_count = this.data_project_liked_count -1;
+      } else {
+        this.data_project_liked_count = this.data_project_liked_count +1;
+      }
+      this.data_project_liked = !this.data_project_liked;
+      // api interaction ?
+      // await likeProject() doesnt exist
     },
-    promote(){
-      console.log("promoting....")
+    async promote() {
+      console.log("promoting....");
+      await promoteProject(Number(this.projectId));
+      // redirect ?
     }
-
-
-
-
 
   }
 }
@@ -150,3 +140,4 @@ export default {
     margin-right: 15px;
   }
 </style>
+
