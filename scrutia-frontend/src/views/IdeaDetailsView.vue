@@ -27,6 +27,7 @@
                           :closed="index !== 0"
                           :answers="d.answers"
                           :author="d.user_id"
+                          onlyThreeAnswer
       />
 
     </div>
@@ -107,25 +108,45 @@ export default {
             "updated_at": "2022-06-07T10:14:47.867Z",
             "nb_upvotes": 2,
             "nb_downvotes": 1,
-            "user_vote": -1,
+            "user_vote": 1,
             "answers": [
               {
                 "id": 0,
-                "description": "string",
-                "user_id": "string",
+                "description": "Tres pertinent",
+                "user_id": "jabs83",
                 "nb_upvotes": 0,
                 "nb_downvotes": 0,
-                "user_vote": -1,
+                "user_vote": 1,
                 "created_at": "2022-06-07T10:14:47.867Z",
                 "updated_at": "2022-06-07T10:14:47.867Z"
               },
               {
                 "id": 1,
-                "description": "string",
-                "user_id": "string",
+                "description": "osef de ca",
+                "user_id": "lorius22",
                 "nb_upvotes": 0,
                 "nb_downvotes": 0,
-                "user_vote": -1,
+                "user_vote": 0,
+                "created_at": "2022-06-07T10:14:47.867Z",
+                "updated_at": "2022-06-07T10:14:47.867Z"
+              },
+              {
+                "id": 3,
+                "description": "osef de ca 2",
+                "user_id": "lorius2242",
+                "nb_upvotes": 0,
+                "nb_downvotes": 0,
+                "user_vote": 0,
+                "created_at": "2022-06-07T10:14:47.867Z",
+                "updated_at": "2022-06-07T10:14:47.867Z"
+              },
+              {
+                "id": 4,
+                "description": "osef de ca 2",
+                "user_id": "lorius2242",
+                "nb_upvotes": 0,
+                "nb_downvotes": 0,
+                "user_vote": 0,
                 "created_at": "2022-06-07T10:14:47.867Z",
                 "updated_at": "2022-06-07T10:14:47.867Z"
               }
