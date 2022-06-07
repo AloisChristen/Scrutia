@@ -18,7 +18,7 @@
                           :key="d.id"
                           :discussion-id="d.id"
                           :title="d.title"
-                          :date="d.title"
+                          :date="d.created_at"
                           :projectId="projectId"
                           :versionId="latestVersionId"
                           :likeCount="d.nb_upvotes - d.nb_downvotes"
@@ -26,6 +26,7 @@
                           :isDownvoted="d.user_vote == -1"
                           :closed="index !== 0"
                           :answers="d.answers"
+                          :author="d.user_id"
       />
 
     </div>

@@ -18,8 +18,8 @@
             <div style="display: flex; flex-direction: column; align-self: center">
               <div class="Lead">{{title}}</div>
               <div style="display: flex">
-                <div style="font-size: xx-small; margin-right: 16px">le mardi 14 juin</div>
-                <div style="font-size: xx-small;">Alfred dupont</div>
+                <div style="font-size: xx-small; margin-right: 16px">{{getFormatedDate(date)}}</div>
+                <div style="font-size: xx-small;">{{author}}</div>
               </div>
             </div>
           </div>
@@ -70,6 +70,9 @@
 
 <script lang="ts">
 
+import {format} from "date-fns";
+import frenchLocale from "date-fns/locale/fr";
+
 export default {
   name: "ProjectDiscussion",
   props: {
@@ -116,6 +119,12 @@ export default {
     },
     answers: {
       type: Array
+    },
+    date: {
+      type: String
+    },
+    author: {
+      type: String
     }
   },
   mounted() {
@@ -146,7 +155,12 @@ export default {
     },
     repondre(){
       console.log("dataResponse", this.dataResponse);
-    }
+    },
+    getFormatedDate(date: string) {
+      return format(new Date(date), 'dd LLLL yyyy', {
+        locale: frenchLocale,
+      })
+    },
   }
 
 }
