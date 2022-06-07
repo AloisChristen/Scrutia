@@ -64,7 +64,7 @@
         type="button"
         class="btn btn-primary"
         value="Réviser le texte"
-        @click="postMessage"
+        v-on:click="reviserTexte()"
       />
 
     </b-row>
@@ -96,6 +96,26 @@ export default {
     }
   },
   methods: {
+
+    async reviserTexte() {
+      const response: Response = await getProjectDetails(this.initiative_id)
+      if (response.ok) {
+        this.project = await response.json()
+        this.latestVersionId = this.project.versions[0].id
+        this.userCanPostQuestion = this.project.user_can_post_question
+        this.isLoggedIn = this.project.user_can_post_question
+        this.username = this.project.user_name
+        this.isLoaded = true
+      }
+      else {
+        this.$swal({
+          title: 'Erreur',
+          text: 'Une erreur est survenue lors de la révision du texte',
+          type: 'error',
+          confirmButtonText: 'OK',
+        })
+      }
+    },
     getUsername: function () {
       let user = this.$store.getters.currentUser
       if (user == undefined) {
