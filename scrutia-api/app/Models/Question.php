@@ -55,7 +55,8 @@ class Question extends Model
 
     public function getProjectIdAttribute(): int
     {
-        return $this->version()->project()->id;
+        $version = $this->version()->first();
+        return $version->project->id;
     }
 
     public function getUserVoteAttribute(): Vote

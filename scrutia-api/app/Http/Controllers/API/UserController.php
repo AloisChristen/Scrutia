@@ -105,4 +105,22 @@ class UserController extends Controller
 
         return response()->json($user->questions()->paginate());
     }
+
+    /**
+     * Retrive users questions
+     *
+     * @return JsonResponse
+     */
+    public function answers(): JsonResponse
+    {
+        $user = User::find(auth()->user()->id);
+
+        if($user == null) {
+            return response()->json(["message" => "Not Found", "errors" => [
+                "User does not exist"
+            ]], 404);
+        }
+
+        return response()->json($user->answers()->paginate());
+    }
 }
