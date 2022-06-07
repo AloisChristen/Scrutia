@@ -44,74 +44,33 @@
       content-class="block-content"
     >
       <b-tab title="Révisions" active>
-        <div class="block-rounded block">
-          <b-col>
-            <base-block
-              rounded
-              title="Title"
-              subtitle="Subtitle"
-              ref="exampleBlock1"
-              btn-option-fullscreen
-              btn-option-pinned
-              btn-option-content
-              btn-option-close
-            >
-              <template #options>
-                <button
-                  type="button"
-                  class="btn-block-option"
-                  @click="loadData('exampleBlock1')"
-                >
-                  <i class="si si-refresh"></i>
-                </button>
-              </template>
+            <ProjectDiscussion v-for="(d, index) in discussions"
+                               :key="d.id"
+                               :discussion-id="d.id"
+                               :project-id="$route.params.project_id"
+                               :versionId="latestVersionId"
+                               :title="d.title"
+                               :text="d.text"
+                               :likeCount="d.likesCurrent"
+                               :isUpvoted="d.isUpvoted"
+                               :isDownvoted="d.isDownvoted"
+                               :closed="index !== 0"
+            />
 
-              <p>
-                Dolor posuere proin blandit accumsan senectus netus nullam
-                curae, ornare laoreet adipiscing luctus mauris adipiscing
-                pretium eget fermentum, tristique lobortis est ut metus lobortis
-                tortor tincidunt himenaeos habitant quis dictumst proin odio
-                sagittis purus mi, nec taciti vestibulum quis in sit varius
-                lorem sit metus mi.
-              </p>
-            </base-block>
-          </b-col>
-        </div>
       </b-tab>
       <b-tab title="Fils de discussion" active>
-        <div class="block-rounded block">
-          <b-col>
-            <base-block
-              rounded
-              title="Title"
-              subtitle="Subtitle"
-              ref="exampleBlock1"
-              btn-option-fullscreen
-              btn-option-pinned
-              btn-option-content
-              btn-option-close
-            >
-              <template #options>
-                <button
-                  type="button"
-                  class="btn-block-option"
-                  @click="loadData('exampleBlock1')"
-                >
-                  <i class="si si-refresh"></i>
-                </button>
-              </template>
-
-              <p>
-                Dolor posuere proin blandit accumsan senectus netus nullam
-                curae, ornare laoreet adipiscing luctus mauris adipiscing
-                pretium eget fermentum, tristique lobortis est ut metus lobortis
-                tortor tincidunt himenaeos habitant quis dictumst proin odio
-                sagittis purus mi, nec taciti vestibulum quis in sit varius
-                lorem sit metus mi.
-              </p>
-            </base-block>
-          </b-col>
-        </div>
+        <ProjectDiscussion v-for="(d, index) in discussions"
+                           :key="d.id"
+                           :discussion-id="d.id"
+                           :project-id="$route.params.project_id"
+                           :versionId="latestVersionId"
+                           :title="d.title"
+                           :text="d.text"
+                           :likeCount="d.likesCurrent"
+                           :isUpvoted="d.isUpvoted"
+                           :isDownvoted="d.isDownvoted"
+                           :closed="index !== 0"
+        />
       </b-tab>
     </b-tabs>
   </div>
@@ -122,7 +81,7 @@ import { getTags } from '@/api/services/TagsService'
 import { TagDTO } from '@/typings/scrutia-types'
 
 export default {
-  name: 'BrowseIdeaView',
+  name: 'initiativeDetails',
   data() {},
   methods: {
     async loadTags() {

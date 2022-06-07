@@ -17,6 +17,7 @@
                           :key="d.id"
                           :discussion-id="d.id"
                           :project-id="$route.params.project_id"
+                          :versionId="latestVersionId"
                           :title="d.title"
                           :text="d.text"
                           :likeCount="d.likesCurrent"
@@ -53,6 +54,7 @@ export default {
       tagList: [],
       projectCanBePromoted: true,
       isLiked: false,
+      latestVersionId: 0,
     }
   },
   async mounted() {
@@ -69,6 +71,7 @@ export default {
       this.isLiked = data.user_vote === 1
       this.description = data.last_description
       this.tagList = data.tags
+      this.latestVersionId = data.latestVersionId
     }
     this.isLoaded = true
   }

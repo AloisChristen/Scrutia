@@ -14,15 +14,37 @@
         <div v-if="ideaActionActivated" style="margin-right: 0; margin-left: auto; display: flex; flex-direction: column">
           <div v-on:click="like_current()">
             <div v-if="data_project_liked">
-              <i class="fa fa-fw fa-thumbs-up mr-1"></i>
-              {{ data_project_liked_count }} personnes soutiennent le projet
+              <div style="display: flex">
+                <i
+                  class="fa fa-fw fa-thumbs-up mr-1"
+                ></i>
+                <div v-if="data_project_liked_count === 0">
+                  Soyez le premier à soutenir
+                </div>
+                <div v-if="data_project_liked_count === 1">
+                  Vous êtes le premier à soutenir le projet
+                </div>
+                <div v-else>
+                  {{ data_project_liked_count }} personnes soutiennent le projet
+                </div>
+              </div>
             </div>
             <div v-else>
-              <i
-                class="fa fa-fw fa-thumbs-up mr-1"
-                style="color: lightgray"
-              ></i>
-              {{ data_project_liked_count }} personnes soutiennent le projet
+              <div style="display: flex">
+                <i
+                  class="fa fa-fw fa-thumbs-up mr-1"
+                  style="color: lightgray"
+                ></i>
+                <div v-if="data_project_liked_count === 0">
+                  Soyez le premier à soutenir
+                </div>
+                <div v-else-if="data_project_liked_count === 1">
+                  {{ data_project_liked_count }} personne soutient le projet
+                </div>
+                <div v-else>
+                  {{ data_project_liked_count }} personnes soutiennent le projet
+                </div>
+              </div>
             </div>
           </div>
           <b-button v-if="canBePromoted" v-on:click="promote" style="margin-right: 0; margin-left: auto">
@@ -48,8 +70,10 @@
 </div>
 </template>
 
-<script>
+<script lang="ts">
 import {promoteProject} from "@/api/services/ProjectsService";
+import {likeVersion} from "@/api/services/VersionsService";
+import {LikeDTO} from "@/typings/scrutia-types";
 
 export default {
   name: "ProjectHeader",
@@ -88,6 +112,9 @@ export default {
     canBePromoted: {
       type: Boolean,
       default: false
+    },
+    versionId: {
+      type: Number,
     }
 
   },
@@ -95,7 +122,6 @@ export default {
     return {
       data_project_liked: this.isLiked,
       data_project_liked_count: this.likesCount
-
     }
   },
   methods: {
@@ -114,23 +140,39 @@ export default {
     },
 
     //- --- -- idea actions -- -- - - -- -
-    like_current(){
+    async like_current() {
       console.log("liking...-");
+
+      let likeDto: LikeDTO = {} as LikeDTO;
+      likeDto.value = 1
+      const response: Response = await likeVersion(this.versionId, likeDto)
+      if(!response.ok){
+        this.$swal({
+          icon: 'error',
+          title: "Une erreur s'est produite, impossible de soutenir le projet",
+          showConfirmButton: true,
+        })
+        return
+      }
       if (this.data_project_liked) {
-        this.data_project_liked_count = this.data_project_liked_count -1;
+        this.data_project_liked_count = this.data_project_liked_count - 1;
       } else {
-        this.data_project_liked_count = this.data_project_liked_count +1;
+        this.data_project_liked_count = this.data_project_liked_count + 1;
       }
       this.data_project_liked = !this.data_project_liked;
-      // api interaction ?
-      // await likeProject() doesnt exist
     },
     async promote() {
       console.log("promoting....");
-      await promoteProject(Number(this.projectId));
-      // redirect ?
+      const response: Response = await promoteProject(Number(this.projectId));
+      if(!response.ok){
+        this.$swal({
+          icon: 'error',
+          title: "Une erreur s'est produite, impossible de promouvoir le projet",
+          showConfirmButton: true,
+        })
+        return
+      }
     }
-
   }
 }
 </script>

@@ -93,3 +93,4 @@ export async function promoteProject(projectId: number) {
     headers: makeHeader({}),
   })
 }
+

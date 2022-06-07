@@ -48,7 +48,7 @@
               hac ac ad massa, fusce ante convallis ante urna molestie vulputate
               bibendum tempus ante justo</div>
             <div v-if="showLink" style="margin-left: auto">
-              <router-link :to="{ name: 'ideaDiscussion', params: { project_id: projectId, discussion_id: discussionId }}">Voir le file -></router-link>
+              <router-link :to="{ name: 'ideaDiscussion', params: { project_id: projectId, discussion_id: discussionId }}">Voir le fil de discussion -></router-link>
             </div>
             <div v-if="completeView" style="width: 100%">
               <b-form @submit.prevent class="mb-5">
