@@ -52,20 +52,37 @@
         />
       </b-tab>
     </b-tabs>
+    <b-row>
+      <textarea
+        class="col-12"
+        :value="message"
+        @input="message = $event.target.value"
+        rows="10"
+        cols="50"
+      ></textarea>
+      <input
+        type="button"
+        class="btn btn-primary"
+        value="Réviser le texte"
+        v-on:click="reviserTexte()"
+      />
+
+    </b-row>
   </div>
 </template>
 
 <script lang="ts">
-import {getProjectDetails} from "@/api/services/ProjectsService";
-import ProjectHeader from "@/components/ProjectHeader.vue";
-import ProjectDiscussion from "@/components/ProjectDiscussion.vue";
+import { getProjectDetails } from '@/api/services/ProjectsService'
+import ProjectHeader from '@/components/ProjectHeader.vue'
+import ProjectDiscussion from '@/components/ProjectDiscussion.vue'
 
-import router from "@/router";
+import router from '@/router'
 
 export default {
   name: 'initiativeDetails',
   components: {
-    ProjectHeader, ProjectDiscussion
+    ProjectHeader,
+    ProjectDiscussion,
   },
   data() {
     return {
@@ -79,6 +96,26 @@ export default {
     }
   },
   methods: {
+
+    async reviserTexte() {
+      const response: Response = await getProjectDetails(this.initiative_id)
+      if (response.ok) {
+        this.project = await response.json()
+        this.latestVersionId = this.project.versions[0].id
+        this.userCanPostQuestion = this.project.user_can_post_question
+        this.isLoggedIn = this.project.user_can_post_question
+        this.username = this.project.user_name
+        this.isLoaded = true
+      }
+      else {
+        this.$swal({
+          title: 'Erreur',
+          text: 'Une erreur est survenue lors de la révision du texte',
+          type: 'error',
+          confirmButtonText: 'OK',
+        })
+      }
+    },
     getUsername: function () {
       let user = this.$store.getters.currentUser
       if (user == undefined) {
@@ -91,16 +128,18 @@ export default {
   async mounted() {
     const response: Response = await getProjectDetails(this.initiative_id);
     if (response.ok) {
-      const data = await response.json();
-      if(data.status === "idee"){
-        await router.push({ name: 'IdeaDetails', params: { project_id: this.initiative_id } });
+      const data = await response.json()
+      if (data.status === 'idee') {
+        await router.push({
+          name: 'IdeaDetails',
+          params: { project_id: this.initiative_id },
+        })
       }
-      this.project = data;
-      console.log("project", data);
+      this.project = data
+      console.log('project', data)
 
-
-      if(this.getUsername() !== data.author) {
-        this.projectCanBePromoted = false;
+      if (this.getUsername() !== data.author) {
+        this.projectCanBePromoted = false
       }
       if(this.getUsername() !=='No user'){
         this.userCanPostQuestion = true;
