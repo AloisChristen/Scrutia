@@ -1,17 +1,16 @@
 module.exports = {
-  preset: "@vue/cli-plugin-unit-jest/presets/typescript-and-babel",
-  collectCoverage: true,
-  collectCoverageFrom: [
-    "src/components/**/*.{ts,vue,js}",
-    "src/views/**/*.{ts,vue,js}",
-    "src/*.{ts,vue,js}",
-    "!src/registerServiceWorker.{ts,js}",
-  ],
-  coverageDirectory: "coverage",
-  coverageThreshold: {
-    global: {
-      branches: 50,
-      functions: 50,
-    },
-  },
+  preset: '@vue/cli-plugin-unit-jest',
+  // collectCoverage: true,
+  // collectCoverageFrom: [
+  //   "src/components/**/*.{vue,js}",
+  //   "src/views/**/*.{vue,js}",
+  //   "src/*.{vue,js}",
+  // ],
+  // coverageDirectory: "coverage",
+  // coverageThreshold: {
+  //   global: {
+  //     branches: 0,
+  //     functions: 0,
+  //   },
+  // },
 };

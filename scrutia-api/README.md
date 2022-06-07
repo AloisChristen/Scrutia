@@ -1,5 +1,7 @@
 # Scrutia API
 
+[![Linters](https://github.com/AloisChristen/Scrutia/actions/workflows/linter.yml/badge.svg)](https://github.com/AloisChristen/Scrutia/actions/workflows/linter.yml)  [![dev_api_test](https://github.com/AloisChristen/Scrutia/actions/workflows/dev_api_test.yml/badge.svg)](https://github.com/AloisChristen/Scrutia/actions/workflows/dev_api_test.yml) [![main_api_test](https://github.com/AloisChristen/Scrutia/actions/workflows/main_api_test.yml/badge.svg)](https://github.com/AloisChristen/Scrutia/actions/workflows/main_api_test.yml)
+
 ## Mise en place :wrench:
 
 ### PHP
@@ -81,3 +83,67 @@ $ sail up
 # ./vendor/bin/sail up si l'alias n'a pas été créé
 ```
 
+
+
+Pour lancer l'API **en background**, il suffit de faire la commande suivante : 
+
+```bash
+$ sail up -d
+# ./vendor/bin/sail up si l'alias n'a pas été créé
+```
+
+
+## tests
+
+pour lancer les tests en local
+
+```bash
+sail artisan test
+```
+
+
+# commandes php artisan 
+
+en local il faut utiliser `sail` à la place de `php` (selon alias)
+
+```bash
+sail artisan migrate:refresh --seed
+```
+
+
+# a faire lors de changement dans les routes
+
+```bash
+sail artisan optimize
+```
+
+# good example for error return and parameter input
+
+```php
+/**
+     * Update the specified resource in storage.
+     *
+     * @param UpdateQuestionRequest $request
+     * @param int $question
+     * @return JsonResponse
+     */
+    public function update(int $id, UpdateQuestionRequest $request): JsonResponse
+    {
+        $question = Question::find($id);
+        if($question == null){
+            return response()->json(["message" => "Not Found", "errors" => [
+                "Question id does not exist"
+            ]], 404);
+        }
+        $question->title = $request->title;
+        $question->description = $request->description;
+        $question->save();
+        return response()->json($question);
+    }
+```
+
+# pour debug facilement
+
+```php
+    dd($tags);
+```

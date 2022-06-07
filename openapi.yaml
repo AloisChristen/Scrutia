@@ -1,0 +1,882 @@
+openapi: 3.0.1
+info:
+  title: Scrutia API
+  version: 1.0.0
+  description: The Scrutia application helps people who want to share an idea to be able to turn it into a political reality and promote it as a popular initiative. It is also a community site that allows anyone to participate in the life cycle of an initiative, from the basic idea to the text of a law submitted to the confederation.
+  contact:
+    name: Scrutia API Support
+    email: scrutia.team@gmail.com
+servers:
+  - url: http://localhost/api
+  - url: https://scrutia-api-dev.herokuapp.com/api
+  - url: https://scrutia-api.herokuapp.com/api
+tags:
+  - name: Auths
+    description: Eveything about authentication
+  - name: Answers
+    description: Everything about answers
+  - name: Projects
+    description: Everything about initiative ideas and projects
+  - name: Questions
+    description: Everything about questions
+  - name: Tags
+    description: Everything about tags
+  - name: User
+    description: Everything about authenticated user
+  - name: Versions
+    description: Everything about initiative text versions
+paths:
+  /register:
+    post:
+      tags:
+        - Auths
+      summary: Register an account
+      requestBody:
+        required: true
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/RegisterDTO'
+      responses:
+        201:
+          description: Created
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/AuthUserDTO'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        
+  /login:
+    post:
+      tags:
+        - Auths
+      summary: Sign in
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/LoginDTO'
+      responses:
+        200:
+          description: OK
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/AuthUserDTO'
+        401:
+          $ref: '#/components/responses/WrongAuth'
+        404:
+          $ref: '#/components/responses/NotFound'
+        422:
+          $ref: '#/components/responses/UnprocessableContent'
+  /logout:
+    post:
+      tags:
+        - Auths
+      summary: Sign out
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: OK
+          content:
+            'application/json':
+              schema:
+                type: string
+  /answers:
+    post:
+      tags:
+        - Answers
+      summary: Answer to a question
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/AnswerStoreDTO'
+      responses:
+        201:
+          description: Created
+        404:
+          $ref: '#/components/responses/NotFound'
+        409:
+          $ref: '#/components/responses/NotEnoughReputation'
+        422:
+          $ref: '#/components/responses/UnprocessableContent'
+  /answers/{answer_id}:
+    put:
+      tags:
+        - Answers
+      summary: Edit an answer
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: answer_id
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/AnswerUpdateDTO'
+      responses:
+        200:
+          description: Updated
+        404:
+          $ref: '#/components/responses/NotFound'
+        409:
+          $ref: '#/components/responses/NotEnoughReputation'
+        422:
+          $ref: '#/components/responses/UnprocessableContent'
+    delete:
+      tags:
+        - Answers
+      summary: Delete an answer
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: answer_id
+          schema:
+            type: integer
+          required: true
+      responses:
+        200:
+          description: Deleted
+        404:
+          $ref: '#/components/responses/NotFound'
+        409:
+          $ref: '#/components/responses/NotEnoughReputation'
+        422:
+          $ref: '#/components/responses/UnprocessableContent'
+  /answers/{answer_id}/like:
+    post:
+      tags:
+        - Answers
+      summary: Like an answer
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: answer_id
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/LikeDTO'
+      responses:
+        200:
+          description: Liked
+        404:
+          $ref: '#/components/responses/NotFound'
+        409:
+          $ref: '#/components/responses/NotEnoughReputation'
+        422:
+          $ref: '#/components/responses/UnprocessableContent'
+  /projects:
+    get:
+      tags:
+        - Projects
+      summary: Get ideas or initiatives
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            description: page number
+      responses:
+        200:
+          description: OK
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProjectPaginationDTO'
+    post:
+      tags:
+        - Projects
+      summary: Add an initiative idea
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/ProjectStoreDTO'
+      responses:
+        201:
+          description: Created
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/NotEnoughReputation'
+  /projects/{projectId}:
+    get:
+      tags:
+        - Projects
+      summary: Get project details
+      parameters:
+        - in: path
+          name: projectId
+          schema:
+            type: integer
+          required: true
+          description: Numeric ID of the project to get
+      responses:
+        200:
+          description: OK
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProjectDetailsDTO'
+  /projects/{projectId}/promote:
+    put:
+      tags:
+        - Projects
+      summary: Promote project idea to concretization
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: projectId
+          schema:
+            type: integer
+          required: true
+          description: Numeric ID of the project to promote
+      responses:
+        204:
+          description: Promoted
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/NotEnoughLikes'
+  /questions:
+    post:
+      tags:
+        - Questions
+      summary: Ask a question
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/QuestionStoreDTO'
+      responses:
+        201:
+          description: Created
+        404:
+          $ref: '#/components/responses/NotFound'
+        409:
+          $ref: '#/components/responses/NotEnoughReputation'
+        422:
+          $ref: '#/components/responses/UnprocessableContent'
+  /questions/{question_id}:
+    put:
+      tags:
+        - Questions
+      summary: Edit a question
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: question_id
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/QuestionUpdateDTO'
+      responses:
+        200:
+          description: Updated
+        404:
+          $ref: '#/components/responses/NotFound'
+        409:
+          $ref: '#/components/responses/NotEnoughReputation'
+        422:
+          $ref: '#/components/responses/UnprocessableContent'
+    delete:
+      tags:
+        - Questions
+      summary: Delete a question
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: question_id
+          schema:
+            type: integer
+          required: true
+      responses:
+        200:
+          description: Deleted
+        404:
+          $ref: '#/components/responses/NotFound'
+        409:
+          $ref: '#/components/responses/NotEnoughReputation'
+        422:
+          $ref: '#/components/responses/UnprocessableContent'
+  /questions/{question_id}/like:
+    post:
+      tags:
+        - Questions
+      summary: Like a question
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: question_id
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/LikeDTO'
+      responses:
+        200:
+          description: Deleted
+        404:
+          $ref: '#/components/responses/NotFound'
+        409:
+          $ref: '#/components/responses/NotEnoughReputation'
+        422:
+          $ref: '#/components/responses/UnprocessableContent'
+  /tags:
+    get:
+      tags:
+        - Tags
+      summary: Get existing tags
+      responses:
+        200:
+          description: OK
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TagDTO'
+  /user:
+    get:
+      tags:
+        - User
+      summary: Get authenticated user informations
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: OK
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserDTO'
+        404:
+          $ref: '#/components/responses/NotFound'
+    put:
+      tags:
+        - User
+      summary: Update a user account
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Username can not be changed
+        required: true
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/UserUpdateDTO'
+      responses:
+        200:
+          description: Updated
+        404:
+          $ref: '#/components/responses/NotFound'
+        409:
+          $ref: '#/components/responses/NotEnoughReputation'
+        422:
+          $ref: '#/components/responses/UnprocessableContent'
+  /versions:
+    post:
+      tags:
+        - Versions
+      summary: Add a new text version
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/VersionStoreDTO'
+      responses:
+        201:
+          description: Created
+        403:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        422:
+          $ref: '#/components/responses/UnprocessableContent'
+  /versions/{version_id}:
+    put:
+      tags:
+        - Versions
+      summary: Edit a text version
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: version_id
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/VersionUpdateDTO'
+      responses:
+        201:
+          description: Updated
+        403:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        422:
+          $ref: '#/components/responses/UnprocessableContent'
+    delete:
+      tags:
+        - Versions
+      summary: Delete a text version
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: version_id
+          schema:
+            type: integer
+          required: true  
+      responses:
+        201:
+          description: Deleted
+        403:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        422:
+          $ref: '#/components/responses/UnprocessableContent'
+  /versions/{version_id}/like:
+    post:
+      tags:
+        - Versions
+      summary: Like a text version
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: version_id
+          schema:
+            type: integer
+          required: true  
+      requestBody:
+        required: true
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/LikeDTO'
+      responses:
+        201:
+          description: Created
+        403:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        422:
+          $ref: '#/components/responses/UnprocessableContent'
+components:
+  schemas:
+    AnswerDetailsDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+        description:
+          type: string
+        user_id:
+          type: string
+          maxLength: 30
+        nb_upvotes:
+          type: integer
+        nb_downvotes:
+          type: integer
+        user_vote:
+          $ref: '#/components/schemas/VoteDTO'
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    AnswerStoreDTO:
+      type: object
+      properties:
+        question_id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+    AnswerUpdateDTO:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+    AuthUserDTO:
+      type: object
+      properties:
+        token:
+          type: string
+        user:
+          $ref: '#/components/schemas/UserDTO'
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorDescription'
+    ErrorDescription:
+      type: object
+      properties:
+        key: 
+          type: string
+        value:
+          type: array
+          items: 
+            type: string
+    LikeDTO:
+      type: object
+      properties:
+        value:
+          type: integer
+    LoginDTO:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+          format: password
+    ProjectStoreDTO:
+      type: object
+      properties:
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/TagDTO'
+    ProjectDetailsDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+          maxLength: 255
+        nb_total_upvotes:
+          type: integer
+        nb_total_downvotes:
+          type: integer
+        status:
+          type: string
+          enum: [idea, initiative]
+        versions:
+          type: array
+          items:
+            $ref: '#/components/schemas/VersionDetailsDTO'
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/TagDTO'
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    ProjectPaginationDTO:
+      type: object
+      properties:
+        total:
+          type: integer
+        per_page:
+          type: integer
+        current_page:
+          type: integer
+        last_page:
+          type: integer
+        first_page_url:
+          type: string
+          format: uri
+        last_page_url:
+          type: string
+          format: uri
+        next_page_url:
+          type: string
+          format: uri
+        prev_page_url:
+          type: string
+          format: uri
+        path:
+          type: string
+          format: uri
+        from:
+          type: integer
+        to:
+          type: integer
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProjectDetailsDTO'
+    QuestionDetailsDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+          maxLength: 255
+        user_id:
+          type: string
+          maxLength: 30
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        nb_upvotes:
+          type: integer
+        nb_downvotes:
+          type: integer
+        user_vote:
+          $ref: '#/components/schemas/VoteDTO'
+        answers:
+          type: array
+          items:
+            $ref: '#/components/schemas/AnswerDetailsDTO'
+    QuestionStoreDTO:
+      type: object
+      properties:
+        project_id:
+          type: integer
+        version_number:
+          type: integer
+        title:
+          type: string
+          maxLength: 50
+        description:
+          type: string
+    QuestionUpdateDTO:
+      type: object
+      properties:
+        title:
+          type: string
+          maxLength: 50
+        description:
+          type: string        
+    RegisterDTO:
+      type: object
+      properties: 
+        username:
+          type: string
+          minLength: 3
+          maxLength: 30
+          pattern: '^[A-Za-z][A-Za-z0-9_]{3,30}$'
+        firstname:
+          type: string
+        lastname:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+        password_confirmation:
+          type: string
+          format: password
+    TagDTO:
+      type: object
+      properties:
+        title:
+          type: string
+          maxLength: 30
+    UserDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+        username:
+          type: string
+          minLength: 3
+          maxLength: 30
+          pattern: '^[A-Za-z][A-Za-z0-9_]{3,30}$'
+        firstname:
+          type: string
+        lastname:
+          type: string
+        email:
+          type: string
+          format: email
+        reputation:
+          type: integer
+    UserUpdateDTO:
+      type: object
+      properties:
+        username:
+          type: string
+          minLength: 3
+          maxLength: 30
+          pattern: '^[A-Za-z][A-Za-z0-9_]{3,30}$'
+        firstname:
+          type: string
+        lastname:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 6
+          format: password
+        password_confirmation:
+          type: string
+          minLength: 6
+          format: password
+    VersionDetailsDTO:
+      type: object
+      properties:
+        number:
+          type: integer
+        description:
+          type: string
+        project_id:
+          type: integer
+        user_id:
+          type: integer
+        nb_upvotes:
+          type: integer
+        nb_downvotes:
+          type: integer
+        user_vote:
+          $ref: '#/components/schemas/VoteDTO'
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        questions:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuestionDetailsDTO'
+    VersionStoreDTO:
+      type: object
+      properties:
+        project_id:
+          type: integer
+        description:
+          type: string
+    VersionUpdateDTO:
+      type: object
+      properties:
+        description:
+          type: string
+    VoteDTO:
+      type: integer
+      enum: [-1, 0, 1]
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotEnoughLikes:
+      description: Not enough likes on the idea to promote project.
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotEnoughReputation:
+      description: User does not have a good enough reputation to do the action.
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Ressource was not found.
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Unauthorized.
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/Error'
+    UnprocessableContent:
+      description: Unprocessable Content.
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/Error'
+    WrongAuth:
+      description: Unauthorized. Wrong username or password.
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/Error'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
