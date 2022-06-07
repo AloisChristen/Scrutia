@@ -79,7 +79,7 @@ export default new Router({
         },
         {
           path: 'initiativeDetails/:initiative_id',
-          name: "Scrutia | Détails de l'initiative",
+          name: "initiativeDetails",
           component: InitiativeDetails,
         },
         {

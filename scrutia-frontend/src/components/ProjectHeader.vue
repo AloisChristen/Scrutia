@@ -36,7 +36,7 @@
   <b-row style="padding-left: 0" no-gutters>
     <b-col cols="12">
       <b-badge v-for="tag in tagList" :key="tag.id" :variant="getNextColor()" style="padding: 5px; margin: 2px" >
-        {{ tag }}
+        {{ tag.title }}
       </b-badge>
     </b-col>
     <b-col cols="12">
@@ -79,7 +79,7 @@ export default {
     },
     isLiked: {
       type: Boolean,
-      default: true
+      default: false
     },
     likesCount: {
       type: Number,

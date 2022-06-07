@@ -4,10 +4,12 @@
 
       <ProjectHeader
         :project-id="$route.params.project_id"
-        title="Sauver les pandas du feu"
-        description="Le Lorem Ipsum est le faux texte standard de l'imprimerie depuis les années 1500, quand un imprimeur anonyme assembla ensemble des morceaux de texte pour réaliser un livre spécimen de polices de texte. Il n'a pas fait que survivre cinq siècles, mais s'est aussi adapté à la bureautique informatique, sans que son contenu n'en soit modifié. Il a été popularisé dans les années 1960 grâce à la vente de feuilles Letraset contenant des passages du Lorem Ipsum, et, plus récemment, par son inclusion dans des applications de mise en page de texte, comme Aldus PageMaker."
-        :tagList="['climat', 'energies', 'écologie']"
+        :title="title"
+        :description="description"
+        :tagList="tagList"
+        :likesCount="likesCount"
         :canBePromoted="projectCanBePromoted"
+        :isLiked="isLiked"
         ideaActionActivated
       ></ProjectHeader>
 
@@ -31,6 +33,7 @@
 import ProjectHeader from "@/components/ProjectHeader.vue";
 import ProjectDiscussion from "@/components/ProjectDiscussion.vue";
 import {getProjectDetails} from "@/api/services/ProjectsService";
+import router from "@/router";
 export default {
   name: "IdeaDetailsView",
   components: {
@@ -45,9 +48,11 @@ export default {
       ],
       isLoaded: false,
       title: "",
+      likesCount: 0,
       description: "",
-      tagList: ["climat", "environnement", "panda"],
-      projectCanBePromoted: true
+      tagList: [],
+      projectCanBePromoted: true,
+      isLiked: false,
     }
   },
   async mounted() {
@@ -56,6 +61,14 @@ export default {
     if (response.ok) {
       const data = await response.json()
       console.log(data)
+      if(data.status !== "idee"){
+        await router.push({ name: 'initiativeDetails', params: { initiative_id: data.id } })
+      }
+      this.title = data.title
+      this.likesCount = data.upvotes
+      this.isLiked = data.user_vote === 1
+      this.description = data.last_description
+      this.tagList = data.tags
     }
     this.isLoaded = true
   }
