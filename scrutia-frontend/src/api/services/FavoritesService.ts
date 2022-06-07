@@ -1,9 +1,10 @@
 import { api, makeHeader } from '../api'
 
-export async function getFavorites() {
-  return await fetch(api.favorites, {
+export async function getFavorites(page : number = 1) {
+  return await fetch(`${api.favorites}?page=${page}`, {
     method: 'GET',
     headers: makeHeader({}),
+
   })
 }
 
