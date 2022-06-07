@@ -8,7 +8,7 @@
           label="Loading..."
           v-show="isLoading"
         ></b-spinner>
-        <b-col sm="12" md="12" xl="12">
+        <b-col sm="12" md="12" xl="12" v-show="favorites.length > 0">
           <b-pagination
             v-model="current_page"
             :total-rows="nb_total_favorites"
@@ -21,6 +21,9 @@
         <b-col sm="12" md="12" xl="12">
           <p v-show="!isLoading && favorites.length === 0">
             Vous n'avez actuellement pas de favoris.
+            <router-link :to="`/browseIdeas`">
+              <em>Parcourir les projets et idées</em>
+            </router-link>
           </p>
           <b-row v-show="favorites.length > 0">
             <b-col
@@ -39,7 +42,7 @@
             </b-col>
           </b-row>
         </b-col>
-        <b-col sm="12" md="12" xl="12">
+        <b-col sm="12" md="12" xl="12" v-show="favorites.length > 0">
           <b-pagination
             v-model="current_page"
             :total-rows="nb_total_favorites"
