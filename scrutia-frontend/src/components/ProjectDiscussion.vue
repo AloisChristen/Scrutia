@@ -72,8 +72,6 @@
               </div>
             </div>
 
-
-
             <div v-if="showLink" style="margin-left: auto">
               <router-link :to="{ name: 'ideaDiscussion', params: { project_id: projectId, discussion_id: discussionId }}">Voir le fil de discussion -></router-link>
             </div>
