@@ -105,7 +105,6 @@ describe("General layout test", () => {
   it("Initiatives tests", () => {
     cy.visit("/initiativeDetails/1");
     cy.contains("h1", "Initiative 1").should("have.class", "font-w600").should("have.class", "text-city").should("have.class", "display-1")
-    cy.contains("a", "Retourner sur la page d'accueil").should("have.attr", "href", "/").click()
   });
   
 });
