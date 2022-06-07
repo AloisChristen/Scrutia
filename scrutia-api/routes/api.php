@@ -84,6 +84,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         function () {
             Route::get('/', 'index')->name('user.index');
             Route::put('/', 'update')->name('user.update');
+            Route::get('/questions', 'question')->name('user.questions');
+            Route::get('/projects', 'projects')->name('user.projects');
         }
     );
 
