@@ -39,6 +39,8 @@
 import ProjectHeader from "@/components/ProjectHeader.vue";
 import ProjectDiscussion from "@/components/ProjectDiscussion.vue";
 import {getProjectDetails} from "@/api/services/ProjectsService";
+import router from "@/router";
+
 export default {
   name: "IdeaDetailsDiscussion",
   components: {
@@ -86,6 +88,10 @@ export default {
       if(this.username !== 'No user'){
         this.isLoggedIn = true;
       }
+    }
+     else {
+      // redirect to 404 page
+      router.push({ name: '404' });
     }
     this.isLoaded = true
   },
