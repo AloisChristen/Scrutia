@@ -60,6 +60,3 @@ jobs:
       - name: e2e on chrome
         run: yarn run test:e2e --headless
         working-directory: './scrutia-frontend'
-      - name: e2e on firefox
-        run: yarn run test:e2e --headless -b firefox
-        working-directory: './scrutia-frontend'
