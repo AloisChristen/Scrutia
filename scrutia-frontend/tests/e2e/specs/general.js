@@ -95,9 +95,17 @@ describe("General layout test", () => {
       .should("have.class", "active");
     cy.url().should("include", "/userProfile")
   });
+
   it("Displays a 404 error page", () => {
     cy.visit("/notExistingPage");
     cy.contains("h1", "404").should("have.class", "font-w600").should("have.class", "text-city").should("have.class", "display-1")
     cy.contains("a", "Retourner sur la page d'accueil").should("have.attr", "href", "/").click()
-  })
+  });
+
+  it("Initiatives tests", () => {
+    cy.visit("/initiativeDetails/1");
+    cy.contains("h1", "Initiative 1").should("have.class", "font-w600").should("have.class", "text-city").should("have.class", "display-1")
+    cy.contains("a", "Retourner sur la page d'accueil").should("have.attr", "href", "/").click()
+  });
+  
 });
