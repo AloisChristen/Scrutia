@@ -16,7 +16,7 @@
               <i v-else class="fa fa-angle-down mr-1" v-on:click="downvote()" style="color: lightgray"></i>
             </div>
             <div style="display: flex; flex-direction: column; align-self: center">
-              <div class="Lead">h3. Title</div>
+              <div class="Lead">{{title}}</div>
               <div style="display: flex">
                 <div style="font-size: xx-small; margin-right: 16px">le mardi 14 juin</div>
                 <div style="font-size: xx-small;">Alfred dupont</div>
@@ -74,7 +74,7 @@ export default {
   name: "ProjectDiscussion",
   props: {
     projectId: {
-      type: String
+      type: Number
     },
     discussionId: {
       type: Number
@@ -114,6 +114,9 @@ export default {
       type: Boolean,
       default: false,
     },
+    answers: {
+      type: Array
+    }
   },
   mounted() {
     if(this.closed) {

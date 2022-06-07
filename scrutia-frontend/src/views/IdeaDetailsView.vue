@@ -14,17 +14,18 @@
         ideaActionActivated
       ></ProjectHeader>
 
-      <ProjectDiscussion v-for="(d, index) in discussions"
+      <ProjectDiscussion v-for="(d, index) in questions"
                           :key="d.id"
                           :discussion-id="d.id"
+                          :title="d.title"
+                          :date="d."
                           :projectId="projectId"
                           :versionId="latestVersionId"
-                          :title="d.title"
-                          :text="d.text"
-                          :likeCount="d.likesCurrent"
-                          :isUpvoted="d.isUpvoted"
-                          :isDownvoted="d.isDownvoted"
+                          :likeCount="d.nb_upvotes - d.nb_downvotes"
+                          :isUpvoted="d.user_vote == 1"
+                          :isDownvoted="d.user_vote == -1"
                           :closed="index !== 0"
+                          :answers="d.answers"
       />
 
     </div>
@@ -43,11 +44,7 @@ export default {
   },
   data() {
     return {
-      discussions: [
-        {id: 1, title: 'pourquoi la terre se rechauffe ?', author: 'fred dupont', likesCurrent: 200, text: "This rule reports the elements which have v-for and do not have v-bind:key with exception to custom components.", isUpvoted: false, isDownvoted: false},
-        {id: 2, title: 'pourquoi la terre se rechauffe ?', author: 'fred dupont', likesCurrent: 200, text: "This rule reports the elements which have v-for and do not have v-bind:key with exception to custom components.", isUpvoted: true, isDownvoted: false},
-        {id: 3, title: 'pourquoi la terre se rechauffe ?', author: 'fred dupont', likesCurrent: 200, text: "This rule reports the elements which have v-for and do not have v-bind:key with exception to custom components.", isUpvoted: false, isDownvoted: true}
-      ],
+      questions: [],
       isLoaded: false,
       title: "",
       likesCount: 0,
@@ -74,11 +71,16 @@ export default {
       this.isLiked = data.user_vote === 1;
       this.description = data.last_description;
       this.tagList = data.tags;
+
       this.latestVersionId = data.latestVersionId;
-      this.discussions = data.question;
+
+      this.questions = data.versions[0].questions;
+      this.questions = this.getFakeQuestion().questions
+
       if(this.getUsername() !== data.author) {
         this.projectCanBePromoted = false;
       }
+
     }
     this.isLoaded = true;
   },
@@ -91,6 +93,111 @@ export default {
         return user.username
       }
     },
+
+    getFakeQuestion() {
+      return {
+
+        "questions": [
+          {
+            "id": 0,
+            "title": "titre question 1",
+            "user_id": "user_question1",
+            "created_at": "2022-06-07T10:14:47.867Z",
+            "updated_at": "2022-06-07T10:14:47.867Z",
+            "nb_upvotes": 2,
+            "nb_downvotes": 1,
+            "user_vote": -1,
+            "answers": [
+              {
+                "id": 0,
+                "description": "string",
+                "user_id": "string",
+                "nb_upvotes": 0,
+                "nb_downvotes": 0,
+                "user_vote": -1,
+                "created_at": "2022-06-07T10:14:47.867Z",
+                "updated_at": "2022-06-07T10:14:47.867Z"
+              },
+              {
+                "id": 1,
+                "description": "string",
+                "user_id": "string",
+                "nb_upvotes": 0,
+                "nb_downvotes": 0,
+                "user_vote": -1,
+                "created_at": "2022-06-07T10:14:47.867Z",
+                "updated_at": "2022-06-07T10:14:47.867Z"
+              }
+            ]
+          },
+          {
+            "id": 1,
+            "title": "string",
+            "user_id": "string",
+            "created_at": "2022-06-07T10:14:47.867Z",
+            "updated_at": "2022-06-07T10:14:47.867Z",
+            "nb_upvotes": 0,
+            "nb_downvotes": 0,
+            "user_vote": -1,
+            "answers": [
+              {
+                "id": 0,
+                "description": "string",
+                "user_id": "string",
+                "nb_upvotes": 0,
+                "nb_downvotes": 0,
+                "user_vote": -1,
+                "created_at": "2022-06-07T10:14:47.867Z",
+                "updated_at": "2022-06-07T10:14:47.867Z"
+              },
+              {
+                "id": 1,
+                "description": "string",
+                "user_id": "string",
+                "nb_upvotes": 0,
+                "nb_downvotes": 0,
+                "user_vote": -1,
+                "created_at": "2022-06-07T10:14:47.867Z",
+                "updated_at": "2022-06-07T10:14:47.867Z"
+              }
+            ]
+          },
+          {
+            "id": 2,
+            "title": "string",
+            "user_id": "string",
+            "created_at": "2022-06-07T10:14:47.867Z",
+            "updated_at": "2022-06-07T10:14:47.867Z",
+            "nb_upvotes": 0,
+            "nb_downvotes": 0,
+            "user_vote": -1,
+            "answers": [
+              {
+                "id": 0,
+                "description": "string",
+                "user_id": "string",
+                "nb_upvotes": 0,
+                "nb_downvotes": 0,
+                "user_vote": -1,
+                "created_at": "2022-06-07T10:14:47.867Z",
+                "updated_at": "2022-06-07T10:14:47.867Z"
+              },
+              {
+                "id": 1,
+                "description": "string",
+                "user_id": "string",
+                "nb_upvotes": 0,
+                "nb_downvotes": 0,
+                "user_vote": -1,
+                "created_at": "2022-06-07T10:14:47.867Z",
+                "updated_at": "2022-06-07T10:14:47.867Z"
+              }
+            ]
+          }
+        ]
+
+        }
+    }
   }
 }
 
