@@ -72,7 +72,8 @@
 
 import {format} from "date-fns";
 import frenchLocale from "date-fns/locale/fr";
-
+//import { likeAnswer } from '@/api/services/AnswersService';
+import {likeAnswer as likeQuestion} from "@/api/services/QuestionsService";
 export default {
   name: "ProjectDiscussion",
   props: {
@@ -141,7 +142,8 @@ export default {
     }
   },
   methods: {
-    upvote() {
+    async upvote() {
+
       if(this.dataIsUpvoted) {
         this.dataIsUpvoted = false
         this.dataLikeCount--
@@ -149,8 +151,13 @@ export default {
         this.dataIsUpvoted = true
         this.dataLikeCount++
       }
+      const response: Response = await likeQuestion(this.discussion_id, this.dataLikeCount)
+      if(!response.ok){
+        this.dataIsUpvoted = !this.dataIsUpvoted
+        this.dataLikeCount--
+      }
     },
-    downvote() {
+    async downvote() {
       if(this.dataIsDownvoted) {
         this.dataIsDownvoted = false
         this.dataLikeCount++
@@ -158,6 +165,12 @@ export default {
         this.dataIsDownvoted = true
         this.dataLikeCount--
       }
+      const response = await likeQuestion(this.discussion_id, this.dataLikeCount)
+      if(!response.ok){
+        this.dataIsDownvoted = !this.dataIsDownvoted
+        this.dataLikeCount++
+      }
+
     },
     repondre(){
       console.log("dataResponse", this.dataResponse);
