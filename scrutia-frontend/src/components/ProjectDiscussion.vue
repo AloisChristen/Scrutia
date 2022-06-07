@@ -159,8 +159,22 @@ export default {
       }
       const response: Response = await likeQuestionsService(this.discussion_id, this.dataLikeCount)
       if(!response.ok){
+        this.$swal({
+          title: 'Erreur',
+          text: 'Une erreur est survenue lors de l\'enregistrement de votre vote',
+          icon: 'error',
+          confirmButtonText: 'Ok'
+        })
         this.dataIsUpvoted = !this.dataIsUpvoted
         this.dataLikeCount--
+      }
+      else {
+        this.$swal({
+          title: 'Merci',
+          text: 'Votre vote a été enregistré',
+          icon: 'success',
+          confirmButtonText: 'Ok'
+        })
       }
     },
     async downvote() {
@@ -173,8 +187,22 @@ export default {
       }
       const response = await likeQuestionsService(this.discussion_id, this.dataLikeCount)
       if(!response.ok){
+        this.$swal({
+          title: 'Erreur',
+          text: 'Une erreur est survenue lors de l\'enregistrement de votre vote',
+          icon: 'error',
+          confirmButtonText: 'Ok'
+        })
         this.dataIsDownvoted = !this.dataIsDownvoted
         this.dataLikeCount++
+      }
+      else {
+        this.$swal({
+          title: 'Merci',
+          text: 'Votre vote a été enregistré',
+          icon: 'success',
+          confirmButtonText: 'Ok'
+        })
       }
 
     },
@@ -189,6 +217,14 @@ export default {
               a.user_vote = value
             }
             return a
+          })
+        }
+        else {
+          this.$swal({
+            title: 'Erreur',
+            text: 'Une erreur est survenue lors de l\'enregistrement de votre vote',
+            icon: 'error',
+            confirmButtonText: 'Ok'
           })
         }
     },
