@@ -88,6 +88,10 @@ export default {
       }
 
     }
+    else {
+      // redirect to 404 page
+      router.push({ name: '404' });
+    }
     this.isLoaded = true;
   },
   methods: {
