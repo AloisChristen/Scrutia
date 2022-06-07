@@ -162,9 +162,3 @@ export type VersionUpdateDTO = {
 }
 
 export type VoteDTO = [-1, 0, 1]
-
-export type ProjectDiscussionData = {
-  title: string,
-  author: string,
-  date: string,
-}
