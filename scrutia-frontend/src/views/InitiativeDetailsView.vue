@@ -7,9 +7,7 @@
       :description="project.last_description"
       :tagList="project.tags"
       :likesCount="project.upvotes - project.downvotes"
-      :canBePromoted="projectCanBePromoted"
-      :isLiked="isLiked"
-      :versionId="latestVersionId"
+      :isLiked="project.user_vote === 1"
     ></ProjectHeader>
 
     <!-- Block Tabs Default Style -->
@@ -19,20 +17,22 @@
       content-class="block-content"
     >
       <b-tab title="Révisions" active>
-        <!--
-            <ProjectDiscussion v-for="(d, index) in projetDiscussions"
-                               :key="d.id"
-                               :discussion-id="d.id"
-                               :project-id="$route.params.project_id"
-                               :versionId="latestVersionId"
-                               :title="d.title"
-                               :text="d.text"
-                               :likeCount="d.likesCurrent"
-                               :isUpvoted="d.isUpvoted"
-                               :isDownvoted="d.isDownvoted"
+            <ProjectDiscussion v-for="(v, index) in project.versions"
+                               :key="v.id"
+                               :project-id="project.id"
+                               :versionId="v.id"
+                               :text="v.description"
+                               :likeCount="v.upvotes - v.downvotes"
+                               :isUpvoted="v.user_vote === 1"
+                               :isDownvoted="v.user_vote === -1"
                                :closed="index !== 0"
+                               modeRevision
+                               :show-link="false"
+                               :version="v"
+                               style="margin-bottom: 16px"
+                               :canReply="userCanPostQuestion"
             />
-        -->
+
       </b-tab>
       <b-tab title="Fils de discussion" active>
         <!--
@@ -57,13 +57,14 @@
 <script lang="ts">
 import {getProjectDetails} from "@/api/services/ProjectsService";
 import ProjectHeader from "@/components/ProjectHeader.vue";
+import ProjectDiscussion from "@/components/ProjectDiscussion.vue";
 
 import router from "@/router";
 
 export default {
   name: 'initiativeDetails',
   components: {
-    ProjectHeader
+    ProjectHeader, ProjectDiscussion
   },
   data() {
     return {
@@ -72,6 +73,7 @@ export default {
       discussions: [],
       project: {},
       isLoaded: false,
+      userCanPostQuestion: false
     }
   },
   methods: {
@@ -97,6 +99,9 @@ export default {
 
       if(this.getUsername() !== data.author) {
         this.projectCanBePromoted = false;
+      }
+      if(this.getUsername() !=='No user'){
+        this.userCanPostQuestion = true;
       }
 
     }

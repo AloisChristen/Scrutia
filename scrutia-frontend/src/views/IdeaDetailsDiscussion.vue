@@ -78,7 +78,7 @@ export default {
 
       this.latestVersionId = data.latestVersionId;
       console.log(data.questions)
-      if(data.questions != undefined || data.questions.length !== 0){
+      if(data.questions != undefined && data.questions.length !== 0){
         let questions = data.versions[0].questions;
         this.question = questions.filter((x: { id: number; }) => x.id === Number(question_id_str))[0]
       } else {
