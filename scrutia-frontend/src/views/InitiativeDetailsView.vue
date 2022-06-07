@@ -15,8 +15,7 @@
                   alt="..."
                   class="img-fluid"
                 />
-                <p>tag 1 tag 2</p>
-                <b-badge :variant="getNextColor()">Pandas</b-badge>
+                <b-badge :variant="getNextColor()">PandasTag</b-badge>
               </div>
 
               <div class="block-content-right col-xl-10">
