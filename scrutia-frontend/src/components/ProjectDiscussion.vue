@@ -41,7 +41,7 @@
             </div>
 
             <div style="display: flex; flex-direction: column; font-size: small;">
-              <div style="font-size: x-small">Le {{getFormatedDate(versionData.created_at)}}</div>
+              <div style="font-size: x-small">Le {{getFormatedDate(versionData.created_at)}}, Révision {{ versionData.number }}</div>
               <div>{{ versionData.description }}</div>
             </div>
           </div>
@@ -302,8 +302,7 @@ export default {
 
       }
       this.inputUserReply = ""; // reset field value
-      //location.reload()
-
+      location.reload()
     },
     getFormatedDate(date: string) {
       return format(new Date(date), 'dd LLLL yyyy', {

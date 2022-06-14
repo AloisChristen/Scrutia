@@ -22,6 +22,7 @@
                                style="margin-bottom: 16px"
                                :canReply="isLoggedIn"
                                :show-link="false"
+                               closed
             />
 
       </b-tab>
