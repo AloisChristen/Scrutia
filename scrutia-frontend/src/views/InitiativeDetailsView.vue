@@ -5,6 +5,7 @@
       :projectId="project.id"
       :project="project"
       idea-action-activated
+      :isLoggedIn="isLoggedIn"
     ></ProjectHeader>
 
     <!-- Block Tabs Default Style -->

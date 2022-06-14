@@ -8,8 +8,8 @@
           <div v-on:click="like_current()">
             <div v-if="data_project.user_vote === 1">
               <div style="display: flex">
-                <i
-                  class="fa fa-fw fa-thumbs-up mr-1"
+                <i class="fa fa-fw fa-thumbs-up mr-1"
+                   v-bind:class="{'scrutia-clickable': isLoggedIn}"
                 ></i>
                 <div v-if="data_project.upvotes === 0">
                   Soyez le premier à soutenir
@@ -25,6 +25,7 @@
             <div v-else-if="data_project.user_vote === 0">
               <div style="display: flex">
                 <i
+                  v-bind:class="{'scrutia-clickable': isLoggedIn}"
                   class="fa fa-fw fa-thumbs-up mr-1"
                   style="color: lightgray"
                 ></i>
@@ -43,6 +44,7 @@
               <div style="display: flex">
                 <i
                   class="fa fa-fw fa-thumbs-down mr-1"
+                  v-bind:class="{'scrutia-clickable': isLoggedIn}"
                 ></i>
                 <div v-if="data_project.upvotes === 0">
                   Soyez le premier à soutenir
@@ -102,6 +104,10 @@ export default {
     },
     project: {
       type: Object,
+    },
+    isLoggedIn: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -175,6 +181,9 @@ export default {
 <style scoped>
   margin-right-15 {
     margin-right: 15px;
+  }
+  .scrutia-clickable {
+    cursor: pointer;
   }
 </style>
 

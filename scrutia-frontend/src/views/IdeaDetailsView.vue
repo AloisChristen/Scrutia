@@ -7,6 +7,7 @@
         :canBePromoted="projectCanBePromoted"
         :project="projet_data"
         ideaActionActivated
+        :isLoggedIn="isLoggedIn"
       ></ProjectHeader>
 
       <ProjectDiscussion v-for="(d, index) in questions"
