@@ -71,6 +71,15 @@ export async function likeProject(projectId: number, like: number) {
     }),
   })
 }
+export async function likeVersion(versionId: number, like: number) {
+  return await fetch(`${api.versions}/${versionId}/like`, {
+    method: 'POST',
+    headers: makeHeader({}),
+    body: JSON.stringify({
+      value: like,
+    }),
+  })
+}
 
 export async function addProject(idea: ProjectStore) {
   return await fetch(api.projects, {
@@ -93,3 +102,4 @@ export async function promoteProject(projectId: number) {
     headers: makeHeader({}),
   })
 }
+

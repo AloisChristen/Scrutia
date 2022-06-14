@@ -53,15 +53,9 @@
               >
             </router-link>
             <div role="separator" class="dropdown-divider"></div>
-            <!-- <router-link
-              class="dropdown-item d-flex align-items-center justify-content-between"
-              to="/userProfile"
-            >
-              <span class="font-size-sm font-w500">Profil</span>
-            </router-link> -->
             <router-link
               class="dropdown-item d-flex align-items-center justify-content-between"
-              to="/"
+              to="/home"
               @click.native="disconnect()"
             >
               <span class="font-size-sm font-w500">Se déconnecter</span>
@@ -76,7 +70,7 @@
         variant="dual"
         class="d-inline-block ml-2"
         menu-class="p-0 border-0 font-size-sm"
-        to="auth/signin"
+        to="/auth/signin"
         id="noUserProfile"
         block
       >

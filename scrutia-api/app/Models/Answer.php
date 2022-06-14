@@ -16,7 +16,7 @@ class Answer extends Model
         'description'
     ];
 
-    protected $appends = ['upvotes', 'downvotes', 'user_vote'];
+    protected $appends = ['upvotes', 'downvotes', 'user_vote', 'project_id'];
 
     protected $hidden = ['question_id', 'user_id','updated_at'];
 
@@ -44,6 +44,13 @@ class Answer extends Model
     public function getDownvotesAttribute(): int
     {
         return $this->likes()->where('value', -1)->count();
+    }
+
+    public function getProjectIdAttribute(): int
+    {
+        $question = $this->question()->first();
+        $version = $question->version()->first();
+        return $version->project->id;
     }
 
     public function getUserVoteAttribute(): Vote

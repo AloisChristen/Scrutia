@@ -49,6 +49,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
             Route::put('/{id}', 'update')->name('answer.update');
             Route::delete('/{id}', 'destroy')->name('answer.delete');
             Route::post('/{id}/like','like')->name('answer.like');
+
         }
     );
 
@@ -84,6 +85,9 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         function () {
             Route::get('/', 'index')->name('user.index');
             Route::put('/', 'update')->name('user.update');
+            Route::get('/questions', 'questions')->name('user.questions');
+            Route::get('/answers', 'answers')->name('user.answers');
+            Route::get('/projects', 'projects')->name('user.projects');
         }
     );
 

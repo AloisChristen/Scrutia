@@ -44,9 +44,10 @@ describe("General layout test", () => {
     cy.get("#searchInput").type("Keyword").parent().parent().submit();
     cy.url().should("include", "/search?question=Keyword");
   });
+  
   it("Displays a 404 error page", () => {
     cy.visit("/notExistingPage");
     cy.contains("h1", "404").should("have.class", "font-w600").should("have.class", "text-city").should("have.class", "display-1")
     cy.contains("a", "Retourner sur la page d'accueil").should("have.attr", "href", "/").click()
-  })
+  });
 });
