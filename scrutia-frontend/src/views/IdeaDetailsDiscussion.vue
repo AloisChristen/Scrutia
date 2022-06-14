@@ -3,34 +3,20 @@
     <div class="content" v-if="isLoaded">
       <!-- http://localhost:8080/project/1/discussion/0 -->
       <ProjectHeader
-        :projectId="projectId"
-        :title="title"
-        :description="description"
-        :tagList="tagList"
-        :likesCount="likesCount"
+        :projectId="project.id"
         :canBePromoted="projectCanBePromoted"
-        :isLiked="isLiked"
-        :versionId="latestVersionId"
+        :project="project"
         ideaActionActivated
       ></ProjectHeader>
 
       <ProjectDiscussion
-                         :key="question.id"
-                         :discussion-id="question.id"
-                         :title="question.title"
-                         :date="question.created_at"
-                         :projectId="projectId"
-                         :versionId="latestVersionId"
-                         :likeCount="question.nb_upvotes - question.nb_downvotes"
-                         :isUpvoted="question.user_vote == 1"
-                         :isDownvoted="question.user_vote == -1"
-                         :answers="question.answers"
-                         :author="question.user_id"
+                         :discussion-id="question_current.id"
+                         :question="question_current"
+                         :projectId="project.id"
                          :can-reply="isLoggedIn"
                          :userForReply="username"
                          :showLink="false"
       />
-
     </div>
   </div>
 </template>
@@ -44,19 +30,14 @@ import router from "@/router";
 export default {
   name: "IdeaDetailsDiscussion",
   components: {
-    ProjectHeader,ProjectDiscussion
+    ProjectHeader,
+    ProjectDiscussion
   },
   data() {
     return {
-      projectId: 0,
-      title: "",
-      description: "",
-      tagList: [],
-      likesCount: 0,
+      project: {},
+      question_current: {},
       projectCanBePromoted: false,
-      isLiked: false,
-      latestVersionId: 0,
-      question: {},
       isLoaded: false,
       username: '',
       isLoggedIn: false,
@@ -68,20 +49,11 @@ export default {
     const response: Response = await getProjectDetails(Number(project_id_str))
     if (response.ok) {
       const data = await response.json()
-      console.log(data)
-      this.projectId = data.id;
-      this.title = data.title;
-      this.likesCount = data.upvotes;
-      this.isLiked = data.user_vote === 1;
-      this.description = data.last_description;
-      this.tagList = data.tags;
+      this.project = data;
 
-      this.latestVersionId = data.latestVersionId;
-      console.log(data.questions)
-      if(data.questions != undefined && data.questions.length !== 0){
-        let questions = data.versions[0].questions;
-        this.question = questions.filter((x: { id: number; }) => x.id === Number(question_id_str))[0]
-      }
+      let allQuestions = this.project.versions[0].questions
+      this.question_current = allQuestions.filter((x: { id: number; }) => x.id === Number(question_id_str))[0]
+
       this.username = this.getUsername();
       if(this.username !== 'No user'){
         this.isLoggedIn = true;

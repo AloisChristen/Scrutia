@@ -6,6 +6,7 @@ import {
 import { api, makeHeader } from '../api'
 
 export async function addQuestion(question: QuestionStoreDTO) {
+  console.log("[service] addQuestion", question)
   return await fetch(api.questions, {
     method: 'POST',
     headers: makeHeader({}),
@@ -31,7 +32,8 @@ export async function deleteQuestion(questionId: number) {
   })
 }
 
-export async function likeAnswer(questionId: number, like: LikeDTO) {
+export async function likeQuestion(questionId: number, like: LikeDTO) {
+  console.log("[service] likeQuestion", questionId, like)
   return await fetch(`${api.questions}/${questionId}/like`, {
     method: 'POST',
     headers: makeHeader({}),

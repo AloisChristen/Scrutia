@@ -3,11 +3,7 @@
     <!-- initiativeDetails/:initiative_id -->
     <ProjectHeader
       :projectId="project.id"
-      :title="project.title"
-      :description="project.last_description"
-      :tagList="project.tags"
-      :likesCount="project.upvotes - project.downvotes"
-      :isLiked="project.user_vote === 1"
+      :project="project"
     ></ProjectHeader>
 
     <!-- Block Tabs Default Style -->
@@ -17,25 +13,19 @@
       content-class="block-content"
     >
       <b-tab title="Révisions" active>
-            <ProjectDiscussion v-for="(v, index) in project.versions"
+            <ProjectDiscussion v-for="v in project.versions"
                                :key="v.id"
                                :project-id="project.id"
                                :versionId="v.id"
-                               :text="v.description"
-                               :likeCount="v.upvotes - v.downvotes"
-                               :isUpvoted="v.user_vote === 1"
-                               :isDownvoted="v.user_vote === -1"
-                               :closed="index !== 0"
-                               modeRevision
-                               :show-link="false"
+                               modeAffichageVersion
                                :version="v"
                                style="margin-bottom: 16px"
-                               :canReply="userCanPostQuestion"
-                               :userForReply="username"
+                               :canReply="isLoggedIn"
+                               :show-link="false"
             />
 
       </b-tab>
-      <b-tab title="Fils de discussion" active>
+      <b-tab title="Fils de discussion">
         <ProjectDiscussion v-for="(d, index) in project.questions"
                            :key="d.id"
                            :discussion-id="d.id"
@@ -99,7 +89,6 @@ export default {
     }
   },
   methods: {
-
     async reviserTexte() {
       let versionNew = {
           project_id: this.project.id,
@@ -157,8 +146,8 @@ export default {
       }
       this.latestVersionId = latestVersionId;
     }
-
     this.isLoaded = true
+
   },
 }
 </script>

@@ -1,51 +1,60 @@
 <template>
 <div>
   <b-row style="padding-left: 0" no-gutters>
-    <b-col v-if="displayPicture">
-      <img
-        src="https://via.placeholder.com/120x120"
-        alt="..."
-        class="img-fluid"
-      />
-    </b-col>
     <b-col cols="12">
       <div style="display: flex">
-        <h1 class="font-w400">{{ title }}</h1>
+        <h1 class="font-w400">{{ data_project.title }}</h1>
         <div v-if="ideaActionActivated" style="margin-right: 0; margin-left: auto; display: flex; flex-direction: column">
           <div v-on:click="like_current()">
-            <div v-if="data_project_liked">
+            <div v-if="data_project.user_vote === 1">
               <div style="display: flex">
                 <i
                   class="fa fa-fw fa-thumbs-up mr-1"
                 ></i>
-                <div v-if="data_project_liked_count === 0">
+                <div v-if="data_project.upvotes === 0">
                   Soyez le premier à soutenir
                 </div>
-                <div v-if="data_project_liked_count === 1">
+                <div v-if="data_project.upvotes === 1">
                   Vous êtes le premier à soutenir le projet
                 </div>
                 <div v-else>
-                  {{ data_project_liked_count }} personnes soutiennent le projet
+                  {{ data_project.upvotes }} personnes soutiennent le projet
                 </div>
               </div>
-            </div>
-            <div v-else>
+            </div> <!-- like -->
+            <div v-else-if="data_project.user_vote === 0">
               <div style="display: flex">
                 <i
                   class="fa fa-fw fa-thumbs-up mr-1"
                   style="color: lightgray"
                 ></i>
-                <div v-if="data_project_liked_count === 0">
+                <div v-if="data_project.upvotes === 0">
                   Soyez le premier à soutenir
                 </div>
-                <div v-else-if="data_project_liked_count === 1">
-                  {{ data_project_liked_count }} personne soutient le projet
+                <div v-else-if="data_project.upvotes === 1">
+                  {{ data_project.upvotes }} personne soutient le projet
                 </div>
                 <div v-else>
-                  {{ data_project_liked_count }} personnes soutiennent le projet
+                  {{ data_project.upvotes }} personnes soutiennent le projet
                 </div>
               </div>
-            </div>
+            </div> <!-- neutral -->
+            <div v-else>
+              <div style="display: flex">
+                <i
+                  class="fa fa-fw fa-thumbs-down mr-1"
+                ></i>
+                <div v-if="data_project.upvotes === 0">
+                  Soyez le premier à soutenir
+                </div>
+                <div v-else-if="data_project.upvotes === 1">
+                  {{ data_project.upvotes }} personne soutient le projet
+                </div>
+                <div v-else>
+                  {{ data_project.upvotes }} personnes soutiennent le projet
+                </div>
+              </div>
+            </div> <!-- for dislike -->
           </div>
           <b-button v-if="canBePromoted" v-on:click="promote" style="margin-right: 0; margin-left: auto">
             promouvoir le projet
@@ -57,13 +66,13 @@
 
   <b-row style="padding-left: 0" no-gutters>
     <b-col cols="12">
-      <b-badge v-for="tag in tagList" :key="tag.id" :variant="getNextColor()" style="padding: 5px; margin: 2px" >
+      <b-badge v-for="tag in data_project.tags" :key="tag.id" :variant="getNextColor()" style="padding: 5px; margin: 2px" >
         {{ tag.title }}
       </b-badge>
     </b-col>
     <b-col cols="12">
       <p>
-        {{description}}
+        {{data_project.last_description}}
       </p>
     </b-col>
   </b-row>
@@ -79,47 +88,21 @@ export default {
     projectId: {
       type: Number
     },
-    title: {
-      type: String,
-      default: 'Ceci est un titre'
-    },
-    tagList: {
-      type: Array,
-      required: true
-    },
-    description: {
-      type: String,
-      default: "Dolor posuere proin blandit accumsan senectus netus nullam curae, ornare laoreet adipiscing luctus mauris adipiscing pretium eget fermentum, tristique lobortis est ut metus lobortis tortor tincidunt himenaeos habitant quis dictumst proin odio sagittis purus mi, nec taciti vestibulum quis in         sit varius lorem sit metus mi."
-    },
-    displayPicture: {
-      type: Boolean,
-      default: false,
-    },
     ideaActionActivated: {
       type: Boolean,
       default: false,
-    },
-    isLiked: {
-      type: Boolean,
-      default: false
-    },
-    likesCount: {
-      type: Number,
-      default: 311,
     },
     canBePromoted: {
       type: Boolean,
       default: false
     },
-    versionId: {
-      type: Number,
+    project: {
+      type: Object,
     }
-
   },
   data() {
     return {
-      data_project_liked: this.isLiked,
-      data_project_liked_count: this.likesCount
+      data_project: this.project,
     }
   },
   methods: {
@@ -140,22 +123,28 @@ export default {
     //- --- -- idea actions -- -- - - -- -
     async like_current() {
       console.log("liking project ", this.projectId);
+      const current = this.project.user_vote;
+      if(current == 1){ // current=like -> new =dislike
+        this.data_project.user_vote = -1;
+        this.data_project.upvotes -= 1;
+      } else if(current == -1) { // current = neg -> neutral
+        this.data_project.user_vote = 0;
+      } else { // current neutral -> like
+        this.data_project.user_vote = 1;
+        this.data_project.upvotes += 1;
+      }
 
-      const response: Response = await likeProject(this.projectId, 1)
+      const response: Response = await likeProject(this.projectId, this.data_project.user_vote)
       if(!response.ok){
+        // TODO CZR: checlk if user is logged -> redirect.
         this.$swal({
           icon: 'error',
           title: "Une erreur s'est produite, impossible de soutenir le projet",
           showConfirmButton: true,
         })
-        return
       }
-      if (this.data_project_liked) {
-        this.data_project_liked_count = this.data_project_liked_count - 1;
-      } else {
-        this.data_project_liked_count = this.data_project_liked_count + 1;
-      }
-      this.data_project_liked = !this.data_project_liked;
+      console.log(await response.json())
+      this.$forceUpdate();
     },
     async promote() {
       console.log("promoting....");
@@ -166,8 +155,9 @@ export default {
           title: "Une erreur s'est produite, impossible de promouvoir le projet",
           showConfirmButton: true,
         })
-        return
       }
+      console.log(await response.json());
+      this.$forceUpdate();
     }
   }
 }
