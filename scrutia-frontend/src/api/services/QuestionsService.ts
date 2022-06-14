@@ -31,7 +31,7 @@ export async function deleteQuestion(questionId: number) {
   })
 }
 
-export async function likeAnswer(questionId: number, like: LikeDTO) {
+export async function likeQuestion(questionId: number, like: LikeDTO) {
   return await fetch(`${api.questions}/${questionId}/like`, {
     method: 'POST',
     headers: makeHeader({}),
