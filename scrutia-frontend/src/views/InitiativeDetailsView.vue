@@ -4,6 +4,7 @@
     <ProjectHeader
       :projectId="project.id"
       :project="project"
+      idea-action-activated
     ></ProjectHeader>
 
     <!-- Block Tabs Default Style -->
