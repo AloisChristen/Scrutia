@@ -6,7 +6,6 @@ import {
 import { api, makeHeader } from '../api'
 
 export async function addAnswer(answer: AnswerStoreDTO) {
-  console.log("[service] addAnswer", answer);
   return await fetch(api.answers, {
     method: 'POST',
     headers: makeHeader({}),
@@ -30,7 +29,6 @@ export async function deleteAnswer(answerId: number) {
 }
 
 export async function likeAnswer(answerId: number, like: LikeDTO) {
-  console.log("[service] likeAnswer", answerId, like)
   return await fetch(`${api.answers}/${answerId}/like`, {
     method: 'POST',
     headers: makeHeader({}),

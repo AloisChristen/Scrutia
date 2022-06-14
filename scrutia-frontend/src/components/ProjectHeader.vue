@@ -104,16 +104,13 @@ export default {
     },
     project: {
       type: Object,
-    },
-    isLoggedIn: {
-      type: Boolean,
-      default: false
     }
   },
   data() {
     return {
       data_project: this.project,
-      canBePromotedAndIsOk: this.canBePromoted
+      canBePromotedAndIsOk: this.canBePromoted,
+      isLoggedIn: this.$store.getters.isConnected
     }
   },
   methods: {
@@ -137,7 +134,6 @@ export default {
       if (!this.isLoggedIn) {
         return
       }
-      console.log("liking project ", this.projectId);
       const current = this.project.user_vote;
       if(current == 1){ // current=like -> new =dislike
         this.data_project.user_vote = -1;
@@ -158,11 +154,9 @@ export default {
           showConfirmButton: true,
         })
       }
-      console.log(await response.json())
       this.$forceUpdate();
     },
     async promote() {
-      console.log("promoting....");
       const response: Response = await promoteProject(this.projectId);
       if(!response.ok){
         this.$swal({
@@ -171,7 +165,6 @@ export default {
           showConfirmButton: true,
         })
       }
-      console.log(await response.json());
       this.$forceUpdate();
     }
   }

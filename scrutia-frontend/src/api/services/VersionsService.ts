@@ -32,7 +32,6 @@ export async function deleteVersion(versionId: number) {
 }
 
 export async function likeVersion(versionId: number, like: LikeDTO) {
-  console.log("[service] likeVersion", versionId, like)
   return await fetch(`${api.versions}/${versionId}/like`, {
     method: 'POST',
     headers: makeHeader({}),

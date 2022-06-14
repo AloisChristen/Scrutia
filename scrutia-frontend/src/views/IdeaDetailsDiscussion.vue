@@ -7,7 +7,6 @@
         :canBePromoted="projectCanBePromoted"
         :project="project"
         ideaActionActivated
-        :isLoggedIn="isLoggedIn"
       ></ProjectHeader>
 
       <ProjectDiscussion

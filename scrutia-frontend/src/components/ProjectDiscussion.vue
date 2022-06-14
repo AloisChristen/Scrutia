@@ -196,7 +196,6 @@ export default {
   methods: {
     async voteQuestion(isUpvote: boolean) {
       if(this.modeAffichageVersion) {
-        console.log(this.versionData)
         if(isUpvote){
           if(this.versionData.user_vote == 1){ // dont send request if already have voted
             return
@@ -262,10 +261,8 @@ export default {
           confirmButtonText: 'Ok'
         })
       }
-      console.log(await response.json())
     },
     async likeAnswer(answerId: number, value: number){
-      console.log(answerId, value)
       let response: Response
       if(this.modeAffichageVersion){
         response = await likeQuestion(answerId, {value})
@@ -291,8 +288,6 @@ export default {
         location.reload();
     },
     async repondreQuestion() {
-      console.log("inputUserReply", this.inputUserReply);
-      console.log(this.$data)
       let response: Response
       if(this.modeAffichageVersion){
         let req = {
