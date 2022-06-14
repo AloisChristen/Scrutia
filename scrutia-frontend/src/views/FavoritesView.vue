@@ -8,7 +8,7 @@
           label="Loading..."
           v-show="isLoading"
         ></b-spinner>
-        <b-col sm="12" md="12" xl="12" v-show="favorites.length > 0">
+        <b-col sm="12" md="12" xl="12" v-show="favorites.length > 3">
           <b-pagination
             v-model="current_page"
             :total-rows="nb_total_favorites"
