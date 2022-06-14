@@ -134,6 +134,7 @@ export default {
           confirmButtonText: 'Ok'
         })
       }
+      location.reload()
 
     }
   }

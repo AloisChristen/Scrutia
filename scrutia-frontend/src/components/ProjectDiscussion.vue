@@ -26,7 +26,7 @@
           </div>
         </template>
 
-        <!-- titre pour mode revision -->
+        <!-- titre pour mode version -->
         <template v-else #title>
           <div style="display: flex">
 

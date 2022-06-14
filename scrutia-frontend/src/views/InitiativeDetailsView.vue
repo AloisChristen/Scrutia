@@ -28,20 +28,18 @@
 
       </b-tab>
       <b-tab title="Fils de discussion" >
-        <ProjectDiscussion v-for="(d, index) in project.questions"
-                           :key="d.id"
-                           :discussion-id="d.id"
-                           :project-id="initiative_id"
-                           :versionId="latestVersionId"
-                           :title="d.title"
-                           :text="d.text"
-                           :likeCount="d.nb_upvotes - d.nb_downvotes"
-                           :isUpvoted="d.user_vote === 1"
-                           :isDownvoted="d.user_vote === -1"
-                           :closed="index !== 0"
-                           :canReply="isLoggedIn"
-                           :userForReply="username"
-        />
+        <div v-for="version in project.versions" :key="version.number">
+          <ProjectDiscussion v-for="d in version.questions"
+                             :key="d.id"
+                             :discussion-id="d.id"
+                             :projectId="project.id"
+                             :versionId="latestVersionId"
+                             :question="d"
+                             closed
+                             :canReply="isLoggedIn"
+                             :show-link="false"
+          />
+        </div>
       </b-tab>
     </b-tabs>
 
@@ -61,7 +59,6 @@
     </b-form>
     </b-row>
 
-
   </div>
 </template>
 
@@ -72,7 +69,8 @@ import ProjectDiscussion from '@/components/ProjectDiscussion.vue'
 
 import router from '@/router'
 import {addVersion} from "@/api/services/VersionsService";
-import {VersionStore} from "@/typings/scrutia-types";
+import {QuestionStoreDTO, VersionStore} from "@/typings/scrutia-types";
+import {addQuestion} from "@/api/services/QuestionsService";
 
 export default {
   name: 'initiativeDetails',
@@ -90,29 +88,50 @@ export default {
       isLoggedIn: false,
       username: '',
       message: '',
-      tabIndex: 1,
+      tabIndex: 0,
       inputContribution : ""
     }
   },
   methods: {
     async traiterInputContribution() {
       console.log("tabIndex", this.tabIndex);
-      let versionNew = {
+
+      let response: Response
+      if(this.tabIndex === 0) { // revision de text
+        let versionNew = {
           project_id: this.project.id,
-          description: this.message,
+          description: this.inputContribution,
         } as VersionStore;
-      const response: Response = await addVersion(versionNew)
+        response = await addVersion(versionNew)
+      } else { // question
+        let question = {
+          project_id: this.project.id,
+          version_number: this.project.versions[this.project.versions.length -1].number, // last version
+          title: this.inputContribution,
+          description: this.inputContribution
+        } as QuestionStoreDTO
+        response = await addQuestion(question)
+      }
+
       if (response.ok) {
-        this.$forceUpdate();
+        this.$swal({
+          title: 'Merci',
+          text: 'Votre question a été enregistrée',
+          icon: 'success',
+          confirmButtonText: 'Ok'
+        })
       }
       else {
+        console.log(await response.json())
         this.$swal({
           title: 'Erreur',
-          text: 'Une erreur est survenue lors de la révision du texte',
+          text: "Une erreur est survenue lors de l'enregistrement",
           type: 'error',
           confirmButtonText: 'OK',
         })
       }
+      //location.reload()
+
     },
     getUsername: function () {
       let user = this.$store.getters.currentUser
