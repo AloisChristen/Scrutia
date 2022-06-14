@@ -11,6 +11,7 @@
       class="block"
       nav-class="nav-tabs-block"
       content-class="block-content"
+      v-model="tabIndex"
     >
       <b-tab title="Révisions" active>
             <ProjectDiscussion v-for="v in project.versions"
@@ -26,7 +27,7 @@
             />
 
       </b-tab>
-      <b-tab title="Fils de discussion">
+      <b-tab title="Fils de discussion" >
         <ProjectDiscussion v-for="(d, index) in project.questions"
                            :key="d.id"
                            :discussion-id="d.id"
@@ -43,22 +44,24 @@
         />
       </b-tab>
     </b-tabs>
-    <b-row>
-      <textarea
-        class="col-12"
-        :value="message"
-        @input="message = $event.target.value"
-        rows="10"
-        cols="50"
-      ></textarea>
-      <input
-        type="button"
-        class="btn btn-primary"
-        value="Réviser le texte"
-        v-on:click="reviserTexte()"
-      />
 
+    <b-row cols="12">
+    <b-form @submit.prevent class="mb-12" style="width: 100%">
+      <b-form-group
+        :label="tabIndex===0 ? 'Réviser le texte' : 'Poser une question'"
+        label-for="contribution">
+        <b-form-textarea id="contribution"
+                         class="col-12"
+                         :placeholder="tabIndex===0 ? 'Réviser le texte' : 'Poser une question'"
+                      v-model="inputContribution" autocomplete="off"></b-form-textarea>
+      </b-form-group>
+      <b-form-group>
+        <b-button type="submit" variant="primary" style="float: right" v-on:click="traiterInputContribution()">Envoyer</b-button>
+      </b-form-group>
+    </b-form>
     </b-row>
+
+
   </div>
 </template>
 
@@ -86,11 +89,14 @@ export default {
       latestVersionId: 0,
       isLoggedIn: false,
       username: '',
-      message: ''
+      message: '',
+      tabIndex: 1,
+      inputContribution : ""
     }
   },
   methods: {
-    async reviserTexte() {
+    async traiterInputContribution() {
+      console.log("tabIndex", this.tabIndex);
       let versionNew = {
           project_id: this.project.id,
           description: this.message,
