@@ -44,20 +44,35 @@
       </b-tab>
     </b-tabs>
 
-    <b-row cols="12">
-    <b-form @submit.prevent class="mb-12" style="width: 100%">
-      <b-form-group
-        :label="tabIndex===0 ? 'Réviser le texte' : 'Poser une question'"
-        label-for="contribution">
-        <b-form-textarea id="contribution"
-                         class="col-12"
-                         :placeholder="tabIndex===0 ? 'Réviser le texte' : 'Poser une question'"
-                      v-model="inputContribution" autocomplete="off"></b-form-textarea>
-      </b-form-group>
-      <b-form-group>
-        <b-button type="submit" variant="primary" style="float: right" v-on:click="traiterInputContribution()">Envoyer</b-button>
-      </b-form-group>
-    </b-form>
+    <b-row cols="12" v-if="tabIndex===0 && isLoggedIn && userIsAuthorOfProject"> <!-- revision de text -->
+      <b-form @submit.prevent class="mb-12" style="width: 100%">
+        <b-form-group
+          label="Réviser le texte"
+          label-for="contribution">
+          <b-form-textarea id="contribution"
+                           class="col-12"
+                           placeholder="Réviser le texte"
+                        v-model="inputContribution" autocomplete="off"></b-form-textarea>
+        </b-form-group>
+        <b-form-group>
+          <b-button type="submit" variant="primary" style="float: right" v-on:click="traiterInputContribution()">Envoyer</b-button>
+        </b-form-group>
+      </b-form>
+    </b-row>
+    <b-row v-if="tabIndex===1 && isLoggedIn"> <!-- poser une question -->
+      <b-form @submit.prevent class="mb-12" style="width: 100%">
+        <b-form-group
+          label="Poser une question"
+          label-for="contribution">
+          <b-form-textarea id="contribution"
+                           class="col-12"
+                           placeholder="Poser une question"
+                           v-model="inputContribution" autocomplete="off"></b-form-textarea>
+        </b-form-group>
+        <b-form-group>
+          <b-button type="submit" variant="primary" style="float: right" v-on:click="traiterInputContribution()">Envoyer</b-button>
+        </b-form-group>
+      </b-form>
     </b-row>
 
   </div>
@@ -90,7 +105,8 @@ export default {
       username: '',
       message: '',
       tabIndex: 0,
-      inputContribution : ""
+      inputContribution : "",
+      userIsAuthorOfProject: true
     }
   },
   methods: {
@@ -158,6 +174,9 @@ export default {
 
       if (this.getUsername() !== data.author) {
         this.projectCanBePromoted = false
+        this.userIsAuthorOfProject = false
+      } else {
+        this.userIsAuthorOfProject = true
       }
       if(this.getUsername() !=='No user'){
         this.userCanPostQuestion = true;
