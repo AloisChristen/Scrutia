@@ -55,7 +55,7 @@
             <div role="separator" class="dropdown-divider"></div>
             <router-link
               class="dropdown-item d-flex align-items-center justify-content-between"
-              to="/"
+              to="/home"
               @click.native="disconnect()"
             >
               <span class="font-size-sm font-w500">Se déconnecter</span>
