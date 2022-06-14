@@ -150,7 +150,7 @@ export default {
           confirmButtonText: 'OK',
         })
       }
-      //location.reload()
+      location.reload()
 
     },
     getUsername: function () {
