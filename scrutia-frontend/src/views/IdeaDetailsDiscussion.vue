@@ -48,8 +48,7 @@ export default {
     const question_id_str = this.$route.params.discussion_id;
     const response: Response = await getProjectDetails(Number(project_id_str))
     if (response.ok) {
-      const data = await response.json()
-      this.project = data;
+      this.project = await response.json();
 
       let allQuestions = this.project.versions[0].questions
       this.question_current = allQuestions.filter((x: { id: number; }) => x.id === Number(question_id_str))[0]
@@ -57,11 +56,14 @@ export default {
       this.username = this.getUsername();
       if(this.username !== 'No user'){
         this.isLoggedIn = true;
+        if(this.username === this.project.username){
+          this.projectCanBePromoted = true;
+        }
       }
     }
      else {
       // redirect to 404 page
-      router.push({ name: '404' });
+      await router.push({name: '404'});
     }
     this.isLoaded = true
   },

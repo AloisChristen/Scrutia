@@ -56,7 +56,11 @@
               </div>
             </div> <!-- for dislike -->
           </div>
-          <b-button v-if="canBePromoted" v-on:click="promote" style="margin-right: 0; margin-left: auto">
+          <b-button v-if="canBePromotedAndIsOk"
+                    block
+                    v-b-tooltip.hover.nofade.left="'Il faut 50 upvotes pour pouvoir promouvoir'"
+                    :disabled="data_project.upvotes < 50"
+                    v-on:click="promote" style="margin-right: 0; margin-left: auto">
             promouvoir le projet
           </b-button>
         </div>
@@ -103,6 +107,7 @@ export default {
   data() {
     return {
       data_project: this.project,
+      canBePromotedAndIsOk: this.canBePromoted
     }
   },
   methods: {
