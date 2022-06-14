@@ -10,11 +10,17 @@
         <template v-if="!modeAffichageVersion" #title> <!-- pour la page idea -->
           <div style="display: flex;">
             <div style="display: flex; flex-direction: column; width: 50px; align-items: center; margin-right: 16px">
-              <i v-if="questionData.user_vote === 1" class="fa fa-angle-up mr-1"></i>
-              <i v-else class="fa fa-angle-up mr-1" v-on:click="voteQuestion(true)" style="color: lightgray"></i>
+              <i v-if="questionData.user_vote === 1" class="fa fa-angle-up mr-1"
+              ></i>
+              <i v-else class="fa fa-angle-up mr-1"
+                 v-on:click="voteQuestion(true)" style="color: lightgray"
+                 v-bind:class="{'scrutia-clickable': isLoggedIn}"
+              ></i>
               <div>{{ questionData.upvotes}}</div>
               <i v-if="questionData.user_vote === -1" class="fa fa-angle-down mr-1"></i>
-              <i v-else class="fa fa-angle-down mr-1" v-on:click="voteQuestion(false)" style="color: lightgray"></i>
+              <i v-else class="fa fa-angle-down mr-1"
+                 v-bind:class="{'scrutia-clickable': isLoggedIn}"
+                 v-on:click="voteQuestion(false)" style="color: lightgray"></i>
             </div>
             <div style="display: flex; flex-direction: column; align-self: center">
               <div class="Lead">{{questionData.title}}</div>
@@ -32,11 +38,16 @@
 
             <div>
               <div style="display: flex; flex-direction: column; width: 50px; align-items: center; margin-right: 16px">
-                <i v-if="versionData.user_vote === 1" class="fa fa-angle-up mr-1"></i>
-                <i v-else class="fa fa-angle-up mr-1" v-on:click="voteQuestion(true)" style="color: lightgray"></i>
+                <i v-if="versionData.user_vote === 1"
+                   class="fa fa-angle-up mr-1"></i>
+                <i v-else class="fa fa-angle-up mr-1"
+                   v-bind:class="{'scrutia-clickable': isLoggedIn}"
+                   v-on:click="voteQuestion(true)" style="color: lightgray"></i>
                 <div>{{ versionData.upvotes - versionData.downvotes}}</div>
                 <i v-if="versionData.user_vote === -1" class="fa fa-angle-down mr-1"></i>
-                <i v-else class="fa fa-angle-down mr-1" v-on:click="voteQuestion(false)" style="color: lightgray"></i>
+                <i v-else class="fa fa-angle-down mr-1"
+                   v-bind:class="{'scrutia-clickable': isLoggedIn}"
+                   v-on:click="voteQuestion(false)" style="color: lightgray"></i>
               </div>
             </div>
 
@@ -56,18 +67,30 @@
             <!-- answers display -->
             <div v-if="!modeAffichageVersion">
               <div style="margin-bottom: 16px" v-for="a in questionData.answers" :key="a.id">
-                <i v-if="a.user_vote === 1" class="fa fa-fw fa-thumbs-up mr-1" v-on:click="likeAnswer(a.id, -1)"></i>
-                <i v-else-if="a.user_vote === -1" class="fa fa-fw fa-thumbs-down mr-1" v-on:click="likeAnswer(a.id, 0)"></i>
-                <i v-else class="fa fa-fw fa-thumbs-up mr-1" style="color: lightgray" v-on:click="likeAnswer(a.id, 1)"></i>
+                <i v-if="a.user_vote === 1" class="fa fa-fw fa-thumbs-up mr-1"
+                   v-bind:class="{'scrutia-clickable': isLoggedIn}"
+                   v-on:click="likeAnswer(a.id, -1)"></i>
+                <i v-else-if="a.user_vote === -1" class="fa fa-fw fa-thumbs-down mr-1"
+                   v-bind:class="{'scrutia-clickable': isLoggedIn}"
+                   v-on:click="likeAnswer(a.id, 0)"></i>
+                <i v-else class="fa fa-fw fa-thumbs-up mr-1" style="color: lightgray"
+                   v-bind:class="{'scrutia-clickable': isLoggedIn}"
+                   v-on:click="likeAnswer(a.id, 1)"></i>
                 <span style="font-weight: bold">{{a.user.username}}:</span>
                 {{a.description}}
               </div>
             </div>
             <div v-else>
               <div style="margin-bottom: 16px" v-for="a in versionData.questions" :key="a.id">
-                <i v-if="a.user_vote === 1" class="fa fa-fw fa-thumbs-up mr-1" v-on:click="likeAnswer(a.id, -1)"></i>
-                <i v-else-if="a.user_vote === -1" class="fa fa-fw fa-thumbs-down mr-1" v-on:click="likeAnswer(a.id, 0)"></i>
-                <i v-else class="fa fa-fw fa-thumbs-up mr-1" style="color: lightgray" v-on:click="likeAnswer(a.id, 1)"></i>
+                <i v-if="a.user_vote === 1" class="fa fa-fw fa-thumbs-up mr-1"
+                   v-bind:class="{'scrutia-clickable': isLoggedIn}"
+                   v-on:click="likeAnswer(a.id, -1)"></i>
+                <i v-else-if="a.user_vote === -1" class="fa fa-fw fa-thumbs-down mr-1"
+                   v-bind:class="{'scrutia-clickable': isLoggedIn}"
+                   v-on:click="likeAnswer(a.id, 0)"></i>
+                <i v-else class="fa fa-fw fa-thumbs-up mr-1" style="color: lightgray"
+                   v-bind:class="{'scrutia-clickable': isLoggedIn}"
+                   v-on:click="likeAnswer(a.id, 1)"></i>
                 <span style="font-weight: bold">{{a.user.username}}:</span>
                 {{a.description}}
               </div>
@@ -146,8 +169,11 @@ export default {
     },
     question: {
       type: Object,
+    },
+    isLoggedIn: {
+      type: Boolean,
+      default: false
     }
-
   },
   mounted() {
     if(this.closed) {
@@ -316,5 +342,7 @@ export default {
 </script>
 
 <style scoped>
-
+  .scrutia-clickable {
+    cursor: pointer;
+  }
 </style>

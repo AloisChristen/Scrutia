@@ -16,6 +16,7 @@
                          :can-reply="isLoggedIn"
                          :userForReply="username"
                          :showLink="false"
+                         :isLoggedIn="isLoggedIn"
       />
     </div>
   </div>

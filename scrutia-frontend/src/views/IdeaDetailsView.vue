@@ -17,6 +17,7 @@
                           :closed="index !== 0"
                           :question="d"
                           onlyThreeAnswer
+                          :is-logged-in="isLoggedIn"
       />
 
       <div v-if="questions.length === 0">
@@ -64,7 +65,8 @@ export default {
       latestVersionId: 0,
       projet_data: {},
       canAskQuestion: false,
-      inputQuestion: ""
+      inputQuestion: "",
+      isLoggedIn: false,
     }
   },
   async mounted() {
@@ -92,6 +94,7 @@ export default {
       }
       if(this.getUsername() != 'No user'){
         this.canAskQuestion = true;
+        this.isLoggedIn = true;
       }
 
     }
