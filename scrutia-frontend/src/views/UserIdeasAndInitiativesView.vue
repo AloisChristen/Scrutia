@@ -8,18 +8,8 @@
           label="Loading..."
           v-show="project.isLoading"
         ></b-spinner>
-        <b-col sm="12" md="12" xl="12" v-show="project.projects.length > 0">
-          <b-pagination
-            v-model="project.current_page"
-            :total-rows="project.nb_total"
-            :per-page="project.per_page"
-            v-show="!project.isLoading"
-            align="center"
-            @change="(newValue) => changePage(newValue)"
-          ></b-pagination>
-        </b-col>
         <b-col sm="12" md="12" xl="12">
-          <p v-show="!project.isLoading && project.projects.length === 0">
+          <p v-show="!project.isLoading && project.items.length === 0">
             Vous n'avez actuellement ni projets ni idées.
             <br />
             <router-link :to="`/browseIdeas`">
@@ -30,12 +20,12 @@
               <em>Créer ma propre initiative</em>
             </router-link>
           </p>
-          <b-row v-show="project.projects.length > 0">
+          <b-row v-show="project.items.length > 0">
             <b-col
               sm="12"
               md="6"
               xl="4"
-              v-for="item in project.projects"
+              v-for="item in project.items"
               v-bind:key="item.id"
               v-show="!project.isLoading"
             >
@@ -47,14 +37,14 @@
             </b-col>
           </b-row>
         </b-col>
-        <b-col sm="12" md="12" xl="12" v-show="project.projects.length > 0">
+        <b-col sm="12" md="12" xl="12" v-show="project.items.length > 0">
           <b-pagination
             v-model="project.current_page"
             :total-rows="project.nb_total"
             :per-page="project.per_page"
             v-show="!project.isLoading"
             align="center"
-            @change="(page) => loadProjects(page)"
+            @change="(newValue) => changePage(newValue)"
           ></b-pagination>
         </b-col>
       </b-row>
@@ -76,7 +66,7 @@ import { Component, Vue } from 'vue-property-decorator'
     return {
       project: {
         isLoading: true,
-        projects: [],
+        items: [],
         nb_total: 0,
         per_page: 15,
         current_page: 0,
@@ -86,7 +76,7 @@ import { Component, Vue } from 'vue-property-decorator'
       },
       question: {
         isLoading: true,
-        questions: [],
+        items: [],
         nb_total: 0,
         per_page: 15,
         current_page: 0,
@@ -99,7 +89,7 @@ import { Component, Vue } from 'vue-property-decorator'
   async created() {
     if (this.checkUser()) {
       this.loadProjects()
-      //this.loadQuestions()
+      this.loadQuestions()
     }
   },
   methods: {
@@ -117,8 +107,7 @@ import { Component, Vue } from 'vue-property-decorator'
       let resp = await userProjects()
       if (resp.ok) {
         let body = await resp.json()
-        console.log(body)
-        this.$data.project.projects = body.data
+        this.$data.project.items = body.data
         this.$data.project.nb_total = body.total
         this.$data.project.per_page = body.per_page
         this.$data.project.current_page = body.current_page
@@ -141,8 +130,8 @@ import { Component, Vue } from 'vue-property-decorator'
       let resp = await userQuestions()
       if (resp.ok) {
         let body = await resp.json()
-        console.log(body)
-        this.$data.question.questions = body.data
+        console.log(body.data)
+        this.$data.question.items = body.data
         this.$data.question.nb_total = body.total
         this.$data.question.per_page = body.per_page
         this.$data.question.current_page = body.current_page
