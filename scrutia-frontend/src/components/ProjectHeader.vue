@@ -122,6 +122,10 @@ export default {
 
     //- --- -- idea actions -- -- - - -- -
     async like_current() {
+      //do nothing if user is not logged
+      if (!this.isLoggedIn) {
+        return
+      }
       console.log("liking project ", this.projectId);
       const current = this.project.user_vote;
       if(current == 1){ // current=like -> new =dislike
