@@ -48,7 +48,8 @@ class Answer extends Model
 
     public function getProjectIdAttribute(): int
     {
-        $version = $this->question()->version()->first();
+        $question = $this->question()->first();
+        $version = $question->version()->first();
         return $version->project->id;
     }
 
