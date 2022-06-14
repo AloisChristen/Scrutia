@@ -124,7 +124,7 @@ export default {
       if(!response.ok){
         this.$swal({
           title: 'Erreur',
-          text: 'Une erreur est survenue lors de l\'enregistrement de votre question, il faudrait gagner de la réputation',
+          text: "Une erreur est survenue lors de l'enregistrement de votre question, vous avez déjà epuisé votre quota de questions pour aurjourd'hui ou il faudrait gagner de la réputation",
           icon: 'error',
           confirmButtonText: 'Ok'
         })
@@ -136,8 +136,8 @@ export default {
           icon: 'success',
           confirmButtonText: 'Ok'
         })
+        location.reload()
       }
-      location.reload()
 
     }
   }

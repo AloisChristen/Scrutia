@@ -276,6 +276,7 @@ export default {
             icon: 'success',
             confirmButtonText: 'Ok'
           })
+          location.reload();
         }
         else {
           this.$swal({
@@ -285,7 +286,6 @@ export default {
             confirmButtonText: 'Ok'
           })
         }
-        location.reload();
     },
     async repondreQuestion() {
       let response: Response
@@ -309,7 +309,7 @@ export default {
       if(!response.ok){
         this.$swal({
           title: 'Erreur',
-          text: 'Une erreur est survenue lors de l\'enregistrement de votre mot à dire, il faudrait gagner de la réputation',
+          text: "Une erreur est survenue lors de l'enregistrement de votre mot à dire, il faudrait gagner de la réputation ou vous avez déjà posé trop de questions pour aujourd'hui.",
           icon: 'error',
           confirmButtonText: 'Ok'
         })
@@ -319,11 +319,10 @@ export default {
           text: 'Votre mot à dire a été enregistré',
           icon: 'success',
           confirmButtonText: 'Ok'
-        })
-
+        });
+        location.reload()
       }
       this.inputUserReply = ""; // reset field value
-      location.reload()
     },
     getFormatedDate(date: string) {
       return format(new Date(date), 'dd LLLL yyyy', {
