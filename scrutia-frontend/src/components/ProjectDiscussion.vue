@@ -68,7 +68,7 @@
                 <i v-if="a.user_vote === 1" class="fa fa-fw fa-thumbs-up mr-1" v-on:click="likeAnswer(a.id, -1)"></i>
                 <i v-else-if="a.user_vote === -1" class="fa fa-fw fa-thumbs-down mr-1" v-on:click="likeAnswer(a.id, 0)"></i>
                 <i v-else class="fa fa-fw fa-thumbs-up mr-1" style="color: lightgray" v-on:click="likeAnswer(a.id, 1)"></i>
-                <span style="font-weight: bold">{{a.user_id}}:</span>
+                <span style="font-weight: bold">{{a.user.username}}:</span>
                 {{a.description}}
               </div>
             </div>
@@ -271,7 +271,7 @@ export default {
       if(this.modeAffichageVersion){
         let req = {
           project_id: this.projectId,
-          version_number: this.versionData.id,
+          version_number: this.versionData.number,
           title:  this.inputUserReply,
           description:  this.inputUserReply,
         } as QuestionStoreDTO;
