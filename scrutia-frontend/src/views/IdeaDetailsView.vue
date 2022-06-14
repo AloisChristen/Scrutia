@@ -113,7 +113,7 @@ export default {
     async creerQuestion() {
       let req = {
         project_id: this.projet_data.id,
-        version_number: this.latestVersionId,
+        version_number: this.projet_data.versions[0].number, // always first version as idea
         title: this.inputQuestion,
         description: this.inputQuestion,
       } as QuestionStoreDTO;
