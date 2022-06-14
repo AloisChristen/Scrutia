@@ -15,6 +15,8 @@ export const api = {
   user: baseUrl + '/user',
   versions: baseUrl + '/versions',
   favorites: baseUrl + '/favorites',
+  user_questions: baseUrl + '/user/questions',
+  user_projects: baseUrl + '/user/projects',
 }
 
 const staticHeader: Dictionary<string> = {

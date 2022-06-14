@@ -15,3 +15,17 @@ export async function updateUser(user: UserUdpateDTO) {
     body: JSON.stringify(user),
   })
 }
+
+export async function userQuestions() {
+  return await fetch(api.user_questions, {
+    method: 'GET',
+    headers: makeHeader({}),
+  })
+}
+
+export async function userProjects() {
+  return await fetch(api.user_projects, {
+    method: 'GET',
+    headers: makeHeader({}),
+  })
+}
