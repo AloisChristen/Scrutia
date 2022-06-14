@@ -70,7 +70,7 @@
         variant="dual"
         class="d-inline-block ml-2"
         menu-class="p-0 border-0 font-size-sm"
-        to="auth/signin"
+        to="/auth/signin"
         id="noUserProfile"
         block
       >

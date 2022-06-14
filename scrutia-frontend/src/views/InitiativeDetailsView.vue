@@ -3,11 +3,8 @@
     <!-- initiativeDetails/:initiative_id -->
     <ProjectHeader
       :projectId="project.id"
-      :title="project.title"
-      :description="project.last_description"
-      :tagList="project.tags"
-      :likesCount="project.upvotes - project.downvotes"
-      :isLiked="project.user_vote === 1"
+      :project="project"
+      idea-action-activated
     ></ProjectHeader>
 
     <!-- Block Tabs Default Style -->
@@ -15,59 +12,71 @@
       class="block"
       nav-class="nav-tabs-block"
       content-class="block-content"
+      v-model="tabIndex"
     >
       <b-tab title="Révisions" active>
-            <ProjectDiscussion v-for="(v, index) in project.versions"
+            <ProjectDiscussion v-for="v in project.versions"
                                :key="v.id"
                                :project-id="project.id"
                                :versionId="v.id"
-                               :text="v.description"
-                               :likeCount="v.upvotes - v.downvotes"
-                               :isUpvoted="v.user_vote === 1"
-                               :isDownvoted="v.user_vote === -1"
-                               :closed="index !== 0"
-                               modeRevision
-                               :show-link="false"
+                               modeAffichageVersion
                                :version="v"
                                style="margin-bottom: 16px"
-                               :canReply="userCanPostQuestion"
-                               :userForReply="username"
+                               :canReply="isLoggedIn"
+                               :show-link="false"
+                               :is-logged-in="isLoggedIn"
+                               closed
             />
 
       </b-tab>
-      <b-tab title="Fils de discussion" active>
-        <ProjectDiscussion v-for="(d, index) in project.questions"
-                           :key="d.id"
-                           :discussion-id="d.id"
-                           :project-id="initiative_id"
-                           :versionId="latestVersionId"
-                           :title="d.title"
-                           :text="d.text"
-                           :likeCount="d.nb_upvotes - d.nb_downvotes"
-                           :isUpvoted="d.user_vote === 1"
-                           :isDownvoted="d.user_vote === -1"
-                           :closed="index !== 0"
-                           :canReply="isLoggedIn"
-                           :userForReply="username"
-        />
+      <b-tab title="Fils de discussion" >
+        <div v-for="version in project.versions" :key="version.number">
+          <ProjectDiscussion v-for="d in version.questions"
+                             :key="d.id"
+                             :discussion-id="d.id"
+                             :projectId="project.id"
+                             :versionId="latestVersionId"
+                             :question="d"
+                             closed
+                             :canReply="isLoggedIn"
+                             :show-link="false"
+                             :is-logged-in="isLoggedIn"
+          />
+        </div>
       </b-tab>
     </b-tabs>
-    <b-row>
-      <textarea
-        class="col-12"
-        :value="message"
-        @input="message = $event.target.value"
-        rows="10"
-        cols="50"
-      ></textarea>
-      <input
-        type="button"
-        class="btn btn-primary"
-        value="Réviser le texte"
-        v-on:click="reviserTexte()"
-      />
 
+    <b-row cols="12" v-if="tabIndex===0 && isLoggedIn && userIsAuthorOfProject"> <!-- revision de text -->
+      <b-form @submit.prevent class="mb-12" style="width: 100%">
+        <b-form-group
+          label="Réviser le texte"
+          label-for="contribution">
+          <b-form-textarea id="contribution"
+                           class="col-12"
+                           placeholder="Réviser le texte"
+                        v-model="inputContribution" autocomplete="off"></b-form-textarea>
+        </b-form-group>
+        <b-form-group>
+          <b-button type="submit" variant="primary" style="float: right" v-on:click="traiterInputContribution()">Envoyer</b-button>
+        </b-form-group>
+      </b-form>
     </b-row>
+    <b-row v-if="tabIndex===1 && isLoggedIn"> <!-- poser une question -->
+      <b-form @submit.prevent class="mb-12" style="width: 100%">
+        <b-form-group
+          label="Poser une question"
+          label-for="contribution">
+          <b-form-textarea id="contribution"
+                           class="col-12"
+                           placeholder="Poser une question"
+                           v-model="inputContribution" autocomplete="off"></b-form-textarea>
+        </b-form-group>
+        <b-form-group>
+          <b-button type="submit" variant="primary" style="float: right" v-on:click="traiterInputContribution()">Envoyer</b-button>
+        </b-form-group>
+      </b-form>
+    </b-row>
+
   </div>
 </template>
 
@@ -78,7 +87,8 @@ import ProjectDiscussion from '@/components/ProjectDiscussion.vue'
 
 import router from '@/router'
 import {addVersion} from "@/api/services/VersionsService";
-import {VersionStore} from "@/typings/scrutia-types";
+import {QuestionStoreDTO, VersionStore} from "@/typings/scrutia-types";
+import {addQuestion} from "@/api/services/QuestionsService";
 
 export default {
   name: 'initiativeDetails',
@@ -95,28 +105,52 @@ export default {
       latestVersionId: 0,
       isLoggedIn: false,
       username: '',
-      message: ''
+      message: '',
+      tabIndex: 0,
+      inputContribution : "",
+      userIsAuthorOfProject: true
     }
   },
   methods: {
+    async traiterInputContribution() {
+      console.log("tabIndex", this.tabIndex);
 
-    async reviserTexte() {
-      let versionNew = {
+      let response: Response
+      if(this.tabIndex === 0) { // revision de text
+        let versionNew = {
           project_id: this.project.id,
-          description: this.message,
+          description: this.inputContribution,
         } as VersionStore;
-      const response: Response = await addVersion(versionNew)
+        response = await addVersion(versionNew)
+      } else { // question
+        let question = {
+          project_id: this.project.id,
+          version_number: this.project.versions[this.project.versions.length -1].number, // last version
+          title: this.inputContribution,
+          description: this.inputContribution
+        } as QuestionStoreDTO
+        response = await addQuestion(question)
+      }
+
       if (response.ok) {
-        this.$forceUpdate();
+        this.$swal({
+          title: 'Merci',
+          text: 'Votre question a été enregistrée',
+          icon: 'success',
+          confirmButtonText: 'Ok'
+        })
       }
       else {
+        console.log(await response.json())
         this.$swal({
           title: 'Erreur',
-          text: 'Une erreur est survenue lors de la révision du texte',
+          text: "Une erreur est survenue lors de l'enregistrement",
           type: 'error',
           confirmButtonText: 'OK',
         })
       }
+      location.reload()
+
     },
     getUsername: function () {
       let user = this.$store.getters.currentUser
@@ -142,6 +176,9 @@ export default {
 
       if (this.getUsername() !== data.author) {
         this.projectCanBePromoted = false
+        this.userIsAuthorOfProject = false
+      } else {
+        this.userIsAuthorOfProject = true
       }
       if(this.getUsername() !=='No user'){
         this.userCanPostQuestion = true;
@@ -157,8 +194,8 @@ export default {
       }
       this.latestVersionId = latestVersionId;
     }
-
     this.isLoaded = true
+
   },
 }
 </script>
